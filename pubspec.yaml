@@ -1,7 +1,7 @@
-name: virtual_flight_throttle
+name: VirtualFlightThrottle
 description: Customizable Virtual Flight-Throttle&#x2F;Controller
 
-version: 1.0.0+1
+version: 0.1.0+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
