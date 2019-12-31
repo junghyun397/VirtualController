@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+import 'page/controller/page_main_controller.dart';
+import 'page/layout/builder/page_layout_builder.dart';
+import 'page/layout/list/page_layout_list.dart';
+import 'page/layout/store/page_layout_store.dart';
+import 'page/network/page_network.dart';
+import 'page/settings/page_settings.dart';
 
-class MyApp extends StatelessWidget {
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
+class VirtualThrottleApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -10,54 +18,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: MyHomePage(title: "VirtualThrottle"),
+
+      // TODO: i8n initialize
+      // localizationsDelegates: [S.delegate],
+      // supportedLocales: S.delegate.supportedLocales,
+      // localeResolutionCallback: S.delegate.resolution(fallback: Locale('en')),
+
+      initialRoute: "/",
+      routes: {
+        "/": (context) => PageMainController(),
+        "/layout": (context) => PageLayoutList(),
+        "/layout/builder": (context) => PageLayoutBuilder(),
+        "/layout/store": (context) => PageLayoutStore(),
+        "/network": (context) => PageNetwork(),
+        "/settings": (context) => PageSettings(),
+      },
+      navigatorObservers: [routeObserver],
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Clicks: ',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}
+void main() => runApp(VirtualThrottleApp());

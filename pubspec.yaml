@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_speed_dial: ^1.2.5
+
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
