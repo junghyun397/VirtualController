@@ -1,6 +1,7 @@
-import 'package:VirtualFlightThrottle/main.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class FixedDirectionState<T> extends State with RouteAware {
 
@@ -50,4 +51,5 @@ class DynamicDirectionState<T> extends State with RouteAware {
 
   @override
   Widget build(BuildContext context) => Container();
+
 }

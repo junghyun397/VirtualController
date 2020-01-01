@@ -1,10 +1,16 @@
+import 'package:VirtualFlightThrottle/data/data_global_settings.dart';
 import 'package:flutter/services.dart';
 
 class UtilitySystem {
 
   static void enableUIOverlays(bool enable) {
     if (enable) SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    else SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    else {
+      List<SystemUiOverlay> systemUI = [];
+      if (!GlobalSettings.settingsMap["hide-home-key"].value) systemUI.add(SystemUiOverlay.bottom);
+      if (!GlobalSettings.settingsMap["hide-top-bar"].value) systemUI.add(SystemUiOverlay.top);
+      SystemChrome.setEnabledSystemUIOverlays(systemUI);
+    }
     // else SystemChrome.setEnabledSystemUIOverlays([]); // TODO: find solution remove to safeArea
   }
 
