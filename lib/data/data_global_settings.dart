@@ -3,9 +3,12 @@ import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 enum SettingsType {
   USER_NAME,
   USER_PWD,
+
   HIDE_TOP_BAR,
   HIDE_HOME_KEY,
+
   AUTO_CONNECTION,
+
   USE_VIBRATION,
 }
 
@@ -73,13 +76,6 @@ class GlobalSettings {
   void resetGlobalSettings() {
     this.settingsMap = _buildDefaultSettings();
     SettingsType.values.forEach((val) => SQLite3Helper().insertSettings(val));
-  }
-
-  void loadSavedGlobalSettings() async {
-    Map<SettingsType, String> settingsList = await SQLite3Helper().getSavedSettingsValue();
-    settingsList.forEach((key, value) {
-      this.settingsMap[key].setValue(value);
-    });
   }
 
   static Map<SettingsType, SettingData> _loadSavedGlobalSettings() {
