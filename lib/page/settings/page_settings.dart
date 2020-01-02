@@ -15,38 +15,38 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future saveSettings() async {
-    final form = this._formKey.currentState;
-    if (form.validate()) {
-      form.save();
-    }
-  }
-
-  void resetSettings() {
-    GlobalSettings.resetGlobalSettings();
-    _formKey.currentState.setState(() {});
+  void _resetSettings() {
+    _formKey.currentState.setState(() {GlobalSettings.resetGlobalSettings();});
     _formKey.currentState.reset();
   }
 
-  CardSettingsText _buildStringSection(String settingName, bool required, String Function(String) validator) {
+  CardSettingsText _buildStringSection(SettingsType settingsType, bool required, String validatorRegex, String regexFail) {
     return CardSettingsText(
-      label: GlobalSettings.settingsMap[settingName].settingName,
-      hintText: GlobalSettings.settingsMap[settingName].defaultValue,
-      initialValue: GlobalSettings.settingsMap[settingName].value,
+      label: GlobalSettings.settingsMap[settingsType].settingName,
+      hintText: GlobalSettings.settingsMap[settingsType].defaultValue,
+      initialValue: GlobalSettings.settingsMap[settingsType].value,
       requiredIndicator: required ? Text("*", style: TextStyle(color: Colors.red)) : Text(""),
       autovalidate: true,
-      validator: validator,
+      validator: validatorRegex == null ? (_) => null : (val) {
+        if ((!new RegExp(validatorRegex).hasMatch(val)) && val != "")
+          return regexFail;
+        else return null;
+      },
 
-      onSaved: (val) => GlobalSettings.settingsMap[settingName].value = val,
+      onChanged: (val) {
+        setState(() {GlobalSettings.settingsMap[settingsType].saveValue(val);});
+      },
     );
   }
 
-  CardSettingsSwitch _buildSwitchSection(String settingName) {
+  CardSettingsSwitch _buildSwitchSection(SettingsType settingsType) {
     return CardSettingsSwitch(
-      label: GlobalSettings.settingsMap[settingName].settingName,
-      initialValue: GlobalSettings.settingsMap[settingName].value,
+      label: GlobalSettings.settingsMap[settingsType].settingName,
+      initialValue: GlobalSettings.settingsMap[settingsType].value,
 
-      onSaved: (val) => GlobalSettings.settingsMap[settingName].value = val,
+      onChanged: (val) {
+        setState(() {GlobalSettings.settingsMap[settingsType].saveValue(val);});
+      }
     );
   }
 
@@ -61,14 +61,10 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: <Widget>[
-//          IconButton( // TODO: implement swap initial-value
-//            icon: Icon(Icons.refresh),
-//            onPressed: this.resetSettings,
-//          ),
           IconButton(
-            icon: Icon(Icons.save),
-            onPressed: this.saveSettings,
-          )
+            icon: Icon(Icons.refresh),
+            onPressed: this._resetSettings,
+          ),
         ],
       ),
       body: Form(
@@ -81,12 +77,9 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
                 label: "User Account",
               ),
               children: <Widget>[
-                this._buildStringSection("user-name", false, (val) {
-                  if ((!new RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val)) && val != "")
-                    return "please review your account name."; // TODO: i8n needed
-                  else return null;
-                }),
-                this._buildStringSection("user-pwd", false, (_) => null),
+                this._buildStringSection(SettingsType.USER_NAME, false,
+                    "^[a-zA-Z0-9-._]{3,20}\$", "please review your account name."), // TODO: i8n needed
+                this._buildStringSection(SettingsType.USER_PWD, false, null, null),
               ],
             ),
             CardSettingsSection(
@@ -94,8 +87,8 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
                 label: "UI Option",
               ),
               children: <Widget>[
-                this._buildSwitchSection("hide-top-bar"),
-                this._buildSwitchSection("hide-home-key"),
+                this._buildSwitchSection(SettingsType.HIDE_TOP_BAR),
+                this._buildSwitchSection(SettingsType.HIDE_HOME_KEY),
               ],
             ),
             CardSettingsSection(
@@ -103,7 +96,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
                 label: "Network",
               ),
               children: <Widget>[
-                this._buildSwitchSection("auto-connection"),
+                this._buildSwitchSection(SettingsType.AUTO_CONNECTION),
               ],
             )
           ],

@@ -9,10 +9,15 @@ class SettingPiece<T> {
     T defaultValue,
     String settingName, String description}) {
 
-    this.value = defaultValue;
     this.defaultValue = defaultValue;
+    this.value = defaultValue;
     this.settingName = settingName;
     this.description = description;
+  }
+
+  void saveValue(T value) {
+    // TODO: connect DB
+    this.value = value;
   }
 
   @override
@@ -21,33 +26,41 @@ class SettingPiece<T> {
   }
 }
 
+enum SettingsType {
+  USER_NAME,
+  USER_PWD,
+  HIDE_TOP_BAR,
+  HIDE_HOME_KEY,
+  AUTO_CONNECTION
+}
+
 class GlobalSettings {
 
-  static Map<String, SettingPiece> _buildDefaultSettings() {
+  static Map<SettingsType, SettingPiece> _buildDefaultSettings() {
     return {
-      "user-name": new SettingPiece<String>(
+      SettingsType.USER_NAME: new SettingPiece<String>(
         defaultValue: "anonymous",
         settingName: "User name",
         description: "user name",
       ), // TODO: i8n needed
-      "user-pwd": new SettingPiece<String>(
+      SettingsType.USER_PWD: new SettingPiece<String>(
         defaultValue: "",
         settingName: "User password",
         description: "user password",
       ),
 
-      "hide-top-bar": new SettingPiece<bool>(
+      SettingsType.HIDE_TOP_BAR: new SettingPiece<bool>(
         defaultValue: true,
         settingName: "Hide topbar",
         description: "enable automatic hide top-bar option",
       ),
-      "hide-home-key": new SettingPiece<bool>(
+      SettingsType.HIDE_HOME_KEY: new SettingPiece<bool>(
         defaultValue: false,
         settingName: "Hide homekey",
         description: "enable automatic hide home-key option",
       ),
 
-      "auto-connection": new SettingPiece<bool>(
+      SettingsType.AUTO_CONNECTION: new SettingPiece<bool>(
         defaultValue: true,
         settingName: "Auto connection",
         description: "enable auto connection",
@@ -55,7 +68,7 @@ class GlobalSettings {
     };
   }
 
-  static Map<String, SettingPiece> settingsMap = _buildDefaultSettings();
+  static Map<SettingsType, SettingPiece> settingsMap = _buildDefaultSettings();
 
   static void initializeGlobalSettings() {
     // TODO: connection SQL-Lite-3 DataBase

@@ -7,8 +7,8 @@ class UtilitySystem {
     if (enable) SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     else {
       List<SystemUiOverlay> systemUI = [];
-      if (!GlobalSettings.settingsMap["hide-home-key"].value) systemUI.add(SystemUiOverlay.bottom);
-      if (!GlobalSettings.settingsMap["hide-top-bar"].value) systemUI.add(SystemUiOverlay.top);
+      if (!GlobalSettings.settingsMap[SettingsType.HIDE_HOME_KEY].value) systemUI.add(SystemUiOverlay.bottom);
+      if (!GlobalSettings.settingsMap[SettingsType.HIDE_TOP_BAR].value) systemUI.add(SystemUiOverlay.top);
       SystemChrome.setEnabledSystemUIOverlays(systemUI);
     }
   }
