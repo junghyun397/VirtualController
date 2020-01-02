@@ -55,7 +55,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text("Settigs"), // TODO: i8n needed
+        title: Text("Settings"), // TODO: i8n needed
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),

@@ -11,7 +11,6 @@ class UtilitySystem {
       if (!GlobalSettings.settingsMap["hide-top-bar"].value) systemUI.add(SystemUiOverlay.top);
       SystemChrome.setEnabledSystemUIOverlays(systemUI);
     }
-    // else SystemChrome.setEnabledSystemUIOverlays([]); // TODO: find solution remove to safeArea
   }
 
   static void enableFixedDirection(bool enable) {

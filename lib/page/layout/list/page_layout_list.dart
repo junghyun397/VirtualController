@@ -1,5 +1,4 @@
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 
 class PageLayoutList extends StatefulWidget {
@@ -13,15 +12,17 @@ class PageLayoutList extends StatefulWidget {
 class _PageLayoutListState extends DynamicDirectionState<PageLayoutList> {
 
   @override
-  void initState() {
-    UtilitySystem.enableFixedDirection(false);
-    UtilitySystem.enableUIOverlays(true);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text("Layout"), // TODO: i8n needed
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+            onPressed:() => Navigator.pop(context
+          ),
+        )
+      ),
       body: Text(
         "layout info here".toUpperCase()
       ),

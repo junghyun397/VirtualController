@@ -13,13 +13,6 @@ class PageLayoutStore extends StatefulWidget {
 class _PageLayoutStoreState extends DynamicDirectionState<PageLayoutStore> {
 
   @override
-  void initState() {
-    UtilitySystem.enableFixedDirection(false);
-    UtilitySystem.enableUIOverlays(true);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Text(
