@@ -1,4 +1,5 @@
 import 'package:VirtualFlightThrottle/data/data_global_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
@@ -15,37 +16,77 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _resetSettings() {
-    _formKey.currentState.setState(() {GlobalSettings.resetGlobalSettings();});
-    _formKey.currentState.reset();
+  @override
+  void initState() {
+    GlobalSettings().loadSavedGlobalSettings();
+    super.initState();
   }
 
-  CardSettingsText _buildStringSection(SettingsType settingsType, bool required, String validatorRegex, String regexFail) {
+  void _resetSettings(BuildContext context) async {
+    if (!await _showResetSettingsDialog(context)) return;
+    GlobalSettings().resetGlobalSettings();
+    Navigator.pop(context);
+    Navigator.pushNamed(context, "/settings");
+  }
+
+  Future<bool> _showResetSettingsDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Reset Settings"),
+          content: const Text("Reset settings?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("CANCEL"),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  CardSettingsInstructions _buildInstruction(SettingsType settingsType) {
+    return CardSettingsInstructions(
+      text: GlobalSettings().settingsMap[settingsType].description,
+    );
+  }
+
+  CardSettingsText _buildStringSection(SettingsType settingsType, bool required, String Function(String) validator) {
     return CardSettingsText(
-      label: GlobalSettings.settingsMap[settingsType].settingName,
-      hintText: GlobalSettings.settingsMap[settingsType].defaultValue,
-      initialValue: GlobalSettings.settingsMap[settingsType].value,
+      label: GlobalSettings().settingsMap[settingsType].settingName,
+      hintText: GlobalSettings().settingsMap[settingsType].defaultValue,
+      initialValue: GlobalSettings().settingsMap[settingsType].value,
       requiredIndicator: required ? Text("*", style: TextStyle(color: Colors.red)) : Text(""),
       autovalidate: true,
-      validator: validatorRegex == null ? (_) => null : (val) {
-        if ((!new RegExp(validatorRegex).hasMatch(val)) && val != "")
-          return regexFail;
-        else return null;
-      },
-
+      validator: validator,
       onChanged: (val) {
-        setState(() {GlobalSettings.settingsMap[settingsType].saveValue(val);});
+        setState(() {
+          GlobalSettings().settingsMap[settingsType].value = val;
+          SQLite3Helper().insertSettings(settingsType);
+        });
       },
     );
   }
 
   CardSettingsSwitch _buildSwitchSection(SettingsType settingsType) {
     return CardSettingsSwitch(
-      label: GlobalSettings.settingsMap[settingsType].settingName,
-      initialValue: GlobalSettings.settingsMap[settingsType].value,
-
+      label: GlobalSettings().settingsMap[settingsType].settingName,
+      initialValue: GlobalSettings().settingsMap[settingsType].value,
       onChanged: (val) {
-        setState(() {GlobalSettings.settingsMap[settingsType].saveValue(val);});
+        setState(() {
+          GlobalSettings().settingsMap[settingsType].value = val;
+          SQLite3Helper().insertSettings(settingsType);
+        });
       }
     );
   }
@@ -55,7 +96,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text("Settings"), // TODO: i8n needed
+        title: Text("Settings"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -63,23 +104,29 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: this._resetSettings,
+            onPressed: () => this._resetSettings(context),
           ),
         ],
       ),
       body: Form(
         key: this._formKey,
         child: CardSettings.sectioned(
-          labelWidth: 150,
+          labelWidth: 200,
           children: <CardSettingsSection>[
             CardSettingsSection(
               header: CardSettingsHeader(
                 label: "User Account",
               ),
               children: <Widget>[
-                this._buildStringSection(SettingsType.USER_NAME, false,
-                    "^[a-zA-Z0-9-._]{3,20}\$", "please review your account name."), // TODO: i8n needed
-                this._buildStringSection(SettingsType.USER_PWD, false, null, null),
+                this._buildInstruction(SettingsType.USER_NAME),
+                this._buildStringSection(SettingsType.USER_NAME, false, (val) {
+                  if ((!new RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val)) && val != "")
+                    return "please review your account name.";
+                  else return null;
+                }),
+
+                this._buildInstruction(SettingsType.USER_PWD),
+                this._buildStringSection(SettingsType.USER_PWD, false, (_) => null),
               ],
             ),
             CardSettingsSection(
@@ -87,7 +134,10 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
                 label: "UI Option",
               ),
               children: <Widget>[
+                this._buildInstruction(SettingsType.HIDE_TOP_BAR),
                 this._buildSwitchSection(SettingsType.HIDE_TOP_BAR),
+
+                this._buildInstruction(SettingsType.HIDE_HOME_KEY),
                 this._buildSwitchSection(SettingsType.HIDE_HOME_KEY),
               ],
             ),
@@ -96,7 +146,17 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
                 label: "Network",
               ),
               children: <Widget>[
+                this._buildInstruction(SettingsType.AUTO_CONNECTION),
                 this._buildSwitchSection(SettingsType.AUTO_CONNECTION),
+              ],
+            ),
+            CardSettingsSection(
+              header: CardSettingsHeader(
+                label: "Hardware",
+              ),
+              children: <Widget>[
+                this._buildInstruction(SettingsType.USE_VIBRATION),
+                this._buildSwitchSection(SettingsType.USE_VIBRATION),
               ],
             )
           ],

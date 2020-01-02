@@ -1,24 +1,36 @@
-class SettingPiece<T> {
+import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+
+enum SettingsType {
+  USER_NAME,
+  USER_PWD,
+  HIDE_TOP_BAR,
+  HIDE_HOME_KEY,
+  AUTO_CONNECTION,
+  USE_VIBRATION,
+}
+
+SettingsType getSettingsTypeFromString(String sourceString) {
+  SettingsType result;
+  SettingsType.values.forEach((val) {
+    if (val.toString() == sourceString) result = val;
+  });
+  return result;
+}
+
+abstract class SettingData<T> {
   T value;
   T defaultValue;
 
   String settingName;
   String description;
 
-  SettingPiece({
-    T defaultValue,
-    String settingName, String description}) {
-
-    this.defaultValue = defaultValue;
-    this.value = defaultValue;
-    this.settingName = settingName;
-    this.description = description;
+  SettingData(
+    this.defaultValue,
+    this.settingName, this.description) {
+    this.value = this.defaultValue;
   }
 
-  void saveValue(T value) {
-    // TODO: connect DB
-    this.value = value;
-  }
+  void setValue(String sourceString);
 
   @override
   String toString() {
@@ -26,56 +38,98 @@ class SettingPiece<T> {
   }
 }
 
-enum SettingsType {
-  USER_NAME,
-  USER_PWD,
-  HIDE_TOP_BAR,
-  HIDE_HOME_KEY,
-  AUTO_CONNECTION
+class StringSettingData extends SettingData<String> {
+  StringSettingData({String defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
+
+  @override
+  void setValue(String sourceString) => value = sourceString;
+
+}
+
+class BooleanSettingData extends SettingData<bool> {
+  BooleanSettingData({bool defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
+
+  @override
+  void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
+
+}
+
+
+class IntegerSettingData extends SettingData<int> {
+  IntegerSettingData({int defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
+
+  @override
+  void setValue(String sourceString) => value = int.parse(sourceString);
 }
 
 class GlobalSettings {
 
-  static Map<SettingsType, SettingPiece> _buildDefaultSettings() {
+  static final GlobalSettings _singleton = new GlobalSettings._internal();
+  factory GlobalSettings() =>  _singleton;
+  GlobalSettings._internal();
+
+  Map<SettingsType, SettingData> settingsMap = _loadSavedGlobalSettings();
+
+  void resetGlobalSettings() {
+    this.settingsMap = _buildDefaultSettings();
+    SettingsType.values.forEach((val) => SQLite3Helper().insertSettings(val));
+  }
+
+  void loadSavedGlobalSettings() async {
+    Map<SettingsType, String> settingsList = await SQLite3Helper().getSavedSettingsValue();
+    settingsList.forEach((key, value) {
+      this.settingsMap[key].setValue(value);
+    });
+  }
+
+  static Map<SettingsType, SettingData> _loadSavedGlobalSettings() {
+    Map<SettingsType, SettingData> result = _buildDefaultSettings();
+    var sync = () async {
+      Map<SettingsType, String> settingsList = await SQLite3Helper().getSavedSettingsValue();
+      settingsList.forEach((key, value) {
+        result[key].setValue(value);
+      });
+    };
+    sync();
+    return result;
+  }
+
+  static Map<SettingsType, SettingData> _buildDefaultSettings() {
     return {
-      SettingsType.USER_NAME: new SettingPiece<String>(
+      SettingsType.USER_NAME: new StringSettingData(
         defaultValue: "anonymous",
         settingName: "User name",
-        description: "user name",
-      ), // TODO: i8n needed
-      SettingsType.USER_PWD: new SettingPiece<String>(
+        description: "Set nickname when sharing layout",
+      ),
+      SettingsType.USER_PWD: new StringSettingData(
         defaultValue: "",
         settingName: "User password",
-        description: "user password",
+        description: "Use password when sharing layout",
       ),
 
-      SettingsType.HIDE_TOP_BAR: new SettingPiece<bool>(
+      SettingsType.HIDE_TOP_BAR: new BooleanSettingData(
         defaultValue: true,
         settingName: "Hide topbar",
-        description: "enable automatic hide top-bar option",
+        description: "Enable auto top bar hide",
       ),
-      SettingsType.HIDE_HOME_KEY: new SettingPiece<bool>(
+      SettingsType.HIDE_HOME_KEY: new BooleanSettingData(
         defaultValue: false,
         settingName: "Hide homekey",
-        description: "enable automatic hide home-key option",
+        description: "Enable auto home key hide",
       ),
 
-      SettingsType.AUTO_CONNECTION: new SettingPiece<bool>(
+      SettingsType.AUTO_CONNECTION: new BooleanSettingData(
         defaultValue: true,
         settingName: "Auto connection",
-        description: "enable auto connection",
+        description: "Enable automatic connection at startup",
       ),
+
+      SettingsType.USE_VIBRATION: new BooleanSettingData(
+        defaultValue: true,
+        settingName: "Use vibration",
+        description: "Enable vibration feedback"
+      )
     };
-  }
-
-  static Map<SettingsType, SettingPiece> settingsMap = _buildDefaultSettings();
-
-  static void initializeGlobalSettings() {
-    // TODO: connection SQL-Lite-3 DataBase
-  }
-
-  static void resetGlobalSettings() {
-    settingsMap = _buildDefaultSettings();
   }
 
 }
