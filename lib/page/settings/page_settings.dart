@@ -16,12 +16,6 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    GlobalSettings().loadSavedGlobalSettings();
-    super.initState();
-  }
-
   void _resetSettings(BuildContext context) async {
     if (!await _showResetSettingsDialog(context)) return;
     GlobalSettings().resetGlobalSettings();
@@ -111,7 +105,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
       body: Form(
         key: this._formKey,
         child: CardSettings.sectioned(
-          labelWidth: 200,
+          labelWidth: 150,
           children: <CardSettingsSection>[
             CardSettingsSection(
               header: CardSettingsHeader(

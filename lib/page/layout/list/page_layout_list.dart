@@ -19,8 +19,7 @@ class _PageLayoutListState extends DynamicDirectionState<PageLayoutList> {
         title: Text("Layout"), // TODO: i8n needed
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-            onPressed:() => Navigator.pop(context
-          ),
+            onPressed:() => Navigator.pop(context),
         )
       ),
       body: Text(

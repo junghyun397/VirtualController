@@ -1,3 +1,5 @@
+import 'package:VirtualFlightThrottle/network/network_agent.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +12,7 @@ class PageNetwork extends StatefulWidget {
 }
 
 class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +24,11 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           onPressed:() => Navigator.pop(context),
         )
       ),
-      body: Text(
-          "network settings here".toUpperCase()
+      body: SafeArea(
+        child: FlatButton(
+          onPressed: () => GlobalNetworkManager().networkManager.sendData(new NetworkData(0, true)),
+          child: Text("CLICK"),
+        ),
       ),
     );
   }

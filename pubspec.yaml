@@ -20,6 +20,8 @@ dependencies:
 
   path_provider: ^1.5.1
 
+  ping_discover_network: ^0.2.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
