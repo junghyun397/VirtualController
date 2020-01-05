@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:VirtualFlightThrottle/network/network_agent.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
+
+NetworkManager globalNetworkManager = new WifiNetworkManager();
 
 abstract class NetworkManager {
 
@@ -11,9 +15,9 @@ abstract class NetworkManager {
 
   List<NetworkData> _buffer = [];
 
-  void findAliveTargetList(Function(List<String>) onDone);
+  Future<List<String>> findAliveTargetList();
 
-  void connectionToTarget(String targetAddress, Function() onConnected, Function() onSessionLost);
+  Future<void> connectToTarget(String targetAddress, Function() onSessionLost);
 
   void sendData(NetworkData networkData) {
     if (!this.isConnected) {
@@ -33,45 +37,53 @@ abstract class NetworkManager {
 
 class WifiNetworkManager extends NetworkManager {
 
-  static const int port = 42424;
+  static const int _port = 42424;
+
+  static const int _timeout = 3;
+
+  static Future<bool> checkWifiConnection() async {
+    return await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
+  }
+
+  static Future<String> getIPAddress() async {
+    return await Connectivity().getWifiIP();
+  }
 
   @override
-  void findAliveTargetList(Function(List<String>) onDone) {
+  Future<List<String>> findAliveTargetList() async {
+    if (!await checkWifiConnection()) return Future.value([]);
+    String ip = await getIPAddress();
+    final String subnet = ip.substring(0, ip.lastIndexOf("."));
+
     final stream = NetworkAnalyzer.discover2(
-      '192.168.0', port,
-      timeout: Duration(seconds: 5),
+      subnet, _port,
+      timeout: Duration(seconds: _timeout),
     );
+
+    Completer<List<String>> completer = new Completer<List<String>>();
 
     List<String> founds = [];
     stream.listen((NetworkAddress address) {
       if (address.exists) founds.add(address.ip);
-    }).onDone(() => onDone(founds));
+    }).onDone(() => completer.complete(founds));
+
+    return completer.future;
   }
 
   @override
-  void connectionToTarget(String targetAddress, Function() onConnected, Function() onSessionLost) {
-    Socket.connect(targetAddress, port).then((socket) {
+  Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {
+    Completer<void> completer = new Completer<void>();
+
+    Socket.connect(targetAddress, _port).then((socket) {
       this._targetNetworkAgent = new WiFiNetworkAgent(socket);
       this.isConnected = true;
+      completer.complete();
     }).catchError((e) {
       this.isConnected = false;
       onSessionLost();
     });
-  }
 
-}
-
-class GlobalNetworkManager {
-
-  static final GlobalNetworkManager _singleton = new GlobalNetworkManager._internal();
-  factory GlobalNetworkManager() =>  _singleton;
-  GlobalNetworkManager._internal();
-
-  NetworkManager networkManager = new WifiNetworkManager();
-
-  void connectNetwork() {
-    this.networkManager.findAliveTargetList((val) => print(val.toString()));
-    this.networkManager.connectionToTarget("10.0.2.2", () => print("CONNECTED!"), () => print("LOST!"));
+    return completer.future;
   }
 
 }

@@ -22,6 +22,12 @@ dependencies:
 
   ping_discover_network: ^0.2.0+1
 
+  vibration: 1.2.2
+
+  async: ^2.3.0
+
+  connectivity: ^0.4.6+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
