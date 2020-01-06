@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/data/data_global_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:card_settings/card_settings.dart';
@@ -18,7 +18,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   void _resetSettings(BuildContext context) async {
     if (!await _showResetSettingsDialog(context)) return;
-    GlobalSettings().resetGlobalSettings();
+    AppSettings().resetGlobalSettings();
     Navigator.pop(context);
     Navigator.pushNamed(context, "/settings");
   }
@@ -51,21 +51,21 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   CardSettingsInstructions _buildInstruction(SettingsType settingsType) {
     return CardSettingsInstructions(
-      text: GlobalSettings().settingsMap[settingsType].description,
+      text: AppSettings().settingsMap[settingsType].description,
     );
   }
 
   CardSettingsText _buildStringSection(SettingsType settingsType, bool required, String Function(String) validator) {
     return CardSettingsText(
-      label: GlobalSettings().settingsMap[settingsType].settingName,
-      hintText: GlobalSettings().settingsMap[settingsType].defaultValue,
-      initialValue: GlobalSettings().settingsMap[settingsType].value,
+      label: AppSettings().settingsMap[settingsType].settingName,
+      hintText: AppSettings().settingsMap[settingsType].defaultValue,
+      initialValue: AppSettings().settingsMap[settingsType].value,
       requiredIndicator: required ? Text("*", style: TextStyle(color: Colors.red)) : Text(""),
       autovalidate: true,
       validator: validator,
       onChanged: (val) {
         setState(() {
-          GlobalSettings().settingsMap[settingsType].value = val;
+          AppSettings().settingsMap[settingsType].value = val;
           SQLite3Helper().insertSettings(settingsType);
         });
       },
@@ -74,11 +74,11 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   CardSettingsSwitch _buildSwitchSection(SettingsType settingsType) {
     return CardSettingsSwitch(
-      label: GlobalSettings().settingsMap[settingsType].settingName,
-      initialValue: GlobalSettings().settingsMap[settingsType].value,
+      label: AppSettings().settingsMap[settingsType].settingName,
+      initialValue: AppSettings().settingsMap[settingsType].value,
       onChanged: (val) {
         setState(() {
-          GlobalSettings().settingsMap[settingsType].value = val;
+          AppSettings().settingsMap[settingsType].value = val;
           SQLite3Helper().insertSettings(settingsType);
         });
       }

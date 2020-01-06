@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/network/network_manager.dart';
+import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +17,12 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
 
   Future<List<String>> _fetchAliveTargetList() async {
     return this._memoizer.runOnce(() async {
-      return await globalNetworkManager.findAliveTargetList();
+      return await AppNetworkManager().val.findAliveTargetList();
     });
   }
 
   void _refetchAliveTargetList() {
     if (!this._memoizer.hasRun) return;
-    print("dd");
     this.setState(() {});
   }
 
@@ -58,7 +57,25 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Text("Target client not founded"),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  "Target client not found.",
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(
+                  width: 300,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      "Please check if Wi-Fi is turned on and if the PC side client is running.",
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -73,18 +90,17 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: true,
-          title: Text("Network"), // TODO: i8n needed
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
+        title: Text("Network"), // TODO: i8n needed
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _refetchAliveTargetList,
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: _refetchAliveTargetList,
-            ),
-          ],
+        ],
       ),
       body: SafeArea(
         child: FutureBuilder(

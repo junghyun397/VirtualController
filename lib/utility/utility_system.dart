@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/data/data_global_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:flutter/services.dart';
 
 class UtilitySystem {
@@ -7,8 +7,8 @@ class UtilitySystem {
     if (enable) SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     else {
       List<SystemUiOverlay> systemUI = [];
-      if (!GlobalSettings().settingsMap[SettingsType.HIDE_HOME_KEY].value) systemUI.add(SystemUiOverlay.bottom);
-      if (!GlobalSettings().settingsMap[SettingsType.HIDE_TOP_BAR].value) systemUI.add(SystemUiOverlay.top);
+      if (!AppSettings().settingsMap[SettingsType.HIDE_HOME_KEY].value) systemUI.add(SystemUiOverlay.bottom);
+      if (!AppSettings().settingsMap[SettingsType.HIDE_TOP_BAR].value) systemUI.add(SystemUiOverlay.top);
       SystemChrome.setEnabledSystemUIOverlays(systemUI);
     }
   }

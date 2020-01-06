@@ -1,38 +1,28 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'dart:io';
 
-import 'package:VirtualFlightThrottle/network/network_agent.dart';
+import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
 
-NetworkManager globalNetworkManager = new WifiNetworkManager();
+class WiFiNetworkAgent extends NetworkAgent {
 
-abstract class NetworkManager {
+  Socket _socket;
 
-  bool isConnected = false;
+  WiFiNetworkAgent(this._socket);
 
-  NetworkAgent _targetNetworkAgent;
-
-  List<NetworkData> _buffer = [];
-
-  Future<List<String>> findAliveTargetList();
-
-  Future<void> connectToTarget(String targetAddress, Function() onSessionLost);
-
+  @override
   void sendData(NetworkData networkData) {
-    if (!this.isConnected) {
-      this._buffer.add(networkData);
-      return;
-    }
-
-    if (this._buffer.length != 0) {
-      this._buffer.forEach((val) => this._targetNetworkAgent.sendData(val));
-      this._buffer.clear();
-    }
-
-    this._targetNetworkAgent.sendData(networkData);
+    this._socket.add(utf8.encode(networkData.toString()));
   }
-  
+
+  @override
+  void killSession() {
+    this._socket.close();
+  }
+
 }
 
 class WifiNetworkManager extends NetworkManager {
@@ -75,7 +65,7 @@ class WifiNetworkManager extends NetworkManager {
     Completer<void> completer = new Completer<void>();
 
     Socket.connect(targetAddress, _port).then((socket) {
-      this._targetNetworkAgent = new WiFiNetworkAgent(socket);
+      this.targetNetworkAgent = new WiFiNetworkAgent(socket);
       this.isConnected = true;
       completer.complete();
     }).catchError((e) {

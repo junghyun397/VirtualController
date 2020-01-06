@@ -1,24 +1,5 @@
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
-
-enum SettingsType {
-  USER_NAME,
-  USER_PWD,
-
-  HIDE_TOP_BAR,
-  HIDE_HOME_KEY,
-
-  AUTO_CONNECTION,
-
-  USE_VIBRATION,
-}
-
-SettingsType getSettingsTypeFromString(String sourceString) {
-  SettingsType result;
-  SettingsType.values.forEach((val) {
-    if (val.toString() == sourceString) result = val;
-  });
-  return result;
-}
+import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
 
 abstract class SettingData<T> {
   T value;
@@ -46,7 +27,6 @@ class StringSettingData extends SettingData<String> {
 
   @override
   void setValue(String sourceString) => value = sourceString;
-
 }
 
 class BooleanSettingData extends SettingData<bool> {
@@ -54,9 +34,7 @@ class BooleanSettingData extends SettingData<bool> {
 
   @override
   void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
-
 }
-
 
 class IntegerSettingData extends SettingData<int> {
   IntegerSettingData({int defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
@@ -65,11 +43,32 @@ class IntegerSettingData extends SettingData<int> {
   void setValue(String sourceString) => value = int.parse(sourceString);
 }
 
-class GlobalSettings {
+enum NetworkType {WIFI, BLUETOOTH}
+class NetworkTypeSettingData extends SettingData<NetworkType> {
+  NetworkTypeSettingData({NetworkType defaultValue, String settingName, String description}) : super(defaultValue, settingName, description);
 
-  static final GlobalSettings _singleton = new GlobalSettings._internal();
-  factory GlobalSettings() =>  _singleton;
-  GlobalSettings._internal();
+  @override
+  void setValue(String sourceString) => value = UtilityDart.getEnumFromString(NetworkType.values, sourceString);
+}
+
+enum SettingsType {
+  USER_NAME,
+  USER_PWD,
+
+  HIDE_TOP_BAR,
+  HIDE_HOME_KEY,
+
+  NETWORK_TYPE,
+  AUTO_CONNECTION,
+
+  USE_VIBRATION,
+}
+
+class AppSettings {
+
+  static final AppSettings _singleton = new AppSettings._internal();
+  factory AppSettings() =>  _singleton;
+  AppSettings._internal();
 
   Map<SettingsType, SettingData> settingsMap = _loadSavedGlobalSettings();
 
@@ -114,6 +113,11 @@ class GlobalSettings {
         description: "Enable auto home key hide",
       ),
 
+      SettingsType.NETWORK_TYPE: new NetworkTypeSettingData(
+          defaultValue: NetworkType.WIFI,
+          settingName: "Network Type",
+          description: "Set network interface for VFT feeder"
+      ),
       SettingsType.AUTO_CONNECTION: new BooleanSettingData(
         defaultValue: true,
         settingName: "Auto connection",
@@ -124,7 +128,7 @@ class GlobalSettings {
         defaultValue: true,
         settingName: "Use vibration",
         description: "Enable vibration feedback"
-      )
+      ),
     };
   }
 
