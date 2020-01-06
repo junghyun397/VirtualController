@@ -1,12 +1,13 @@
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:flutter/material.dart';
 
+const String PAGE_LAYOUT_STORE_ROUTE = "/layout/store";
+
 class PageLayoutStore extends StatefulWidget {
   PageLayoutStore({Key key}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PageLayoutStoreState();
-
 }
 
 class _PageLayoutStoreState extends DynamicDirectionState<PageLayoutStore> {

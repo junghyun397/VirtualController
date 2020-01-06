@@ -3,27 +3,25 @@ import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
+const String PAGE_NETWORK_ROUTE = "/network";
+
 class PageNetwork extends StatefulWidget {
   PageNetwork({Key key}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PageNetworkState();
-
 }
 
 class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
 
-  final AsyncMemoizer<List<String>> _memoizer = AsyncMemoizer<List<String>>();
+  final AsyncCache<List<String>> _aliveTargetCache = AsyncCache<List<String>>(const Duration(hours: 1));
 
-  Future<List<String>> _fetchAliveTargetList() async {
-    return this._memoizer.runOnce(() async {
-      return await AppNetworkManager().val.findAliveTargetList();
-    });
-  }
+  Future<List<String>> get _aliveTargetList => this._aliveTargetCache.fetch(() {
+    return AppNetworkManager().val.findAliveTargetList();
+  });
 
   void _refetchAliveTargetList() {
-    if (!this._memoizer.hasRun) return;
-    this.setState(() {});
+    this.setState(() {this._aliveTargetCache.invalidate();});
   }
 
   Widget _buildInProcessing(BuildContext context) {
@@ -104,7 +102,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
       ),
       body: SafeArea(
         child: FutureBuilder(
-          future: _fetchAliveTargetList(),
+          future: _aliveTargetList,
           builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
             if (snapshot.hasData && snapshot.data.isEmpty) return this._buildTargetNotFound(context);
             else if (snapshot.hasData && snapshot.data.isNotEmpty) return this._buildTargetList(context);

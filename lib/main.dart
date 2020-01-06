@@ -29,12 +29,12 @@ class VirtualThrottleApp extends StatelessWidget {
 
       initialRoute: "/",
       routes: {
-        "/": (context) => PageMainController(),
-        "/layout": (context) => PageLayoutList(),
-        "/layout/builder": (context) => PageLayoutBuilder(),
-        "/layout/store": (context) => PageLayoutStore(),
-        "/network": (context) => PageNetwork(),
-        "/settings": (context) => PageSettings(),
+        PAGE_MAIN_CONTROLLER_ROUTE: (context) => PageMainController(),
+        PAGE_LAYOUT_LIST_ROUTE: (context) => PageLayoutList(),
+        PAGE_LAYOUT_BUILDER_ROUTE: (context) => PageLayoutBuilder(),
+        PAGE_LAYOUT_STORE_ROUTE: (context) => PageLayoutStore(),
+        PAGE_NETWORK_ROUTE: (context) => PageNetwork(),
+        PAGE_SETTING_ROUTE: (context) => PageSettings(),
       },
       navigatorObservers: [routeObserver],
     );

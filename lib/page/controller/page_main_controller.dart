@@ -1,7 +1,12 @@
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
+import 'package:VirtualFlightThrottle/page/layout/list/page_layout_list.dart';
+import 'package:VirtualFlightThrottle/page/network/page_network.dart';
+import 'package:VirtualFlightThrottle/page/settings/page_settings.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
+const String PAGE_MAIN_CONTROLLER_ROUTE = "/";
 
 class PageMainController extends StatefulWidget {
   PageMainController({Key key}): super(key: key);
@@ -49,7 +54,7 @@ class _PageMainControllerState extends RootFixedDirectionState<PageMainControlle
               color: Colors.black87),
             backgroundColor: Colors.white,
              label: "Layout", // TODO: i8n needed
-            onTap: () => Navigator.pushNamed(context, "/layout"),
+            onTap: () => Navigator.pushNamed(context, PAGE_LAYOUT_LIST_ROUTE),
           ),
           SpeedDialChild(
             child: Icon(
@@ -57,7 +62,7 @@ class _PageMainControllerState extends RootFixedDirectionState<PageMainControlle
               color: Colors.black87),
             backgroundColor: Colors.white,
             label: "PC Client", // TODO: i8n needed
-            onTap: () => Navigator.pushNamed(context, "/network"),
+            onTap: () => Navigator.pushNamed(context, PAGE_NETWORK_ROUTE),
           ),
           SpeedDialChild(
             child: Icon(
@@ -65,7 +70,7 @@ class _PageMainControllerState extends RootFixedDirectionState<PageMainControlle
               color: Colors.black87),
             backgroundColor: Colors.white,
             label: "Setting", // TODO: i8n needed
-            onTap: () => Navigator.pushNamed(context, "/settings"),
+            onTap: () => Navigator.pushNamed(context, PAGE_SETTING_ROUTE),
           ),
         ],
       ),

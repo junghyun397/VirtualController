@@ -4,12 +4,13 @@ import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
 
+const String PAGE_SETTING_ROUTE = "/settings";
+
 class PageSettings extends StatefulWidget {
   PageSettings({Key key}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PageSettingsState();
-
 }
 
 class _PageSettingsState extends DynamicDirectionState<PageSettings> {
