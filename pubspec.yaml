@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  provider: ^4.0.1
+
   flutter_speed_dial: ^1.2.5
 
   card_settings: ^1.5.3

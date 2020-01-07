@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/material.dart';
 
 import 'page/controller/page_main_controller.dart';
@@ -29,12 +30,12 @@ class VirtualThrottleApp extends StatelessWidget {
 
       initialRoute: "/",
       routes: {
-        PAGE_MAIN_CONTROLLER_ROUTE: (context) => PageMainController(),
-        PAGE_LAYOUT_LIST_ROUTE: (context) => PageLayoutList(),
-        PAGE_LAYOUT_BUILDER_ROUTE: (context) => PageLayoutBuilder(),
-        PAGE_LAYOUT_STORE_ROUTE: (context) => PageLayoutStore(),
-        PAGE_NETWORK_ROUTE: (context) => PageNetwork(),
-        PAGE_SETTING_ROUTE: (context) => PageSettings(),
+        Routes.PAGE_MAIN_CONTROLLER: (context) => PageMainController(),
+        Routes.PAGE_LAYOUT_LIST: (context) => PageLayoutList(),
+        Routes.PAGE_LAYOUT_BUILDER: (context) => PageLayoutBuilder(),
+        Routes.PAGE_LAYOUT_STORE: (context) => PageLayoutStore(),
+        Routes.PAGE_NETWORK: (context) => PageNetwork(),
+        Routes.PAGE_SETTING: (context) => PageSettings(),
       },
       navigatorObservers: [routeObserver],
     );

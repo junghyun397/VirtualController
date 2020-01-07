@@ -3,8 +3,6 @@ import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
-const String PAGE_NETWORK_ROUTE = "/network";
-
 class PageNetwork extends StatefulWidget {
   PageNetwork({Key key}): super(key: key);
 
@@ -14,14 +12,11 @@ class PageNetwork extends StatefulWidget {
 
 class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
 
-  final AsyncCache<List<String>> _aliveTargetCache = AsyncCache<List<String>>(const Duration(hours: 1));
+  void _fetchAliveTargetList() {
 
-  Future<List<String>> get _aliveTargetList => this._aliveTargetCache.fetch(() {
-    return AppNetworkManager().val.findAliveTargetList();
-  });
+  }
 
   void _refetchAliveTargetList() {
-    this.setState(() {this._aliveTargetCache.invalidate();});
   }
 
   Widget _buildInProcessing(BuildContext context) {
@@ -66,8 +61,8 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      "Please check if Wi-Fi is turned on and if the PC side client is running.",
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                      "Please check if Wi-Fi or Bluetooth is turned on and if the PC side client is running.",
+                      style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -102,7 +97,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
       ),
       body: SafeArea(
         child: FutureBuilder(
-          future: _aliveTargetList,
+          future: null,
           builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
             if (snapshot.hasData && snapshot.data.isEmpty) return this._buildTargetNotFound(context);
             else if (snapshot.hasData && snapshot.data.isNotEmpty) return this._buildTargetList(context);
