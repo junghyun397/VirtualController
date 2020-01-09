@@ -1,7 +1,7 @@
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/material.dart';
 
-import 'page/controller/page_main_controller.dart';
+import 'page/controller/page_main_panel.dart';
 import 'page/direction_state.dart';
 import 'page/layout/builder/page_layout_builder.dart';
 import 'page/layout/list/page_layout_list.dart';
@@ -18,10 +18,6 @@ class VirtualThrottleApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blueGrey,
-      ),
 
       // TODO: i8n initialize
       // localizationsDelegates: [S.delegate],
@@ -30,7 +26,7 @@ class VirtualThrottleApp extends StatelessWidget {
 
       initialRoute: "/",
       routes: {
-        Routes.PAGE_MAIN_CONTROLLER: (context) => PageMainController(),
+        Routes.PAGE_MAIN_PANEL: (context) => PageMainPanel(),
         Routes.PAGE_LAYOUT_LIST: (context) => PageLayoutList(),
         Routes.PAGE_LAYOUT_BUILDER: (context) => PageLayoutBuilder(),
         Routes.PAGE_LAYOUT_STORE: (context) => PageLayoutStore(),

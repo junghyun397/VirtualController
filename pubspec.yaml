@@ -30,6 +30,8 @@ dependencies:
 
   connectivity: ^0.4.6+2
 
+  flutter_xlider: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

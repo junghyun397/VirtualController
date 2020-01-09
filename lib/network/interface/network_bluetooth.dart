@@ -1,7 +1,5 @@
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 
-// TODO: implement bluetooth
-
 class BlueToothNetworkAgent extends NetworkAgent {
 
   @override
@@ -18,5 +16,10 @@ class BlueToothNetworkManager extends NetworkManager {
 
   @override
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {return Future.value();}
+
+  @override
+  String toString() {
+    return "Bluetooth";
+  }
 
 }

@@ -1,6 +1,6 @@
 class Routes {
 
-  static const String PAGE_MAIN_CONTROLLER = "/";
+  static const String PAGE_MAIN_PANEL = "/";
 
   static const String PAGE_LAYOUT_LIST = "/layout";
   static const String PAGE_LAYOUT_BUILDER = "/layout/builder";

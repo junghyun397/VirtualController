@@ -76,4 +76,9 @@ class WifiNetworkManager extends NetworkManager {
     return completer.future;
   }
 
+  @override
+  String toString() {
+    return "WiFi";
+  }
+
 }

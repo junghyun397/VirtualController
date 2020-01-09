@@ -1,6 +1,5 @@
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
 class PageNetwork extends StatefulWidget {
@@ -61,7 +60,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      "Please check if Wi-Fi or Bluetooth is turned on and if the PC side client is running.",
+                      "Please check if " + AppNetworkManager().val.toString() + " is turned on and if the PC side client is running.",
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -83,7 +82,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Network"), // TODO: i8n needed
+        title: Text("Network"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -97,7 +96,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
       ),
       body: SafeArea(
         child: FutureBuilder(
-          future: null,
+          future: AppNetworkManager().val.findAliveTargetList(),
           builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
             if (snapshot.hasData && snapshot.data.isEmpty) return this._buildTargetNotFound(context);
             else if (snapshot.hasData && snapshot.data.isNotEmpty) return this._buildTargetList(context);
