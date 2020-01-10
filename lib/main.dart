@@ -1,5 +1,6 @@
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'page/controller/page_main_panel.dart';
 import 'page/direction_state.dart';
@@ -38,4 +39,12 @@ class VirtualThrottleApp extends StatelessWidget {
   }
 }
 
-void main() => runApp(VirtualThrottleApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays([]);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  runApp(VirtualThrottleApp());
+}

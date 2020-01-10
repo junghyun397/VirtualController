@@ -24,7 +24,7 @@ dependencies:
 
   ping_discover_network: ^0.2.0+1
 
-  vibration: 1.2.2
+  vibrate: ^0.0.4
 
   async: ^2.3.0
 

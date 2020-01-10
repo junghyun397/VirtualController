@@ -11,13 +11,6 @@ class PageNetwork extends StatefulWidget {
 
 class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
 
-  void _fetchAliveTargetList() {
-
-  }
-
-  void _refetchAliveTargetList() {
-  }
-
   Widget _buildInProcessing(BuildContext context) {
     return Center(
       child: Column(
@@ -90,13 +83,13 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _refetchAliveTargetList,
+            onPressed: () => null,
           ),
         ],
       ),
       body: SafeArea(
         child: FutureBuilder(
-          future: AppNetworkManager().val.findAliveTargetList(),
+          future: null,
           builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
             if (snapshot.hasData && snapshot.data.isEmpty) return this._buildTargetNotFound(context);
             else if (snapshot.hasData && snapshot.data.isNotEmpty) return this._buildTargetList(context);

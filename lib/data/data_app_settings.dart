@@ -108,9 +108,14 @@ class AppSettings {
         description: "Enable auto top bar hide",
       ),
       SettingsType.HIDE_HOME_KEY: new BooleanSettingData(
-        defaultValue: false,
+        defaultValue: true,
         settingName: "Hide homekey",
         description: "Enable auto home key hide",
+      ),
+      SettingsType.USE_VIBRATION: new BooleanSettingData(
+          defaultValue: true,
+          settingName: "Use vibration",
+          description: "Enable vibration feedback"
       ),
 
       SettingsType.NETWORK_TYPE: new NetworkTypeSettingData(
@@ -122,12 +127,6 @@ class AppSettings {
         defaultValue: true,
         settingName: "Auto connection",
         description: "Enable automatic connection at startup",
-      ),
-
-      SettingsType.USE_VIBRATION: new BooleanSettingData(
-        defaultValue: true,
-        settingName: "Use vibration",
-        description: "Enable vibration feedback"
       ),
     };
   }

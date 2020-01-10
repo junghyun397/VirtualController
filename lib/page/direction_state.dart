@@ -33,6 +33,7 @@ class RootFixedDirectionState<T> extends FixedDirectionState {
 
   @override
   void initState() {
+    UtilitySystem.enableDarkSoftKey();
     UtilitySystem.enableUIOverlays(false);
     UtilitySystem.enableFixedDirection(true);
     super.initState();

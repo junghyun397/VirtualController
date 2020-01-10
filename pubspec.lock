@@ -42,7 +42,7 @@ packages:
       name: card_settings
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.3"
+    version: "1.5.5"
   charcode:
     dependency: transitive
     description:
@@ -103,14 +103,14 @@ packages:
       name: flutter_cupertino_settings
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.0"
   flutter_masked_text:
     dependency: transitive
     description:
       name: flutter_masked_text
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.0"
+    version: "0.8.0"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -129,7 +129,7 @@ packages:
       name: flutter_xlider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   image:
     dependency: transitive
     description:
@@ -143,7 +143,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.16.1"
   matcher:
     dependency: transitive
     description:
@@ -296,13 +296,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
-  vibration:
+  vibrate:
     dependency: "direct main"
     description:
-      name: vibration
+      name: vibrate
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.2"
+    version: "0.0.4"
   xml:
     dependency: transitive
     description:

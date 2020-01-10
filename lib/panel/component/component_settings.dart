@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:VirtualFlightThrottle/panel/component/builder/component_builder.dart';
+import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+
 abstract class ComponentDataSetting<T> {
   T value;
   Type type;
   
   String settingName;
 
-  ComponentDataSetting(String sourceString, this.settingName) {
+  ComponentDataSetting(this.settingName, String sourceString) {
     this.setValue(sourceString);
     this.type = this.value.runtimeType;
   }
@@ -20,35 +23,35 @@ abstract class ComponentDataSetting<T> {
 }
 
 class StringComponentDataSetting extends ComponentDataSetting<String> {
-  StringComponentDataSetting(String sourceString, String settingName) : super(sourceString, settingName);
+  StringComponentDataSetting(String settingName, String sourceString) : super(settingName, sourceString);
 
   @override
   void setValue(String sourceString) => this.value = sourceString;
 }
 
 class BooleanComponentDataSetting extends ComponentDataSetting<bool> {
-  BooleanComponentDataSetting(String sourceString, String settingName) : super(sourceString, settingName);
+  BooleanComponentDataSetting(String settingName, String sourceString) : super(settingName, sourceString);
 
   @override
   void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
 }
 
 class IntegerComponentDataSetting extends ComponentDataSetting<int> {
-  IntegerComponentDataSetting(String sourceString, String settingName) : super(sourceString, settingName);
+  IntegerComponentDataSetting(String settingName, String sourceString) : super(settingName, sourceString);
 
   @override
   void setValue(String sourceString) => value = int.parse(sourceString);
 }
 
 class DoubleComponentDataSetting extends ComponentDataSetting<double> {
-  DoubleComponentDataSetting(String sourceString, String settingName) : super(sourceString, settingName);
+  DoubleComponentDataSetting(String settingName, String sourceString) : super(settingName, sourceString);
 
   @override
   void setValue(String sourceString) => value = double.parse(sourceString);
 }
 
 class DoubleListComponentDataSetting extends ComponentDataSetting<List<double>> {
-  DoubleListComponentDataSetting(String sourceString, String settingName) : super(sourceString, settingName);
+  DoubleListComponentDataSetting(String settingName, String sourceString) : super(settingName, sourceString);
 
   @override
   void setValue(String sourceString) => value = json.decode(sourceString);
@@ -57,40 +60,45 @@ class DoubleListComponentDataSetting extends ComponentDataSetting<List<double>> 
 class ComponentSetting {
   String name;
 
-  int width;
-  int height;
-  String controllerType;
-  int targetInput;
+  ComponentType componentType;
+
+  int x, y;
+  int width, height;
+
+  List<int> targetInputs;
 
   Map<String, ComponentDataSetting> settings = new Map<String, ComponentDataSetting>();
 
   ComponentSetting.fromJSON(this.name, Map<String, dynamic> json) {
+    this.componentType = UtilityDart.getEnumFromString(ComponentType.values, json["component_type"]);
+
+    this.x = json["x"];
+    this.y = json["y"];
     this.width = json["width"];
     this.height = json["height"];
-    
-    this.controllerType = json["controller_type"];
-    this.targetInput = json["target_input"];
+
+    this.targetInputs = json["target_inputs"];
 
     json["settings"].forEach((key, val) {
       ComponentDataSetting componentSetting;
       switch (val["type"]) {
         case "String":
-          componentSetting = StringComponentDataSetting(val["value"].toString(), key);
+          componentSetting = StringComponentDataSetting(key, val["value"].toString());
           break;
         case "bool":
-          componentSetting = BooleanComponentDataSetting(val["value"].toString(), key);
+          componentSetting = BooleanComponentDataSetting(key, val["value"].toString());
           break;
         case "int":
-          componentSetting = IntegerComponentDataSetting(val["value"].toString(), key);
+          componentSetting = IntegerComponentDataSetting(key, val["value"].toString());
           break;
         case "double":
-          componentSetting = BooleanComponentDataSetting(val["value"].toString(), key);
+          componentSetting = BooleanComponentDataSetting(key, val["value"].toString());
           break;
         case "List<double>":
-          componentSetting = DoubleListComponentDataSetting(val["value"].toString(), key);
+          componentSetting = DoubleListComponentDataSetting(key, val["value"].toString());
           break;
         default:
-          componentSetting = StringComponentDataSetting(val["value"].toString(), key);
+          componentSetting = StringComponentDataSetting(key, val["value"].toString());
           break;
       }
 
@@ -101,11 +109,14 @@ class ComponentSetting {
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> result = new Map<String, dynamic>();
 
+    result["component_type"] = this.componentType.toString();
+
+    result["x"] = this.x;
+    result["y"] = this.y;
     result["width"] = this.width;
     result["height"] = this.height;
     
-    result["controller_type"] = this.controllerType;
-    result["target_input"] = this.targetInput;
+    result["target_inputs"] = this.targetInputs;
     
     Map<String, String> data = new Map<String, String>();
     this.settings.forEach((key, val) => data[key] = val.toString());
