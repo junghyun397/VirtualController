@@ -1,7 +1,7 @@
-import 'package:VirtualFlightThrottle/panel/component/builder/component_builder.dart';
+import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -14,6 +14,47 @@ class PageMainPanel extends StatefulWidget {
 }
 
 class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
+
+  Widget _buildTargetClientNotFoundAlert(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+        height: 30,
+        color: Colors.red,
+        child: Row(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(right: 5),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              "Target client not found.",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(),
+            RichText(
+              text: TextSpan(
+                text: "go network setting",
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () =>
+                      Navigator.pushNamed(context, Routes.PAGE_NETWORK),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,13 +63,19 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
       resizeToAvoidBottomInset: false,
       extendBody: true,
       body: Container(
-        child: Center(
-          child: Text(
-            "main panel here".toUpperCase(),
-            style: TextStyle(color: Colors.white),
-          ),
+        child: Stack(
+          children: <Widget>[
+            if (!AppNetworkManager().val.isConnected) this._buildTargetClientNotFoundAlert(context),
+            Center(
+              child: Text(
+                "main panel here".toUpperCase(),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
       ),
+      
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: SpeedDial(
         marginBottom: 30,

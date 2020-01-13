@@ -14,8 +14,6 @@ class PageSettings extends StatefulWidget {
 
 class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   void _resetSettings(BuildContext context) async {
     if (!await _showResetSettingsDialog(context)) return;
     AppSettings().resetGlobalSettings();
@@ -133,7 +131,6 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
         ],
       ),
       body: Form(
-        key: this._formKey,
         child: CardSettings.sectioned(
           labelWidth: 150,
           children: <CardSettingsSection>[
