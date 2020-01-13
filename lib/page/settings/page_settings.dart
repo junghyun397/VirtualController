@@ -53,6 +53,20 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
+  CardSettingsInt _buildIntSection(SettingsType settingsType, String unitLabel) {
+    return CardSettingsInt(
+        label: AppSettings().settingsMap[settingsType].settingName,
+        initialValue: AppSettings().settingsMap[settingsType].value,
+        unitLabel: unitLabel,
+        onChanged: (val) {
+          setState(() {
+            AppSettings().settingsMap[settingsType].value = val;
+            SQLite3Helper().insertSettings(settingsType);
+          });
+        }
+    );
+  }
+
   CardSettingsText _buildStringSection(SettingsType settingsType, bool required, String Function(String) validator) {
     return CardSettingsText(
       label: AppSettings().settingsMap[settingsType].settingName,
@@ -159,6 +173,9 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
                 this._buildInstruction(SettingsType.AUTO_CONNECTION),
                 this._buildSwitchSection(SettingsType.AUTO_CONNECTION),
+
+                this._buildInstruction(SettingsType.NETWORK_TIMEOUT),
+                this._buildIntSection(SettingsType.NETWORK_TIMEOUT, "ms"),
               ],
             ),
             CardSettingsSection(

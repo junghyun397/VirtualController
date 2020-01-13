@@ -99,7 +99,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      "Please check if " + AppNetworkManager().val.toString() + " is turned on and if the PC side device is running.",
+                      "Please check if " + AppNetworkManager().val.toString() + " is turned on or if the PC side device is running.",
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -158,7 +158,10 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                         color: Colors.blue,
                       ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => this._refreshTargetList,
+                        ..onTap = () {
+                          AppNetworkManager().val.disconnectCurrentTarget();
+                          this._refreshTargetList();
+                        },
                     ),
                   ),
                 ),
@@ -174,13 +177,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
   void initState() {
     if (AppNetworkManager().val.isConnected)
       this._connectionStateController.add(_ConnectionEvent(_ConnectionState.CONNECTED, null));
-    else {
-      AppNetworkManager().val.findAliveTargetList().then((val) {
-        this._connectionStateController.add(_ConnectionEvent(
-            (val.isEmpty ? _ConnectionState.NOTFOUND : _ConnectionState.FOUND), val));
-      });
-      this._connectionStateController.add(_ConnectionEvent(_ConnectionState.FINDING, null));
-    }
+    else this._refreshTargetList();
     super.initState();
   }
 

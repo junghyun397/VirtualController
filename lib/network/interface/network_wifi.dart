@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'dart:io';
 
+import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
@@ -29,8 +30,6 @@ class WifiNetworkManager extends NetworkManager {
 
   static const int _port = 42424;
 
-  static const int _timeout = 5;
-
   static Future<bool> checkWifiConnection() async {
     return await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
   }
@@ -47,7 +46,7 @@ class WifiNetworkManager extends NetworkManager {
 
     final stream = NetworkAnalyzer.discover2(
       subnet, _port,
-      timeout: Duration(seconds: _timeout),
+      timeout: Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
     );
 
     Completer<List<String>> completer = new Completer<List<String>>();
@@ -72,7 +71,7 @@ class WifiNetworkManager extends NetworkManager {
     }).catchError((e) {
       this.networkStateStreamController.add(false);
       onSessionLost();
-    }).timeout(Duration(seconds: 3), onTimeout: () {
+    }).timeout(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value), onTimeout: () {
       this.networkStateStreamController.add(false);
       onSessionLost();
     });

@@ -48,6 +48,13 @@ abstract class NetworkManager {
 
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost);
 
+  void disconnectCurrentTarget() {
+    if (!this.isConnected) return;
+    this.targetNetworkAgent.killSession();
+    this.networkStateStreamController.add(false);
+    this.isConnected = false;
+  }
+
   void sendData(NetworkData networkData) {
     if (!this.isConnected) {
       this._buffer.add(networkData);
@@ -61,5 +68,4 @@ abstract class NetworkManager {
 
     this.targetNetworkAgent.sendData(networkData);
   }
-  
 }

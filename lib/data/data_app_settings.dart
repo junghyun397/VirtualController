@@ -1,5 +1,6 @@
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class SettingData<T> {
   T value;
@@ -8,9 +9,10 @@ abstract class SettingData<T> {
   String settingName;
   String description;
 
-  SettingData(
-    this.defaultValue,
-    this.settingName, this.description) {
+  SettingData({
+  @required this.defaultValue,
+  @required this.settingName,
+  @required this.description}) {
     this.value = this.defaultValue;
   }
 
@@ -23,21 +25,21 @@ abstract class SettingData<T> {
 }
 
 class StringSettingData extends SettingData<String> {
-  StringSettingData({String defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
+  StringSettingData({String defaultValue, String settingName, String description}): super(defaultValue: defaultValue, settingName: settingName, description: description);
 
   @override
   void setValue(String sourceString) => value = sourceString;
 }
 
 class BooleanSettingData extends SettingData<bool> {
-  BooleanSettingData({bool defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
+  BooleanSettingData({bool defaultValue, String settingName, String description}): super(defaultValue: defaultValue, settingName: settingName, description: description);
 
   @override
   void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
 }
 
 class IntegerSettingData extends SettingData<int> {
-  IntegerSettingData({int defaultValue, String settingName, String description}): super(defaultValue, settingName, description);
+  IntegerSettingData({int defaultValue, String settingName, String description}): super(defaultValue: defaultValue, settingName: settingName, description: description);
 
   @override
   void setValue(String sourceString) => value = int.parse(sourceString);
@@ -45,7 +47,7 @@ class IntegerSettingData extends SettingData<int> {
 
 enum NetworkType {WIFI, BLUETOOTH}
 class NetworkTypeSettingData extends SettingData<NetworkType> {
-  NetworkTypeSettingData({NetworkType defaultValue, String settingName, String description}) : super(defaultValue, settingName, description);
+  NetworkTypeSettingData({NetworkType defaultValue, String settingName, String description}) : super(defaultValue: defaultValue, settingName: settingName, description: description);
 
   @override
   void setValue(String sourceString) => value = UtilityDart.getEnumFromString(NetworkType.values, sourceString);
@@ -60,6 +62,7 @@ enum SettingsType {
 
   NETWORK_TYPE,
   AUTO_CONNECTION,
+  NETWORK_TIMEOUT,
 
   USE_VIBRATION,
 }
@@ -107,15 +110,20 @@ class AppSettings {
         description: "Enable auto home key hide",
       ),
       SettingsType.USE_VIBRATION: new BooleanSettingData(
-          defaultValue: true,
-          settingName: "Use vibration",
-          description: "Enable vibration feedback"
+        defaultValue: true,
+        settingName: "Use vibration",
+        description: "Enable vibration feedback"
       ),
 
       SettingsType.NETWORK_TYPE: new NetworkTypeSettingData(
-          defaultValue: NetworkType.WIFI,
-          settingName: "Network Type",
-          description: "Set network interface for VFT feeder"
+        defaultValue: NetworkType.WIFI,
+        settingName: "Network Type",
+        description: "Set network interface for VFT feeder"
+      ),
+      SettingsType.NETWORK_TIMEOUT: new IntegerSettingData(
+        defaultValue: 1500,
+        settingName: "Network Timeout",
+        description: "Set device discovery and connection timeout (ms)",
       ),
       SettingsType.AUTO_CONNECTION: new BooleanSettingData(
         defaultValue: true,
