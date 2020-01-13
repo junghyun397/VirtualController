@@ -21,7 +21,17 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
       child: Container(
         padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
         height: 30,
-        color: Colors.red,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          boxShadow: [
+            new BoxShadow(
+              color: Colors.black,
+              offset: new Offset(0, 2),
+              blurRadius: 1,
+              spreadRadius: 3,
+            )
+          ],
+        ),
         child: Row(
           children: <Widget>[
             Container(
@@ -32,7 +42,7 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
               ),
             ),
             Text(
-              "Target client not found.",
+              "Target device not found.",
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -42,7 +52,8 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
               text: TextSpan(
                 text: "go network setting",
                 style: TextStyle(
-                  color: Colors.blue,
+                  color: Colors.blueAccent,
+                  decoration: TextDecoration.underline,
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () =>
@@ -65,7 +76,14 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
       body: Container(
         child: Stack(
           children: <Widget>[
-            if (!AppNetworkManager().val.isConnected) this._buildTargetClientNotFoundAlert(context),
+            StreamBuilder<bool>(
+              stream: AppNetworkManager().val.networkStateStreamController.stream,
+              initialData: false,
+              builder: (context, snapshot) {
+                if (!snapshot.data) return this._buildTargetClientNotFoundAlert(context);
+                return Container();
+              }
+            ),
             Center(
               child: Text(
                 "main panel here".toUpperCase(),

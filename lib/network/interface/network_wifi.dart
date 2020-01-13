@@ -11,7 +11,7 @@ class WiFiNetworkAgent extends NetworkAgent {
 
   Socket _socket;
 
-  WiFiNetworkAgent(this._socket);
+  WiFiNetworkAgent(this._socket, String address): super(address);
 
   @override
   void sendData(NetworkData networkData) {
@@ -29,7 +29,7 @@ class WifiNetworkManager extends NetworkManager {
 
   static const int _port = 42424;
 
-  static const int _timeout = 3;
+  static const int _timeout = 5;
 
   static Future<bool> checkWifiConnection() async {
     return await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
@@ -65,11 +65,15 @@ class WifiNetworkManager extends NetworkManager {
     Completer<void> completer = new Completer<void>();
 
     Socket.connect(targetAddress, _port).then((socket) {
-      this.targetNetworkAgent = new WiFiNetworkAgent(socket);
+      this.targetNetworkAgent = WiFiNetworkAgent(socket, targetAddress);
       this.isConnected = true;
+      this.networkStateStreamController.add(true);
       completer.complete();
     }).catchError((e) {
-      this.isConnected = false;
+      this.networkStateStreamController.add(false);
+      onSessionLost();
+    }).timeout(Duration(seconds: 3), onTimeout: () {
+      this.networkStateStreamController.add(false);
       onSessionLost();
     });
 

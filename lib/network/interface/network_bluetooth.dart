@@ -2,6 +2,8 @@ import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 
 class BlueToothNetworkAgent extends NetworkAgent {
 
+  BlueToothNetworkAgent(String address) : super(address);
+
   @override
   void killSession() {}
 

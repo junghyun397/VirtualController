@@ -23,6 +23,10 @@ class ButtonNetworkData extends NetworkData<bool> {
 
 abstract class NetworkAgent {
 
+  String address;
+
+  NetworkAgent(this.address);
+
   void sendData(NetworkData networkData);
 
   void killSession();
@@ -32,6 +36,9 @@ abstract class NetworkAgent {
 abstract class NetworkManager {
 
   bool isConnected = false;
+
+  // ignore: close_sinks
+  StreamController<bool> networkStateStreamController = StreamController<bool>();
 
   NetworkAgent targetNetworkAgent;
 

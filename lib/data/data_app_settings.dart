@@ -79,13 +79,7 @@ class AppSettings {
 
   static Map<SettingsType, SettingData> _loadSavedGlobalSettings() {
     Map<SettingsType, SettingData> result = _buildDefaultSettings();
-    var sync = () async {
-      Map<SettingsType, String> settingsList = await SQLite3Helper().getSavedSettingsValue();
-      settingsList.forEach((key, value) {
-        result[key].setValue(value);
-      });
-    };
-    sync();
+    SQLite3Helper().getSavedSettingsValue().then((val) => val.forEach((key, value) => result[key].setValue(value)));
     return result;
   }
 
