@@ -73,17 +73,17 @@ class AppSettings {
   factory AppSettings() =>  _singleton;
   AppSettings._internal();
 
-  Map<SettingsType, SettingData> settingsMap = _loadSavedGlobalSettings();
+  Map<SettingsType, SettingData> settingsMap = _buildDefaultSettings();
 
   void resetGlobalSettings() {
     this.settingsMap = _buildDefaultSettings();
     SettingsType.values.forEach((val) => SQLite3Helper().insertSettings(val));
   }
 
-  static Map<SettingsType, SettingData> _loadSavedGlobalSettings() {
+  Future<void> loadSavedGlobalSettings() async {
     Map<SettingsType, SettingData> result = _buildDefaultSettings();
-    SQLite3Helper().getSavedSettingsValue().then((val) => val.forEach((key, value) => result[key].setValue(value)));
-    return result;
+    await SQLite3Helper().getSavedSettingsValue().then((val) => val.forEach((key, value) => result[key].setValue(value)));
+    this.settingsMap = result;
   }
 
   static Map<SettingsType, SettingData> _buildDefaultSettings() {

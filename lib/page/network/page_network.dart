@@ -46,10 +46,10 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
   void _tryConnectToTarget(String target) {
     AppNetworkManager().val.connectToTarget(target, () {
       this._scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("The connection with the server $target failed."),
-        action: SnackBarAction(label: "RETRY", onPressed: () {
+        content: Text("Connection with the server $target failed."),
+        action: SnackBarAction(label: "REFRESH", onPressed: () {
           this._scaffoldKey.currentState.hideCurrentSnackBar();
-          this._tryConnectToTarget(target);
+          this._refreshTargetList();
         }),
       ));
     }).then((val) {
@@ -105,6 +105,15 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                     ),
                   ),
                 ),
+                FlatButton(
+                  onPressed: this._refreshTargetList,
+                  child: Text(
+                    "REFRESH",
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ],
             ),
           )
@@ -113,21 +122,20 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
     );
   }
 
-  Widget _buildTargetTile(BuildContext context, String target) {
-    return ListTile(
-      leading: Icon(
-        Icons.videogame_asset
-      ),
-      title: Text(target),
-      subtitle: Text("Tap to connect with this device"),
-      trailing: Text("ACTIVE", style: TextStyle(color: Colors.green),),
-      onTap: () => this._tryConnectToTarget(target),
-    );
-  }
-
   Widget _buildTargetList(BuildContext context, List<String> deviceList) {
     return ListView(
-      children: deviceList.map((val) => this._buildTargetTile(context, val)).toList(),
+      children: deviceList
+          .map((val) => ListTile(
+                leading: Icon(Icons.videogame_asset),
+                title: Text(val),
+                subtitle: Text("Tap to connect with this device"),
+                trailing: Text(
+                  "ACTIVE",
+                  style: TextStyle(color: Colors.green),
+                ),
+                onTap: () => this._tryConnectToTarget(val),
+              ))
+          .toList(),
     );
   }
 
@@ -149,19 +157,15 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   "Conntcted with device ${AppNetworkManager().val.targetNetworkAgent.address}",
                   style: TextStyle(fontSize: 16),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: RichText(
-                    text: TextSpan(
-                      text: "DISCONNECT",
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          AppNetworkManager().val.disconnectCurrentTarget();
-                          this._refreshTargetList();
-                        },
+                FlatButton(
+                  onPressed: () {
+                    AppNetworkManager().val.disconnectCurrentTarget();
+                    this._refreshTargetList();
+                  },
+                  child: Text(
+                    "DISCONNECT",
+                    style: TextStyle(
+                      color: Colors.blue,
                     ),
                   ),
                 ),

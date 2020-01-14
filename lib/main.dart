@@ -1,8 +1,11 @@
+import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'page/controller/page_main_panel.dart';
+import 'page/main/page_main_panel.dart';
 import 'page/direction_state.dart';
 import 'page/layout/builder/page_layout_builder.dart';
 import 'page/layout/list/page_layout_list.dart';
@@ -46,5 +49,8 @@ void main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+  await SQLite3Helper().initializeDb();
+  await AppSettings().loadSavedGlobalSettings();
+  AppNetworkManager().tryAutoReconnection();
   runApp(VirtualThrottleApp());
 }

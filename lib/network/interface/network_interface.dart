@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+
 
 class NetworkData<T> {
   int targetInput;
@@ -47,6 +50,13 @@ abstract class NetworkManager {
   Future<List<String>> findAliveTargetList();
 
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost);
+  
+  void setConnectedState() {
+    this.isConnected = true;
+    this.networkStateStreamController.add(true);
+    if (AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value)
+      SQLite3Helper().insertRegisteredDevices(this.targetNetworkAgent.address);
+  }
 
   void disconnectCurrentTarget() {
     if (!this.isConnected) return;

@@ -65,8 +65,7 @@ class WifiNetworkManager extends NetworkManager {
 
     Socket.connect(targetAddress, _port).then((socket) {
       this.targetNetworkAgent = WiFiNetworkAgent(socket, targetAddress);
-      this.isConnected = true;
-      this.networkStateStreamController.add(true);
+      this.setConnectedState();
       completer.complete();
     }).catchError((e) {
       this.networkStateStreamController.add(false);
