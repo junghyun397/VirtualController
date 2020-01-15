@@ -10,15 +10,12 @@ server_socket.listen(5)
 print("[o] listen at:", PORT)
 
 while True:
-	client_socket, address = server_socket.accept()
-	print ("[+] connection by:", address)
+    client_socket, address = server_socket.accept()
+    print("[+] connection by:", address)
 
-	while True:
-		data = client_socket.recv(1024).decode()
-		if data == "":
-		    print("[-] disconnected by:", address)
-		    break    
-		print ("[ ] receive data:" , data)
-
-server_socket.close()
-print("[x] end.")
+    while True:
+        data = client_socket.recv(1024).decode()
+        if data == "":
+            print("[-] disconnected by:", address)
+            break
+        print("[ ] receive data:", data)

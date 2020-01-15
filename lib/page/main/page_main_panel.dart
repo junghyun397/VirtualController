@@ -19,16 +19,16 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+        padding: EdgeInsets.only(left: 10),
         height: 30,
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: Colors.redAccent,
           boxShadow: [
             new BoxShadow(
               color: Colors.black,
-              offset: new Offset(0, 2),
+              offset: new Offset(0, 1),
               blurRadius: 1,
-              spreadRadius: 3,
+              spreadRadius: 2,
             )
           ],
         ),
@@ -48,16 +48,14 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
               ),
             ),
             Spacer(),
-            RichText(
-              text: TextSpan(
-                text: "go network setting",
+            FlatButton(
+              onPressed: () => Navigator.pushNamed(context, Routes.PAGE_NETWORK),
+              child: Text(
+                "Go to network settings",
                 style: TextStyle(
                   color: Colors.blueAccent,
                   decoration: TextDecoration.underline,
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () =>
-                      Navigator.pushNamed(context, Routes.PAGE_NETWORK),
               ),
             ),
           ],
@@ -124,11 +122,11 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
           ),
           SpeedDialChild(
             child: const Icon(
-              Icons.cast_connected,
+              Icons.cast,
               color: Colors.black87,
             ),
             backgroundColor: Colors.white,
-            label: "PC Client",
+            label: "Network",
             labelStyle: const TextStyle(
               color: Colors.black54,
             ),

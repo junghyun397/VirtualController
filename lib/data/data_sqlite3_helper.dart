@@ -14,35 +14,32 @@ class SQLite3Helper {
   factory SQLite3Helper() =>  _singleton;
   SQLite3Helper._internal();
 
+  static const int DB_VERSION = 4;
+
   Database _db;
 
   Future<void> initializeDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "virtual_throttle_db.db");
-    _db = await openDatabase(path, version: 3, onCreate: _onCreate);
+    String path = join(documentsDirectory.path, "virtual_throttle_database.db");
+    _db = await openDatabase(path, version: DB_VERSION, onCreate: _createTables, onOpen: (db) => this._createTables(db, DB_VERSION));
   }
 
-  Future<void> _insertOrUpdate(String table, Map<String, dynamic> values) async {
-    int id = await this._db.update(table, values);
-    if (id == 0) await this._db.insert(table, values);
-  }
-
-  void _onCreate(Database db, int version) async {
+  void _createTables(Database db, int version) async {
     await db.execute(
-      "CREATE TABLE settings("
+      "CREATE TABLE IF NOT EXISTS settings("
           "settings_type TEXT PRIMARY KEY, "
           "value TEXT"
-      ");"
-
-      "CREATE TABLE layouts("
-          "layout_name TEXT PRIMARY KEY, "
-          "value TEXT, "
-          "date DATETIME DEFAULT CURRENT_TIMESTAMP"
-      ");"
-
-      "CREATE TABLE registered_devices("
-          "address TEXT PRIMARY KEY"
-      ");"
+      ")");
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS layouts("
+        "layout_name TEXT PRIMARY KEY, "
+        "value TEXT, "
+        "date DATETIME DEFAULT CURRENT_TIMESTAMP"
+      ")");
+    await db.execute(
+      "CREATE TABLE IF NOT EXISTS registered_devices("
+        "address TEXT PRIMARY KEY"
+      ")"
     );
   }
 

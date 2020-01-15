@@ -18,6 +18,7 @@ class VirtualThrottleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "VirtualThrottle",
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
@@ -42,8 +43,7 @@ class VirtualThrottleApp extends StatelessWidget {
   }
 }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> initializeGlobalComponent() async {
   await SystemChrome.setEnabledSystemUIOverlays([]);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
@@ -52,5 +52,10 @@ void main() async {
   await SQLite3Helper().initializeDb();
   await AppSettings().loadSavedGlobalSettings();
   AppNetworkManager().tryAutoReconnection();
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeGlobalComponent();
   runApp(VirtualThrottleApp());
 }

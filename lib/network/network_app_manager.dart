@@ -3,6 +3,8 @@ import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_bluetooth.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_wifi.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AppNetworkManager {
 
@@ -26,11 +28,20 @@ class AppNetworkManager {
   Future<void> tryAutoReconnection() async {
     if ((!this.val.isConnected) && AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value) {
       List<String> registered = await SQLite3Helper().getSavedRegisteredDevices();
-      this.val.findAliveTargetList().then((val) {
-        val.forEach((target) {
-          if (registered.contains(target)) this.val.connectToTarget(target, () => null);
-        });
-      });
+      this.val.findAliveTargetList().then((val) => val.forEach((target) {
+        if (registered.contains(target)) {
+          this.val.connectToTarget(target, () => null);
+          Fluttertoast.showToast(
+            msg: "Connected with device $target",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      }));
     }
   }
 
