@@ -1,5 +1,6 @@
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
+import 'package:VirtualFlightThrottle/panel/panel.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,21 +15,34 @@ class PageMainPanel extends StatefulWidget {
 }
 
 class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
+  Widget _mainPanelCache;
 
-  Widget _buildTargetClientNotFoundAlert(BuildContext context) {
+  Widget _buildMainPanel(BuildContext context) {
+    return Container();
+    if (this._mainPanelCache == null)
+      this._mainPanelCache = Panel(
+        blockWidth: 10,
+        blockHeight: 10,
+        panelController: null,
+        panelSetting: null,
+      );
+    return this._mainPanelCache;
+  }
+
+  Widget _buildTargetDeviceNotFoundAlert(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
         padding: EdgeInsets.only(left: 10),
         height: 30,
         decoration: BoxDecoration(
-          color: Colors.redAccent,
+          color: Theme.of(context).errorColor,
           boxShadow: [
             new BoxShadow(
               color: Colors.black,
               offset: new Offset(0, 1),
               blurRadius: 1,
-              spreadRadius: 2,
+              spreadRadius: 1,
             )
           ],
         ),
@@ -39,6 +53,7 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
               child: Icon(
                 Icons.error_outline,
                 color: Colors.white,
+                size: 20,
               ),
             ),
             Text(
@@ -53,7 +68,7 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
               child: Text(
                 "Go to network settings",
                 style: TextStyle(
-                  color: Colors.blueAccent,
+                  color: Colors.blue,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -75,19 +90,16 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
         child: Stack(
           children: <Widget>[
             StreamBuilder<bool>(
-              stream: AppNetworkManager().val.networkStateStreamController.stream,
-              initialData: false,
-              builder: (context, snapshot) {
-                if (!snapshot.data) return this._buildTargetClientNotFoundAlert(context);
-                return Container();
-              }
+                stream: AppNetworkManager().val.networkStateStreamController
+                    .stream,
+                initialData: false,
+                builder: (context, snapshot) {
+                  if (!snapshot.data)
+                    return this._buildTargetDeviceNotFoundAlert(context);
+                  return Container();
+                }
             ),
-            Center(
-              child: Text(
-                "main panel here".toUpperCase(),
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            this._buildMainPanel(context),
           ],
         ),
       ),
@@ -97,6 +109,8 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
         marginBottom: 30,
         marginRight: 30,
 
+        elevation: 5,
+
         shape: CircleBorder(),
         animatedIcon: AnimatedIcons.menu_close,
         curve: Curves.bounceIn,
@@ -104,7 +118,9 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
         overlayColor: Colors.black,
         overlayOpacity: 0.4,
 
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
         foregroundColor: Colors.white,
 
         children: [

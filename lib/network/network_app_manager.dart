@@ -25,24 +25,40 @@ class AppNetworkManager {
     }
   }
 
-  Future<void> tryAutoReconnection() async {
-    if ((!this.val.isConnected) && AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value) {
-      List<String> registered = await SQLite3Helper().getSavedRegisteredDevices();
-      this.val.findAliveTargetList().then((val) => val.forEach((target) {
-        if (registered.contains(target)) {
-          this.val.connectToTarget(target, () => null);
-          Fluttertoast.showToast(
-            msg: "Connected with device $target",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-        }
-      }));
-    }
+  void startNotifyNetworkStateToast() {
+    this.val.networkStateStreamController.stream.listen((val) {
+      if (val)
+        Fluttertoast.showToast(
+          msg: "Connected with device.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      else
+        Fluttertoast.showToast(
+          msg: "Disconnected with device.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+    });
   }
 
+  Future<void> tryAutoReconnection() async {
+    if ((!this.val.isConnected) &&
+        AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value) {
+      List<String> registered =
+          await SQLite3Helper().getSavedRegisteredDevices();
+      this.val.findAliveTargetList().then((val) => val.forEach((target) {
+            if (registered.contains(target))
+              this.val.connectToTarget(target, () => null);
+          }));
+    }
+  }
 }

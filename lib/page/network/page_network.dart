@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:flutter/gestures.dart';
+import 'package:VirtualFlightThrottle/page/network/page_network_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PageNetwork extends StatefulWidget {
   PageNetwork({Key key}): super(key: key);
@@ -12,52 +11,11 @@ class PageNetwork extends StatefulWidget {
   State<StatefulWidget> createState() => _PageNetworkState();
 }
 
-enum _ConnectionState {
-  FINDING,
-  NOTFOUND,
-  FOUND,
-  CONNECTED,
-}
-
-class _ConnectionEvent {
-  _ConnectionState state;
-
-  List<String> body;
-
-  _ConnectionEvent(this.state, this.body);
-}
-
 class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ignore: close_sinks
-  final StreamController<_ConnectionEvent> _connectionStateController = StreamController<_ConnectionEvent>();
-
-  Future<void> _refreshTargetList() async {
-    // ignore: unrelated_type_equality_checks
-    AppNetworkManager().val.findAliveTargetList().then((val) {
-      this._connectionStateController.add(_ConnectionEvent(
-          (val.isEmpty ? _ConnectionState.NOTFOUND : _ConnectionState.FOUND), val));
-    });
-    this._connectionStateController.add(_ConnectionEvent(_ConnectionState.FINDING, null));
-  }
-  
-  void _tryConnectToTarget(String target) {
-    AppNetworkManager().val.connectToTarget(target, () {
-      this._scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Connection with the server $target failed."),
-        action: SnackBarAction(label: "REFRESH", onPressed: () {
-          this._scaffoldKey.currentState.hideCurrentSnackBar();
-          this._refreshTargetList();
-        }),
-      ));
-    }).then((val) {
-      this._connectionStateController.add(_ConnectionEvent(_ConnectionState.CONNECTED, null));
-    });
-  }
-
-  Widget _buildInProcessing(BuildContext context) {
+  Widget _buildFinding(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,14 +27,14 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           ),
           const Padding(
             padding: EdgeInsets.only(top: 16),
-            child: Text("finding target device..."),
+            child: Text("Finding target device..."),
           )
         ],
       ),
     );
   }
 
-  Widget _buildTargetNotFound(BuildContext context) {
+  Widget _buildNotFound(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +49,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             child: Column(
               children: <Widget>[
                 Text(
-                  "Target device not found.",
+                  "PC side device not found.",
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(
@@ -99,14 +57,18 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      "Please check if " + AppNetworkManager().val.toString() + " is turned on or if the PC side device is running.",
+                      "Please check if " +
+                          AppNetworkManager().val.toString() +
+                          " is turned on or PC side device is running.",
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ),
                 FlatButton(
-                  onPressed: this._refreshTargetList,
+                  onPressed: Provider
+                      .of<PageNetworkController>(context)
+                      .refreshDeviceList,
                   child: Text(
                     "REFRESH",
                     style: TextStyle(
@@ -122,10 +84,36 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
     );
   }
 
-  Widget _buildTargetList(BuildContext context, List<String> deviceList) {
-    return ListView(
-      children: deviceList
-          .map((val) => ListTile(
+  Widget _buildFound(BuildContext context, List<String> deviceList) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: Row(
+            children: <Widget>[
+              Text(
+                "Found ${deviceList.length} PC-side devices.",
+              ),
+              Spacer(),
+              FlatButton(
+                onPressed: Provider
+                    .of<PageNetworkController>(context)
+                    .refreshDeviceList,
+                child: Text(
+                  "REFRESH",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        ListView(
+          shrinkWrap: true,
+          children: deviceList.map((val) =>
+              ListTile(
                 leading: Icon(Icons.videogame_asset),
                 title: Text(val),
                 subtitle: Text("Tap to connect with this device"),
@@ -133,9 +121,27 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   "ACTIVE",
                   style: TextStyle(color: Colors.green),
                 ),
-                onTap: () => this._tryConnectToTarget(val),
-              ))
-          .toList(),
+                onTap: () =>
+                    Provider.of<PageNetworkController>(context, listen: false)
+                        .connectDevice(val, () {
+                      this._scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(
+                            "Connection with the server $val failed."),
+                        action: SnackBarAction(
+                            label: "REFRESH",
+                            textColor: Colors.green,
+                            onPressed: () {
+                              this._scaffoldKey.currentState
+                                  .hideCurrentSnackBar();
+                              Provider.of<PageNetworkController>(
+                                  context, listen: false).refreshDeviceList();
+                            }
+                        ),
+                      ));
+                    }),
+              ),).toList(),
+        ),
+      ],
     );
   }
 
@@ -158,10 +164,9 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   style: TextStyle(fontSize: 16),
                 ),
                 FlatButton(
-                  onPressed: () {
-                    AppNetworkManager().val.disconnectCurrentTarget();
-                    this._refreshTargetList();
-                  },
+                  onPressed: Provider
+                      .of<PageNetworkController>(context)
+                      .disconnectCurrentDevice,
                   child: Text(
                     "DISCONNECT",
                     style: TextStyle(
@@ -178,48 +183,36 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
   }
 
   @override
-  void initState() {
-    if (AppNetworkManager().val.isConnected)
-      this._connectionStateController.add(_ConnectionEvent(_ConnectionState.CONNECTED, null));
-    else this._refreshTargetList();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: this._scaffoldKey,
-      appBar: AppBar(
-        title: Text("Network"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: this._refreshTargetList,
+    return ChangeNotifierProvider<PageNetworkController>(
+      create: (_) => PageNetworkController(),
+      child: Scaffold(
+        key: this._scaffoldKey,
+        appBar: AppBar(
+          title: Text("Network"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: StreamBuilder(
-          stream: this._connectionStateController.stream,
-          builder: (BuildContext context, AsyncSnapshot<_ConnectionEvent> snapshot) {
-            if (!snapshot.hasData) return Container();
-            switch (snapshot.data.state) {
-              case _ConnectionState.FINDING:
-                return this._buildInProcessing(context);
-              case _ConnectionState.NOTFOUND:
-                return this._buildTargetNotFound(context);
-              case _ConnectionState.FOUND:
-                return this._buildTargetList(context, snapshot.data.body);
-              case _ConnectionState.CONNECTED:
-                return this._buildConnected(context);
-              default:
-                return this._buildInProcessing(context);
-            }
-          },
+        ),
+        body: SafeArea(
+          child: Consumer<PageNetworkController>(
+            builder: (BuildContext context, PageNetworkController value,
+                Widget child) {
+              switch (value.networkConnectionState) {
+                case NetworkConnectionState.FINDING:
+                  return this._buildFinding(context);
+                case NetworkConnectionState.NOTFOUND:
+                  return this._buildNotFound(context);
+                case NetworkConnectionState.FOUND:
+                  return this._buildFound(context, value.deviceList);
+                case NetworkConnectionState.CONNECTED:
+                  return this._buildConnected(context);
+                default:
+                  return this._buildFinding(context);
+              }
+            },
+          ),
         ),
       ),
     );

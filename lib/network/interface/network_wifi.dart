@@ -12,7 +12,19 @@ class WiFiNetworkAgent extends NetworkAgent {
 
   Socket _socket;
 
-  WiFiNetworkAgent(this._socket, String address): super(address);
+  WiFiNetworkAgent(this._socket, String address, Function onSessionKilled)
+      : super(address, onSessionKilled) {
+    this._socket.handleError((error) {
+      onSessionKilled();
+    });
+    this._socket.listen((event) {
+      this.receiveData(utf8.decode(event));
+    }, onError: (error) {
+      this.killSession();
+    }, onDone: () {
+      this.killSession();
+    });
+  }
 
   @override
   void sendData(NetworkData networkData) {
@@ -20,10 +32,9 @@ class WiFiNetworkAgent extends NetworkAgent {
   }
 
   @override
-  void killSession() {
+  void removeConnection() {
     this._socket.close();
   }
-
 }
 
 class WifiNetworkManager extends NetworkManager {
@@ -46,10 +57,12 @@ class WifiNetworkManager extends NetworkManager {
 
     final stream = NetworkAnalyzer.discover2(
       subnet, _port,
-      timeout: Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
+      timeout: Duration(
+          milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT]
+              .value),
     );
 
-    Completer<List<String>> completer = new Completer<List<String>>();
+    Completer<List<String>> completer = Completer<List<String>>();
 
     List<String> founds = [];
     stream.listen((NetworkAddress address) {
@@ -60,19 +73,25 @@ class WifiNetworkManager extends NetworkManager {
   }
 
   @override
-  Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {
-    Completer<void> completer = new Completer<void>();
+  Future<void> connectToTarget(String deviceAddress,
+      Function() onSessionFail) async {
+    if (this.isConnected) return this.disconnectCurrentTarget();
 
-    Socket.connect(targetAddress, _port).then((socket) {
-      this.targetNetworkAgent = WiFiNetworkAgent(socket, targetAddress);
+    Completer<void> completer = Completer<void>();
+
+    Function() onSessionKilled = this.setDisconnectedState;
+
+    Socket.connect(deviceAddress, _port).then((socket) {
+      this.targetNetworkAgent =
+          WiFiNetworkAgent(socket, deviceAddress, onSessionKilled);
       this.setConnectedState();
       completer.complete();
     }).catchError((e) {
-      this.networkStateStreamController.add(false);
-      onSessionLost();
-    }).timeout(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value), onTimeout: () {
-      this.networkStateStreamController.add(false);
-      onSessionLost();
+      onSessionFail();
+    }).timeout(Duration(
+        milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT]
+            .value), onTimeout: () {
+      onSessionFail();
     });
 
     return completer.future;

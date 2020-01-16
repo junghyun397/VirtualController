@@ -119,8 +119,8 @@ class AppSettings {
       SettingsType.NETWORK_TYPE: new NetworkTypeSettingData(
         defaultValue: NetworkType.WIFI,
         settingName: "Network Type",
-          description: "Set network interface for PC side device"
-      ),
+          description:
+              "Set network interface for PC side device (Applies after restart)"),
       SettingsType.NETWORK_TIMEOUT: new IntegerSettingData(
         defaultValue: 1500,
         settingName: "Network Timeout",

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
-
+import 'package:flutter/cupertino.dart';
 
 class NetworkData<T> {
   int targetInput;
@@ -24,15 +24,45 @@ class ButtonNetworkData extends NetworkData<bool> {
   ButtonNetworkData(int targetInput, bool value) : super(targetInput, value);
 }
 
+class ValidationNetworkData extends NetworkData<int> {
+  ValidationNetworkData() : super(-1, DateTime
+      .now()
+      .millisecondsSinceEpoch);
+}
+
 abstract class NetworkAgent {
 
   String address;
 
-  NetworkAgent(this.address);
+  Function onSessionKilled;
+  bool killed = false;
+
+  NetworkAgent(this.address, this.onSessionKilled) {
+    this._startValidationSession();
+  }
 
   void sendData(NetworkData networkData);
 
-  void killSession();
+  void receiveData(String data) {}
+
+  void killSession() {
+    this.killed = true;
+    this.removeConnection();
+    this.onSessionKilled();
+  }
+
+  void removeConnection();
+
+  void _startValidationSession() {
+        () async {
+      while (!this.killed) {
+        this.sendData(ValidationNetworkData());
+        await Future.delayed(Duration(
+            milliseconds: AppSettings().settingsMap[SettingsType
+                .NETWORK_TIMEOUT].value));
+      }
+    }();
+  }
 
 }
 
@@ -41,7 +71,8 @@ abstract class NetworkManager {
   bool isConnected = false;
 
   // ignore: close_sinks
-  StreamController<bool> networkStateStreamController = StreamController<bool>();
+  StreamController<bool> networkStateStreamController = StreamController<
+      bool>.broadcast();
 
   NetworkAgent targetNetworkAgent;
 
@@ -49,8 +80,8 @@ abstract class NetworkManager {
 
   Future<List<String>> findAliveTargetList();
 
-  Future<void> connectToTarget(String targetAddress, Function() onSessionLost);
-  
+  Future<void> connectToTarget(String deviceAddress, Function() onSessionLost);
+
   void setConnectedState() {
     this.isConnected = true;
     this.networkStateStreamController.add(true);
@@ -58,10 +89,14 @@ abstract class NetworkManager {
       SQLite3Helper().insertRegisteredDevices(this.targetNetworkAgent.address);
   }
 
-  void disconnectCurrentTarget() {
-    if (!this.isConnected) return;
-    this.targetNetworkAgent.killSession();
+  void setDisconnectedState() {
+    this.isConnected = false;
     this.networkStateStreamController.add(false);
+  }
+
+  void disconnectCurrentTarget() {
+    this.setDisconnectedState();
+    this.targetNetworkAgent.killSession();
     this.isConnected = false;
   }
 
@@ -69,11 +104,6 @@ abstract class NetworkManager {
     if (!this.isConnected) {
       this._buffer.add(networkData);
       return;
-    }
-
-    if (this._buffer.length != 0) {
-      this._buffer.forEach((val) => this.targetNetworkAgent.sendData(val));
-      this._buffer.clear();
     }
 
     this.targetNetworkAgent.sendData(networkData);

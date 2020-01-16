@@ -58,6 +58,7 @@ Future<void> initializeGlobalComponent() async {
   ]);
   await SQLite3Helper().initializeDb();
   await AppSettings().loadSavedGlobalSettings();
+  AppNetworkManager().startNotifyNetworkStateToast();
   AppNetworkManager().tryAutoReconnection();
 }
 
