@@ -56,14 +56,12 @@ class NetworkTypeSettingData extends SettingData<NetworkType> {
 enum SettingsType {
   USER_NAME,
   USER_PWD,
-
+  USE_DARK_THEME,
   HIDE_TOP_BAR,
   HIDE_HOME_KEY,
-
   NETWORK_TYPE,
   AUTO_CONNECTION,
   NETWORK_TIMEOUT,
-
   USE_VIBRATION,
 }
 
@@ -98,7 +96,10 @@ class AppSettings {
         settingName: "User password",
         description: "Use password when sharing layout",
       ),
-
+      SettingsType.USE_DARK_THEME: new BooleanSettingData(
+          defaultValue: false,
+          settingName: "Use dark theme",
+          description: "Use a Dark theme (Applies after restart)"),
       SettingsType.HIDE_TOP_BAR: new BooleanSettingData(
         defaultValue: true,
         settingName: "Hide topbar",
@@ -118,7 +119,7 @@ class AppSettings {
       SettingsType.NETWORK_TYPE: new NetworkTypeSettingData(
         defaultValue: NetworkType.WIFI,
         settingName: "Network Type",
-        description: "Set network interface for VFT feeder"
+          description: "Set network interface for PC side device"
       ),
       SettingsType.NETWORK_TIMEOUT: new IntegerSettingData(
         defaultValue: 1500,

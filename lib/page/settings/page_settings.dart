@@ -181,12 +181,12 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
             CardSettingsSection(
               header: CardSettingsHeader(label: "UI Option"),
               children: <Widget>[
+                this._buildInstruction(SettingsType.USE_DARK_THEME),
+                this._buildSwitchSection(SettingsType.USE_DARK_THEME),
                 this._buildInstruction(SettingsType.HIDE_TOP_BAR),
                 this._buildSwitchSection(SettingsType.HIDE_TOP_BAR),
-
                 this._buildInstruction(SettingsType.HIDE_HOME_KEY),
                 this._buildSwitchSection(SettingsType.HIDE_HOME_KEY),
-
                 this._buildInstruction(SettingsType.USE_VIBRATION),
                 this._buildSwitchSection(SettingsType.USE_VIBRATION),
               ],

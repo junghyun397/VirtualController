@@ -23,6 +23,13 @@ class VirtualThrottleApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blueGrey,
+      ),
+      themeMode: AppSettings().settingsMap[SettingsType.USE_DARK_THEME].value
+          ? ThemeMode.dark
+          : ThemeMode.system,
 
       // TODO: i8n initialize
       // localizationsDelegates: [S.delegate],
