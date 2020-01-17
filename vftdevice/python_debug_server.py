@@ -30,8 +30,7 @@ class ParsedPacket:
             self.packet_type = PacketType.ANALOGUE
 
     def __str__(self):
-        return "type: " + str(packet.packet_type) + " target-input: " + str(packet.target_input) + " data: " + str(
-            packet.body)
+        return "type: " + str(packet.packet_type) + " target-input: " + str(packet.target_input) + " data: " + str(packet.body)
 
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -52,9 +51,12 @@ while True:
             break
         packet = ParsedPacket(data)
 
-        print("[<] receive data;", str(packet))
+        if packet.packet_type == PacketType.ERROR:
+            print("[x] failed parse packet")
+        else:
+            print("[<] receive data;", str(packet))
 
-        if packet.packet_type == PacketType.VALIDATION:
-            response = "alive"
-            print("[>] send validation response: alive")
-            client_socket.send(response.encode())
+            if packet.packet_type == PacketType.VALIDATION:
+                response = "alive"
+                print("[>] send validation response: alive")
+                client_socket.send(response.encode())

@@ -12,10 +12,11 @@ enum NetworkConnectionState {
 }
 
 class PageNetworkController with ChangeNotifier {
+
+  bool _disposed = false;
+
   NetworkConnectionState _networkConnectionStateCache;
-
   get networkConnectionState => this._networkConnectionStateCache;
-
   set networkConnectionState(NetworkConnectionState networkConnectionState) {
     this._networkConnectionStateCache = networkConnectionState;
     notifyListeners();
@@ -29,27 +30,19 @@ class PageNetworkController with ChangeNotifier {
   PageNetworkController() {
     if (AppNetworkManager().val.isConnected) {
       this.networkConnectionState = NetworkConnectionState.CONNECTED;
-    } else
-      this.refreshDeviceList();
+    } else this.refreshDeviceList();
 
-    this._networkStateStreamSubscription = AppNetworkManager()
-        .val
-        .networkStateStreamController
-        .stream
-        .listen((val) {
-      if (val)
-        this.networkConnectionState = NetworkConnectionState.CONNECTED;
-      else
-        this.refreshDeviceList();
+    this._networkStateStreamSubscription = AppNetworkManager().val.networkStateStreamController.stream.listen((val) {
+      if (val) this.networkConnectionState = NetworkConnectionState.CONNECTED;
+      else this.refreshDeviceList();
     });
   }
 
   void refreshDeviceList() {
     AppNetworkManager().val.findAliveTargetList().then((val) {
-      if (this.networkConnectionState != NetworkConnectionState.FINDING) return;
+      if (this.networkConnectionState != NetworkConnectionState.FINDING || this._disposed) return;
 
-      if (val.isEmpty)
-        this.networkConnectionState = NetworkConnectionState.NOTFOUND;
+      if (val.isEmpty) this.networkConnectionState = NetworkConnectionState.NOTFOUND;
       else {
         this.deviceList = val;
         this.networkConnectionState = NetworkConnectionState.FOUND;
@@ -59,11 +52,7 @@ class PageNetworkController with ChangeNotifier {
   }
 
   void connectDevice(String target, Function onFail) {
-    AppNetworkManager().val.connectToTarget(target, () {
-      onFail();
-    }).then((_) {
-      this.networkConnectionState = NetworkConnectionState.CONNECTED;
-    });
+    AppNetworkManager().val.connectToTarget(target, onFail).then((_) => this.networkConnectionState = NetworkConnectionState.CONNECTED);
   }
 
   void disconnectCurrentDevice() {
@@ -73,6 +62,7 @@ class PageNetworkController with ChangeNotifier {
 
   @override
   void dispose() {
+    this._disposed = true;
     this._networkStateStreamSubscription.cancel();
     super.dispose();
   }

@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
-import 'package:flutter/cupertino.dart';
 
-class NetworkData<T> {
+class NetworkData {
   int targetInput;
-  T value;
+  int value;
 
   NetworkData(this.targetInput, this.value);
 
@@ -16,18 +15,8 @@ class NetworkData<T> {
   }
 }
 
-class AxesNetworkData extends NetworkData<double> {
-  AxesNetworkData(int targetInput, double value) : super(targetInput, value);
-}
-
-class ButtonNetworkData extends NetworkData<bool> {
-  ButtonNetworkData(int targetInput, bool value) : super(targetInput, value);
-}
-
-class ValidationNetworkData extends NetworkData<int> {
-  ValidationNetworkData() : super(-1, DateTime
-      .now()
-      .millisecondsSinceEpoch);
+class ValidationNetworkData extends NetworkData {
+  ValidationNetworkData() : super(-1, DateTime.now().millisecondsSinceEpoch);
 }
 
 abstract class NetworkAgent {
@@ -57,9 +46,7 @@ abstract class NetworkAgent {
         () async {
       while (!this.killed) {
         this.sendData(ValidationNetworkData());
-        await Future.delayed(Duration(
-            milliseconds: AppSettings().settingsMap[SettingsType
-                .NETWORK_TIMEOUT].value));
+        await Future.delayed(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value));
       }
     }();
   }

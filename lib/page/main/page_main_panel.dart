@@ -1,5 +1,6 @@
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
+import 'package:VirtualFlightThrottle/page/main/page_main_panel_debug.dart';
 import 'package:VirtualFlightThrottle/panel/panel.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/gestures.dart';
@@ -18,7 +19,7 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
   Widget _mainPanelCache;
 
   Widget _buildMainPanel(BuildContext context) {
-    return Container();
+    return buildDebugArea(context);
     if (this._mainPanelCache == null)
       this._mainPanelCache = Panel(
         blockWidth: 10,
@@ -89,9 +90,9 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
       body: Container(
         child: Stack(
           children: <Widget>[
+            this._buildMainPanel(context),
             StreamBuilder<bool>(
-                stream: AppNetworkManager().val.networkStateStreamController
-                    .stream,
+                stream: AppNetworkManager().val.networkStateStreamController.stream,
                 initialData: false,
                 builder: (context, snapshot) {
                   if (!snapshot.data)
@@ -99,7 +100,6 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
                   return Container();
                 }
             ),
-            this._buildMainPanel(context),
           ],
         ),
       ),
@@ -109,8 +109,6 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
         marginBottom: 30,
         marginRight: 30,
 
-        elevation: 5,
-
         shape: CircleBorder(),
         animatedIcon: AnimatedIcons.menu_close,
         curve: Curves.bounceIn,
@@ -118,10 +116,8 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
         overlayColor: Colors.black,
         overlayOpacity: 0.4,
 
-        backgroundColor: Theme
-            .of(context)
-            .primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
 
         children: [
           SpeedDialChild(

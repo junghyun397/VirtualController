@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:flutter/material.dart';
@@ -9,144 +11,157 @@ class ComponentSlider extends Component {
       {Key key,
       @required componentSetting,
       @required blockWidth,
-      @required blockHeight})
-      : super(
-            key: key,
-            componentSetting: componentSetting,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight);
+      @required blockHeight}
+      ): super(key: key, componentSetting: componentSetting, blockWidth: blockWidth, blockHeight: blockHeight);
 
   @override
   Widget buildComponent(BuildContext context) {
     return this._buildSlider(
       context: context,
-      height: this.blockHeight * this.componentSetting.y,
+
       displayName: this.componentSetting.getSettingsOr("display-name", ""),
-      range: this.componentSetting.getSettingsOr("range", 100),
+
+      range: this.componentSetting.getSettingsOr("range", 100.0),
       useIntRange: this.componentSetting.getSettingsOr("use-int-range", true),
       unitName: this.componentSetting.getSettingsOr("unit-name", ""),
+
       axis: this.componentSetting.getSettingsOr("axis", true),
-      useValuePopup:
-          this.componentSetting.getSettingsOr("use-value-popup", true),
+
+      useValuePopup: this.componentSetting.getSettingsOr("use-value-popup", true),
+
       markDensity: this.componentSetting.getSettingsOr("mark-density", 0.4),
-      markSightCount:
-          this.componentSetting.getSettingsOr("mark-sight-count", 9),
-      useMarkSightValue:
-          this.componentSetting.getSettingsOr("use-mark-sight-value", true),
+      markSightCount: this.componentSetting.getSettingsOr("mark-sight-count", 9),
+      useMarkSightValue: this.componentSetting.getSettingsOr("use-mark-sight-value", true),
+
       detentPoints: this.componentSetting.getSettingsOr("detent-points", []),
     );
   }
 
   Widget _buildSlider({
     @required BuildContext context,
-    @required height,
+
     @required String displayName,
+
     @required double range,
     @required bool useIntRange,
     @required String unitName,
+
     @required bool axis,
+
     @required bool useValuePopup,
+
     @required double markDensity,
     @required int markSightCount, // recommended 1, 4, 9
     @required bool useMarkSightValue,
+
     @required List<double> detentPoints,
   }) {
-    PanelController panelController = Provider.of<PanelController>(context);
-    return FlutterSlider(
-      selectByTap: false,
-      rtl: true,
+    return Consumer<PanelController> (
+      builder: (BuildContext context, PanelController panelController, Widget _) {
+        return FlutterSlider(
+          selectByTap: false,
 
-      hatchMark: FlutterSliderHatchMark(
-        distanceFromTrackBar: 30,
-        density: markDensity,
-        smallLine: const FlutterSliderSizedBox(
-          height: 8,
-          width: 1,
-          decoration: BoxDecoration(color: Colors.white),
-        ),
-        bigLine: const FlutterSliderSizedBox(
-          height: 16,
-          width: 2,
-          decoration: BoxDecoration(color: Colors.white),
-        ),
-        labels: _buildSliderHatchLabel(
-            range, useIntRange, markSightCount, unitName, useMarkSightValue),
-      ),
-
-      trackBar: FlutterSliderTrackBar(
-        inactiveTrackBarHeight: 8,
-        activeTrackBarHeight: 8,
-        inactiveTrackBar: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          border: Border.all(
-            color: Colors.black38,
-            width: 2,
-          ),
-          color: Colors.black87,
-        ),
-        activeTrackBar: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          border: Border.all(
-            color: Colors.black38,
-            width: 2,
-          ),
-          color: Colors.black87,
-        ),
-      ),
-
-      touchSize: 40,
-      handlerHeight: 30,
-      handlerWidth: 50,
-      handler: FlutterSliderHandler(
-        decoration: const BoxDecoration(),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(97, 97, 97, 1),
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                border: Border.all(color: Colors.black54, width: 4),
-                shape: BoxShape.rectangle,
-                boxShadow: [
-                  const BoxShadow(
-                      color: Colors.black,
-                      spreadRadius: 0.05,
-                      blurRadius: 10,
-                      offset: Offset(0, 2)),
-                ],
-              ),
+          hatchMark: FlutterSliderHatchMark(
+            distanceFromTrackBar: axis ? 30 : 10,
+            density: markDensity,
+            smallLine: const FlutterSliderSizedBox(
+              height: 8,
+              width: 1,
+              decoration: BoxDecoration(color: Colors.white),
             ),
-            Center(
-              child: Icon(
-                Icons.menu,
-                color: Colors.white70,
-                size: 20,
-              ),
+            bigLine: const FlutterSliderSizedBox(
+              height: 16,
+              width: 2,
+              decoration: BoxDecoration(color: Colors.white),
             ),
-          ],
-        ),
-      ),
-      handlerAnimation: FlutterSliderHandlerAnimation(
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.elasticOut.flipped,
-        duration: Duration(milliseconds: 500),
-        scale: 1.2,
-      ),
-      tooltip: FlutterSliderTooltip(
-        disabled: useValuePopup,
-        custom: (value) => _buildSliderToolTip(value, useIntRange, unitName),
-      ),
+            labels: _buildSliderHatchLabel(
+                range, useIntRange, markSightCount, unitName,
+                useMarkSightValue),
+          ),
 
-      axis: axis ? Axis.vertical : Axis.horizontal,
-      min: 0,
-      max: range,
-      step: useIntRange ? 1 : range / 1000,
-      values: [0],
+          trackBar: FlutterSliderTrackBar(
+            inactiveTrackBarHeight: 8,
+            activeTrackBarHeight: 8,
+            inactiveTrackBar: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              border: Border.all(
+                color: Colors.black38,
+                width: 2,
+              ),
+              color: Colors.black87,
+            ),
+            activeTrackBar: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              border: Border.all(
+                color: Colors.black38,
+                width: 2,
+              ),
+              color: Colors.black87,
+            ),
+          ),
 
-      onDragging: (handlerIndex, lowerValue, _) {
-        panelController.eventAnalogue(
-            componentSetting.targetInputs[0], range / lowerValue * 1000);
-      },
+          touchSize: 40,
+          handlerHeight: axis ? 30 : 50,
+          handlerWidth: axis ? 50 : 30,
+          handler: FlutterSliderHandler(
+            decoration: const BoxDecoration(),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(97, 97, 97, 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    border: Border.all(color: Colors.black54, width: 4),
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      const BoxShadow(
+                          color: Colors.black,
+                          spreadRadius: 0.05,
+                          blurRadius: 10,
+                          offset: Offset(0, 2)),
+                    ],
+                  ),
+                ),
+                Center(
+                  child: Transform.rotate(
+                    angle: (axis ? 180 : 90) * pi / 180,
+                    child: Icon(
+                      Icons.menu,
+                      color: Colors.white70,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          handlerAnimation: FlutterSliderHandlerAnimation(
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.elasticOut.flipped,
+            duration: Duration(milliseconds: 500),
+            scale: 1.2,
+          ),
+          tooltip: FlutterSliderTooltip(
+            disabled: !useValuePopup,
+            custom: (value) => _buildSliderToolTip(value, useIntRange, unitName),
+          ),
+
+          axis: axis ? Axis.vertical : Axis.horizontal,
+          rtl: axis,
+
+          min: 0,
+          max: range,
+          step: useIntRange
+              ? 1
+              : range / 1000,
+          values: [0],
+
+          onDragging: (handlerIndex, lowerValue, _) {
+            panelController.eventAnalogue(componentSetting.targetInputs[0],
+                (lowerValue / range * 1000).floor().toInt());
+          },
+        );
+      }
     );
   }
 

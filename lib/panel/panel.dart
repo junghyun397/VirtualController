@@ -21,60 +21,58 @@ class Panel extends StatelessWidget {
     @required this.panelController,
   }) : super(key: key);
 
-  List<Widget> _buildPanelPositionedComponents(BuildContext context) {
+  List<Widget> _buildPanelComponents(BuildContext context) {
     List<Widget> result = List<Widget>();
     this.panelSetting.components.forEach((key, val) {
-      Widget componentWidget;
-      switch (val.componentType) {
-        case ComponentType.SLIDER:
-          componentWidget = ComponentSlider(
-            componentSetting: val,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-          );
-          break;
-        case ComponentType.BUTTON:
-          componentWidget = ComponentButton(
-            componentSetting: val,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-          );
-          break;
-        case ComponentType.SWITCH:
-          componentWidget = ComponentSlider(
-            componentSetting: val,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-          );
-          break;
-        case ComponentType.TOGGLE_BUTTON:
-          componentWidget = ComponentSlider(
-            componentSetting: val,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-          );
-          break;
-        case ComponentType.TOGGLE_SWITCH_2AXES:
-          componentWidget = ComponentSlider(
-            componentSetting: val,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-          );
-          break;
-        case ComponentType.TOGGLE_SWITCH_4AXES:
-          componentWidget = ComponentSlider(
-            componentSetting: val,
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-          );
-          break;
-      }
       result.add(Positioned(
         left: val.x * this.blockWidth,
-        width: this.blockWidth,
-        top: val.y * this.blockHeight,
-        height: this.blockHeight,
-        child: componentWidget,
+        bottom: val.y * this.blockHeight,
+        child: SizedBox(
+          width: val.width * this.blockWidth,
+          height: val.height * this.blockHeight,
+          child: () {
+            switch (val.componentType) {
+              case ComponentType.SLIDER:
+                return ComponentSlider(
+                  componentSetting: val,
+                  blockWidth: blockWidth,
+                  blockHeight: blockHeight,
+                );
+              case ComponentType.BUTTON:
+                return ComponentButton(
+                  componentSetting: val,
+                  blockWidth: blockWidth,
+                  blockHeight: blockHeight,
+                );
+              case ComponentType.SWITCH:
+                return ComponentSlider(
+                  componentSetting: val,
+                  blockWidth: blockWidth,
+                  blockHeight: blockHeight,
+                );
+              case ComponentType.TOGGLE_BUTTON:
+                return ComponentSlider(
+                  componentSetting: val,
+                  blockWidth: blockWidth,
+                  blockHeight: blockHeight,
+                );
+              case ComponentType.TOGGLE_SWITCH_2AXES:
+                return ComponentSlider(
+                  componentSetting: val,
+                  blockWidth: blockWidth,
+                  blockHeight: blockHeight,
+                );
+              case ComponentType.TOGGLE_SWITCH_4AXES:
+                return ComponentSlider(
+                  componentSetting: val,
+                  blockWidth: blockWidth,
+                  blockHeight: blockHeight,
+                );
+              default:
+                return Container();
+            }
+          } (),
+        ),
       ));
     });
     return result;
@@ -82,12 +80,10 @@ class Panel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<PanelController>(
+    return ChangeNotifierProvider<PanelController>(
       create: (_) => this.panelController,
-      child: Container(
-        child: Stack(
-          children: this._buildPanelPositionedComponents(context),
-        ),
+      child: Stack(
+        children: this._buildPanelComponents(context),
       ),
     );
   }

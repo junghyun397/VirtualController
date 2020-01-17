@@ -2,14 +2,15 @@ import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
+import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'page/main/page_main_panel.dart';
 import 'page/direction_state.dart';
 import 'page/layout/builder/page_layout_builder.dart';
 import 'page/layout/list/page_layout_list.dart';
 import 'page/layout/store/page_layout_store.dart';
+import 'page/main/page_main_panel.dart';
 import 'page/network/page_network.dart';
 import 'page/settings/page_settings.dart';
 
@@ -21,7 +22,7 @@ class VirtualThrottleApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "VirtualThrottle",
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: primaryBlack,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,

@@ -47,6 +47,13 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
+    Widget _buildHeader(BuildContext context, String category) {
+    return Theme(
+      data: Theme.of(context).copyWith(brightness: Brightness.light, accentColor: Theme.of(context).primaryColor),
+      child: CardSettingsHeader(label: category),
+    );
+  }
+
   CardSettingsInstructions _buildInstruction(SettingsType settingsType) {
     return CardSettingsInstructions(
       text: AppSettings().settingsMap[settingsType].description,
@@ -149,7 +156,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
           labelWidth: 150,
           children: <CardSettingsSection>[
             CardSettingsSection(
-              header: CardSettingsHeader(label: "User Account"),
+              header: this._buildHeader(context, "User Account"),
               children: <Widget>[
                 this._buildInstruction(SettingsType.USER_NAME),
                 this._buildStringSection(SettingsType.USER_NAME, false, (val) {
@@ -166,7 +173,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               ],
             ),
             CardSettingsSection(
-              header: CardSettingsHeader(label: "Network"),
+              header: this._buildHeader(context, "Network"),
               children: <Widget>[
                 // this._buildInstruction(SettingsType.NETWORK_TYPE),
                 // this._buildListPickerSection(SettingsType.NETWORK_TYPE),
@@ -179,7 +186,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               ],
             ),
             CardSettingsSection(
-              header: CardSettingsHeader(label: "UI Option"),
+              header: this._buildHeader(context, "UI Option"),
               children: <Widget>[
                 this._buildInstruction(SettingsType.USE_DARK_THEME),
                 this._buildSwitchSection(SettingsType.USE_DARK_THEME),
