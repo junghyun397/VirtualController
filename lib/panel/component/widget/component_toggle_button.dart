@@ -1,8 +1,8 @@
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:flutter/material.dart';
 
-class ComponentButton extends Component {
-  ComponentButton(
+class ComponentToggleButton extends Component {
+  ComponentToggleButton(
       {Key key,
       @required componentSetting,
       @required blockWidth,

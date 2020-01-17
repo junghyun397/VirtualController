@@ -1,7 +1,8 @@
+import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
+import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
-
-import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
+import 'package:provider/provider.dart';
 
 class ComponentSlider extends Component {
   ComponentSlider(
@@ -16,25 +17,24 @@ class ComponentSlider extends Component {
             blockHeight: blockHeight);
 
   @override
-  Widget build(BuildContext context) {
-    return wrapByName(
-        this._buildSlider(
-          context: context,
-          height: this.blockHeight * componentSetting.y,
-          displayName: componentSetting.getSettingsOr("display-name", ""),
-          range: componentSetting.getSettingsOr("range", 100),
-          useIntRange: componentSetting.getSettingsOr("use-int-range", true),
-          unitName: componentSetting.getSettingsOr("unit-name", ""),
-          axis: componentSetting.getSettingsOr("axis", true),
-          useValuePopup:
-              componentSetting.getSettingsOr("use-value-popup", true),
-          markDensity: componentSetting.getSettingsOr("mark-density", 0.4),
-          markSightCount: componentSetting.getSettingsOr("mark-sight-count", 9),
-          useMarkSightValue:
-              componentSetting.getSettingsOr("use-mark-sight-value", true),
-          detentPoints: componentSetting.getSettingsOr("detent-points", []),
-        ),
-        componentSetting.name);
+  Widget buildComponent(BuildContext context) {
+    return this._buildSlider(
+      context: context,
+      height: this.blockHeight * this.componentSetting.y,
+      displayName: this.componentSetting.getSettingsOr("display-name", ""),
+      range: this.componentSetting.getSettingsOr("range", 100),
+      useIntRange: this.componentSetting.getSettingsOr("use-int-range", true),
+      unitName: this.componentSetting.getSettingsOr("unit-name", ""),
+      axis: this.componentSetting.getSettingsOr("axis", true),
+      useValuePopup:
+          this.componentSetting.getSettingsOr("use-value-popup", true),
+      markDensity: this.componentSetting.getSettingsOr("mark-density", 0.4),
+      markSightCount:
+          this.componentSetting.getSettingsOr("mark-sight-count", 9),
+      useMarkSightValue:
+          this.componentSetting.getSettingsOr("use-mark-sight-value", true),
+      detentPoints: this.componentSetting.getSettingsOr("detent-points", []),
+    );
   }
 
   Widget _buildSlider({
@@ -51,9 +51,11 @@ class ComponentSlider extends Component {
     @required bool useMarkSightValue,
     @required List<double> detentPoints,
   }) {
+    PanelController panelController = Provider.of<PanelController>(context);
     return FlutterSlider(
       selectByTap: false,
       rtl: true,
+
       hatchMark: FlutterSliderHatchMark(
         distanceFromTrackBar: 30,
         density: markDensity,
@@ -70,6 +72,7 @@ class ComponentSlider extends Component {
         labels: _buildSliderHatchLabel(
             range, useIntRange, markSightCount, unitName, useMarkSightValue),
       ),
+
       trackBar: FlutterSliderTrackBar(
         inactiveTrackBarHeight: 8,
         activeTrackBarHeight: 8,
@@ -90,6 +93,7 @@ class ComponentSlider extends Component {
           color: Colors.black87,
         ),
       ),
+
       touchSize: 40,
       handlerHeight: 30,
       handlerWidth: 50,
@@ -132,32 +136,34 @@ class ComponentSlider extends Component {
         disabled: useValuePopup,
         custom: (value) => _buildSliderToolTip(value, useIntRange, unitName),
       ),
+
       axis: axis ? Axis.vertical : Axis.horizontal,
       min: 0,
       max: range,
       step: useIntRange ? 1 : range / 1000,
       values: [0],
-      onDragging: (handlerIndex, lowerValue, _) {},
+
+      onDragging: (handlerIndex, lowerValue, _) {
+        panelController.eventAnalogue(
+            componentSetting.targetInputs[0], range / lowerValue * 1000);
+      },
     );
   }
 
-  List<FlutterSliderHatchMarkLabel> _buildSliderHatchLabel(
-      double range,
-      bool useIntRange,
-      int markSightCount,
-      String unitName,
+  List<FlutterSliderHatchMarkLabel> _buildSliderHatchLabel(double range,
+      bool useIntRange, int markSightCount, String unitName,
       bool useMarkSightValue) {
-    List<FlutterSliderHatchMarkLabel> result =
-        List<FlutterSliderHatchMarkLabel>.generate(markSightCount, (idx) {
-      double percent =
-          (idx + 1) * 100 / (markSightCount + 1).floor().toDouble();
+    List<FlutterSliderHatchMarkLabel> result = List<
+        FlutterSliderHatchMarkLabel>.generate(markSightCount, (idx) {
+      double percent = (idx + 1) * 100 /
+          (markSightCount + 1).floor().toDouble();
       return new FlutterSliderHatchMarkLabel(
         percent: percent,
         label: Text(
           useMarkSightValue
               ? useIntRange
-                  ? (percent * range / 100).floor().toString()
-                  : (percent * range / 100).toStringAsPrecision(2)
+              ? (percent * range / 100).floor().toString()
+              : (percent * range / 100).toStringAsPrecision(2)
               : "",
           style: const TextStyle(color: Colors.white),
         ),
@@ -211,4 +217,5 @@ class ComponentSlider extends Component {
       ),
     );
   }
+
 }

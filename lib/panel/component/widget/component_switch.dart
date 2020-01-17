@@ -14,7 +14,7 @@ class ComponentSwitch extends Component {
             blockHeight: blockHeight);
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildComponent(BuildContext context) {
     return Container();
   }
 }

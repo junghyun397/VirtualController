@@ -67,6 +67,9 @@ enum ComponentType {
   SLIDER,
   BUTTON,
   SWITCH,
+  TOGGLE_BUTTON,
+  TOGGLE_SWITCH_2AXES,
+  TOGGLE_SWITCH_4AXES,
 }
 
 class ComponentSetting {
@@ -79,9 +82,8 @@ class ComponentSetting {
 
   List<int> targetInputs;
 
-  Map<String, ComponentSettingData> settings = new Map<
-      String,
-      ComponentSettingData>();
+  Map<String, ComponentSettingData> settings =
+      new Map<String, ComponentSettingData>();
 
   T getSettingsOr<T>(String settingName, T defaultValue) {
     if (this.settings.containsKey(settingName))

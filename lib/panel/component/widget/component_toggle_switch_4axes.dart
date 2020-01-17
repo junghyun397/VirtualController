@@ -1,8 +1,8 @@
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:flutter/material.dart';
 
-class ComponentButton extends Component {
-  ComponentButton(
+class ComponentToggleSwitch4Axes extends Component {
+  ComponentToggleSwitch4Axes(
       {Key key,
       @required componentSetting,
       @required blockWidth,

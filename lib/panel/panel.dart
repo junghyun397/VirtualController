@@ -1,7 +1,6 @@
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_button.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_slider.dart';
-import 'package:VirtualFlightThrottle/panel/component/widget/component_switch.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:flutter/material.dart';
@@ -27,25 +26,46 @@ class Panel extends StatelessWidget {
     this.panelSetting.components.forEach((key, val) {
       Widget componentWidget;
       switch (val.componentType) {
-        case ComponentType.BUTTON:
-          componentWidget = ComponentButton(
-            blockWidth: blockWidth,
-            blockHeight: blockHeight,
-            componentSetting: val.settings,
-          );
-          break;
         case ComponentType.SLIDER:
           componentWidget = ComponentSlider(
+            componentSetting: val,
             blockWidth: blockWidth,
             blockHeight: blockHeight,
-            componentSetting: val.settings,
+          );
+          break;
+        case ComponentType.BUTTON:
+          componentWidget = ComponentButton(
+            componentSetting: val,
+            blockWidth: blockWidth,
+            blockHeight: blockHeight,
           );
           break;
         case ComponentType.SWITCH:
-          componentWidget = ComponentSwitch(
+          componentWidget = ComponentSlider(
+            componentSetting: val,
             blockWidth: blockWidth,
             blockHeight: blockHeight,
-            componentSetting: val.settings,
+          );
+          break;
+        case ComponentType.TOGGLE_BUTTON:
+          componentWidget = ComponentSlider(
+            componentSetting: val,
+            blockWidth: blockWidth,
+            blockHeight: blockHeight,
+          );
+          break;
+        case ComponentType.TOGGLE_SWITCH_2AXES:
+          componentWidget = ComponentSlider(
+            componentSetting: val,
+            blockWidth: blockWidth,
+            blockHeight: blockHeight,
+          );
+          break;
+        case ComponentType.TOGGLE_SWITCH_4AXES:
+          componentWidget = ComponentSlider(
+            componentSetting: val,
+            blockWidth: blockWidth,
+            blockHeight: blockHeight,
           );
           break;
       }
