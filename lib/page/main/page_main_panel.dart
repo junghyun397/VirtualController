@@ -1,7 +1,6 @@
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/main/page_main_panel_debug.dart';
-import 'package:VirtualFlightThrottle/panel/panel.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +15,11 @@ class PageMainPanel extends StatefulWidget {
 }
 
 class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
+
   Widget _mainPanelCache;
 
   Widget _buildMainPanel(BuildContext context) {
-    return buildDebugArea(context);
-    if (this._mainPanelCache == null)
-      this._mainPanelCache = Panel(
-        blockWidth: 10,
-        blockHeight: 10,
-        panelController: null,
-        panelSetting: null,
-      );
+    if (this._mainPanelCache == null) this._mainPanelCache = buildDebugArea(context);
     return this._mainPanelCache;
   }
 
@@ -95,8 +88,7 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
                 stream: AppNetworkManager().val.networkStateStreamController.stream,
                 initialData: false,
                 builder: (context, snapshot) {
-                  if (!snapshot.data)
-                    return this._buildTargetDeviceNotFoundAlert(context);
+                  if (!snapshot.data) return this._buildTargetDeviceNotFoundAlert(context);
                   return Container();
                 }
             ),

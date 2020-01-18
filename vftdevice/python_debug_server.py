@@ -22,12 +22,12 @@ class ParsedPacket:
         self.target_input = int(splitted_data[0])
         self.body = int(splitted_data[1])
 
-        if self.target_input == -1:
+        if self.target_input == -2:
             self.packet_type = PacketType.VALIDATION
-        elif self.target_input > 10:
-            self.packet_type = PacketType.DIGITAL
-        else:
+        elif self.target_input < 10:
             self.packet_type = PacketType.ANALOGUE
+        else:
+            self.packet_type = PacketType.DIGITAL
 
     def __str__(self):
         return "type: " + str(packet.packet_type) + " target-input: " + str(packet.target_input) + " data: " + str(packet.body)

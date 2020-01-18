@@ -19,8 +19,6 @@ class ComponentSlider extends Component {
     return this._buildSlider(
       context: context,
 
-      displayName: this.componentSetting.getSettingsOr("display-name", ""),
-
       range: this.componentSetting.getSettingsOr("range", 100.0),
       useIntRange: this.componentSetting.getSettingsOr("use-int-range", true),
       unitName: this.componentSetting.getSettingsOr("unit-name", ""),
@@ -39,8 +37,6 @@ class ComponentSlider extends Component {
 
   Widget _buildSlider({
     @required BuildContext context,
-
-    @required String displayName,
 
     @required double range,
     @required bool useIntRange,
@@ -67,12 +63,12 @@ class ComponentSlider extends Component {
             smallLine: const FlutterSliderSizedBox(
               height: 8,
               width: 1,
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: const BoxDecoration(color: Colors.white),
             ),
             bigLine: const FlutterSliderSizedBox(
               height: 16,
               width: 2,
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: const BoxDecoration(color: Colors.white),
             ),
             labels: _buildSliderHatchLabel(
                 range, useIntRange, markSightCount, unitName,
@@ -83,7 +79,7 @@ class ComponentSlider extends Component {
             inactiveTrackBarHeight: 8,
             activeTrackBarHeight: 8,
             inactiveTrackBar: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
               border: Border.all(
                 color: Colors.black38,
                 width: 2,
@@ -91,7 +87,7 @@ class ComponentSlider extends Component {
               color: Colors.black87,
             ),
             activeTrackBar: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
               border: Border.all(
                 color: Colors.black38,
                 width: 2,
@@ -118,13 +114,13 @@ class ComponentSlider extends Component {
                           color: Colors.black,
                           spreadRadius: 0.05,
                           blurRadius: 10,
-                          offset: Offset(0, 2)),
+                          offset: const Offset(0, 2)),
                     ],
                   ),
                 ),
                 Center(
                   child: Transform.rotate(
-                    angle: (axis ? 180 : 90) * pi / 180,
+                    angle: (axis ? 2 : 1) * pi / 2,
                     child: Icon(
                       Icons.menu,
                       color: Colors.white70,
@@ -156,10 +152,8 @@ class ComponentSlider extends Component {
               : range / 1000,
           values: [0],
 
-          onDragging: (handlerIndex, lowerValue, _) {
-            panelController.eventAnalogue(componentSetting.targetInputs[0],
-                (lowerValue / range * 1000).floor().toInt());
-          },
+          onDragging: (handlerIndex, lowerValue, _) =>
+            panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt()),
         );
       }
     );
@@ -217,7 +211,7 @@ class ComponentSlider extends Component {
             color: Colors.black54,
             spreadRadius: 0.05,
             blurRadius: 2,
-            offset: Offset(0, 0.1),
+            offset: const Offset(0, 0.1),
           ),
         ],
         color: Colors.white70,
@@ -226,9 +220,7 @@ class ComponentSlider extends Component {
         useIntRange
             ? value.round().toString() + unitName
             : value.toStringAsFixed(2) + unitName,
-        style: TextStyle(
-          fontSize: 20,
-        ),
+        style: const TextStyle(fontSize: 20),
       ),
     );
   }

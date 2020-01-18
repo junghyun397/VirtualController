@@ -11,9 +11,7 @@ class PanelSetting {
     this.width = json["width"];
     this.height = json["height"];
 
-    json["components"].forEach((key, val) {
-      this.components[key] = ComponentSetting.fromJSON(key, val);
-    });
+    json["components"].forEach((key, val) => this.components[key] = ComponentSetting.fromJSON(key, val));
   }
 
   Map<String, dynamic> toJSON() {

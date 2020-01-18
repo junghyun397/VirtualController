@@ -3,6 +3,17 @@ import 'dart:async';
 import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 
+class NetworkProtocol {
+  static const int PASS = -1;
+  static const int VALIDATION = -2;
+
+  static const int ANALOGUE_INPUT_COUNT = 10;
+  static const int DIGITAL_INPUT_COUNT = 100;
+
+  static const int DIGITAL_TRUE = 1;
+  static const int DIGITAL_FALSE = 0;
+}
+
 class NetworkData {
   int targetInput;
   int value;
@@ -16,7 +27,7 @@ class NetworkData {
 }
 
 class ValidationNetworkData extends NetworkData {
-  ValidationNetworkData() : super(-1, DateTime.now().millisecondsSinceEpoch);
+  ValidationNetworkData() : super(NetworkProtocol.VALIDATION, DateTime.now().millisecondsSinceEpoch);
 }
 
 abstract class NetworkAgent {
@@ -64,6 +75,10 @@ abstract class NetworkManager {
   NetworkAgent targetNetworkAgent;
 
   List<NetworkData> _buffer = [];
+
+  Future<bool> checkInterfaceAlive();
+
+  Future<String> getLocalAddress();
 
   Future<List<String>> findAliveTargetList();
 

@@ -1,6 +1,7 @@
 import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vibrate/vibrate.dart';
 
 class UtilitySystem {
 
@@ -29,8 +30,12 @@ class UtilitySystem {
       ]);
   }
 
-  static void enableDarkSoftKey() {
+  static void enableDarkSoftKey() =>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light));
+
+
+  static void vibrate() {
+    if (AppSettings().settingsMap[SettingsType.USE_VIBRATION].value) Vibrate.feedback(FeedbackType.success);
   }
 
 }

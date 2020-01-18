@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:io';
 
 import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
@@ -12,8 +11,7 @@ class WiFiNetworkAgent extends NetworkAgent {
 
   Socket _socket;
 
-  WiFiNetworkAgent(this._socket, String address, Function onSessionKilled)
-      : super(address, onSessionKilled) {
+  WiFiNetworkAgent(this._socket, String address, Function onSessionKilled): super(address, onSessionKilled) {
     this._socket.handleError((error) {
       onSessionKilled();
     });
@@ -41,25 +39,21 @@ class WifiNetworkManager extends NetworkManager {
 
   static const int _port = 42424;
 
-  static Future<bool> checkWifiConnection() async {
-    return await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
-  }
+  @override
+  Future<bool> checkInterfaceAlive() async => await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
 
-  static Future<String> getIPAddress() async {
-    return await Connectivity().getWifiIP();
-  }
+  @override
+  Future<String> getLocalAddress() async => await Connectivity().getWifiIP();
 
   @override
   Future<List<String>> findAliveTargetList() async {
-    if (!await checkWifiConnection()) return Future.value([]);
-    String ip = await getIPAddress();
+    if (!await this.checkInterfaceAlive()) return Future.value([]);
+    String ip = await this.getLocalAddress();
     final String subnet = ip.substring(0, ip.lastIndexOf("."));
 
     final stream = NetworkAnalyzer.discover2(
       subnet, _port,
-      timeout: Duration(
-          milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT]
-              .value),
+      timeout: Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
     );
 
     Completer<List<String>> completer = Completer<List<String>>();
@@ -82,15 +76,12 @@ class WifiNetworkManager extends NetworkManager {
     Function() onSessionKilled = this.setDisconnectedState;
 
     Socket.connect(deviceAddress, _port).then((socket) {
-      this.targetNetworkAgent =
-          WiFiNetworkAgent(socket, deviceAddress, onSessionKilled);
+      this.targetNetworkAgent = WiFiNetworkAgent(socket, deviceAddress, onSessionKilled);
       this.setConnectedState();
       completer.complete();
     }).catchError((e) {
       onSessionFail();
-    }).timeout(Duration(
-        milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT]
-            .value), onTimeout: () {
+    }).timeout(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value), onTimeout: () {
       onSessionFail();
     });
 
@@ -98,8 +89,6 @@ class WifiNetworkManager extends NetworkManager {
   }
 
   @override
-  String toString() {
-    return "WiFi";
-  }
+  String toString() => "WiFi";
 
 }

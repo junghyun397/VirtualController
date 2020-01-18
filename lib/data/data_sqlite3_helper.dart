@@ -52,8 +52,7 @@ class SQLite3Helper {
   Future<Map<SettingsType, String>> getSavedSettingsValue() async {
     List<Map> list = await this._db.rawQuery('SELECT * FROM settings');
     Map<SettingsType, String> settingsList = new Map<SettingsType, String>();
-    list.forEach((value) => settingsList[UtilityDart.getEnumFromString(
-        SettingsType.values, value["settings_type"])] = value["value"]);
+    list.forEach((value) => settingsList[getEnumFromString(SettingsType.values, value["settings_type"])] = value["value"]);
     return settingsList;
   }
 
@@ -89,11 +88,8 @@ class SQLite3Helper {
   // Network
 
   Future<List<String>> getSavedRegisteredDevices() async {
-    List<Map> list = await this._db.rawQuery(
-        'SELECT * FROM registered_devices');
-    return List<String>.generate(list.length, (idx) {
-      return list[idx]["address"];
-    });
+    List<Map> list = await this._db.rawQuery('SELECT * FROM registered_devices');
+    return List<String>.generate(list.length, (idx) => list[idx]["address"]);
   }
 
   Future<void> insertRegisteredDevices(String address) async {

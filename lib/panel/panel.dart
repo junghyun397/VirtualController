@@ -1,6 +1,9 @@
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_button.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_slider.dart';
+import 'package:VirtualFlightThrottle/panel/component/widget/component_switch.dart';
+import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_button.dart';
+import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_switch_2axes.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:flutter/material.dart';
@@ -27,51 +30,56 @@ class Panel extends StatelessWidget {
       result.add(Positioned(
         left: val.x * this.blockWidth,
         bottom: val.y * this.blockHeight,
-        child: SizedBox(
-          width: val.width * this.blockWidth,
-          height: val.height * this.blockHeight,
-          child: () {
-            switch (val.componentType) {
-              case ComponentType.SLIDER:
-                return ComponentSlider(
-                  componentSetting: val,
-                  blockWidth: blockWidth,
-                  blockHeight: blockHeight,
-                );
-              case ComponentType.BUTTON:
-                return ComponentButton(
-                  componentSetting: val,
-                  blockWidth: blockWidth,
-                  blockHeight: blockHeight,
-                );
-              case ComponentType.SWITCH:
-                return ComponentSlider(
-                  componentSetting: val,
-                  blockWidth: blockWidth,
-                  blockHeight: blockHeight,
-                );
-              case ComponentType.TOGGLE_BUTTON:
-                return ComponentSlider(
-                  componentSetting: val,
-                  blockWidth: blockWidth,
-                  blockHeight: blockHeight,
-                );
-              case ComponentType.TOGGLE_SWITCH_2AXES:
-                return ComponentSlider(
-                  componentSetting: val,
-                  blockWidth: blockWidth,
-                  blockHeight: blockHeight,
-                );
-              case ComponentType.TOGGLE_SWITCH_4AXES:
-                return ComponentSlider(
-                  componentSetting: val,
-                  blockWidth: blockWidth,
-                  blockHeight: blockHeight,
-                );
-              default:
-                return Container();
-            }
-          } (),
+        child: Center(
+          child: Container(
+//            color: Colors.red,
+            child: SizedBox(
+              width: val.width * this.blockWidth,
+              height: val.height * this.blockHeight,
+              child: () {
+                switch (val.componentType) {
+                  case ComponentType.SLIDER:
+                    return ComponentSlider(
+                      componentSetting: val,
+                      blockWidth: blockWidth,
+                      blockHeight: blockHeight,
+                    );
+                  case ComponentType.BUTTON:
+                    return ComponentButton(
+                      componentSetting: val,
+                      blockWidth: blockWidth,
+                      blockHeight: blockHeight,
+                    );
+                  case ComponentType.SWITCH:
+                    return ComponentSwitch(
+                      componentSetting: val,
+                      blockWidth: blockWidth,
+                      blockHeight: blockHeight,
+                    );
+                  case ComponentType.TOGGLE_BUTTON:
+                    return ComponentToggleButton(
+                      componentSetting: val,
+                      blockWidth: blockWidth,
+                      blockHeight: blockHeight,
+                    );
+                  case ComponentType.TOGGLE_SWITCH_2AXES:
+                    return ComponentToggleSwitch2Axes(
+                      componentSetting: val,
+                      blockWidth: blockWidth,
+                      blockHeight: blockHeight,
+                    );
+                  case ComponentType.TOGGLE_SWITCH_4AXES:
+                    return ComponentToggleSwitch2Axes(
+                      componentSetting: val,
+                      blockWidth: blockWidth,
+                      blockHeight: blockHeight,
+                    );
+                  default:
+                    return Container();
+                }
+              } (),
+            ),
+          ),
         ),
       ));
     });

@@ -50,7 +50,7 @@ class NetworkTypeSettingData extends SettingData<NetworkType> {
   NetworkTypeSettingData({NetworkType defaultValue, String settingName, String description}) : super(defaultValue: defaultValue, settingName: settingName, description: description);
 
   @override
-  void setValue(String sourceString) => value = UtilityDart.getEnumFromString(NetworkType.values, sourceString);
+  void setValue(String sourceString) => value = getEnumFromString(NetworkType.values, sourceString);
 }
 
 enum SettingsType {

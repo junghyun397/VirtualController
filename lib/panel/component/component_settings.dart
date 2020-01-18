@@ -113,7 +113,7 @@ class ComponentSetting {
   });
 
   ComponentSetting.fromJSON(this.name, Map<String, dynamic> json) {
-    this.componentType = UtilityDart.getEnumFromString(ComponentType.values, json["component_type"]);
+    this.componentType = getEnumFromString(ComponentType.values, json["component_type"]);
 
     this.x = json["x"];
     this.y = json["y"];

@@ -15,21 +15,19 @@ abstract class Component extends StatelessWidget {
       : super(key: key);
 
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          Flexible(
-            child: this.buildComponent(context),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Flexible(child: this.buildComponent(context)),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            this.componentSetting.getSettingsOr("display-name", ""),
+            style: TextStyle(color: Colors.white70),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              this.componentSetting.getSettingsOr("display-name", ""),
-              style: TextStyle(color: Colors.white70),
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 
