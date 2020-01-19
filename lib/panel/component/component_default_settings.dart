@@ -7,7 +7,8 @@ ComponentSetting getDefaultComponentSetting(
   @required int y,
   @required int width,
   @required int height,
-  List<int> targetInputs = const [-1],
+  List<int> targetInputs = const [-1, -1, -1, -1],
+  Map<String, String> inserts,
 }) {
   Map<String, dynamic> settings;
 
@@ -74,14 +75,6 @@ ComponentSetting getDefaultComponentSetting(
         }
       };
       break;
-    case ComponentType.SWITCH:
-      settings = {
-        "display-name": {
-          "type": "String",
-          "value": "SWTCH",
-        },
-      };
-      break;
     case ComponentType.TOGGLE_BUTTON:
       settings = {
         "display-name": {
@@ -95,35 +88,25 @@ ComponentSetting getDefaultComponentSetting(
         }
       };
       break;
-    case ComponentType.TOGGLE_SWITCH_2AXES:
+    case ComponentType.TOGGLE_SWITCH:
       settings = {
         "display-name": {
           "type": "String",
-          "value": "TGLE2",
-        },
-
-        "use-neutrality": {
-          "type": "bool",
-          "value": "true",
+          "value": "SWTCH",
         },
       };
       break;
-    case ComponentType.TOGGLE_SWITCH_4AXES:
+    case ComponentType.HAT_SWITCH:
       settings = {
         "display-name": {
           "type": "String",
-          "value": "TGLE4",
-        },
-
-        "use-neutrality": {
-          "type": "bool",
-          "value": "true",
+          "value": "HAT",
         },
       };
       break;
   }
 
-  return ComponentSetting.fromJSON("Unnamed conponent", {
+  ComponentSetting componentSetting = ComponentSetting.fromJSON("Unnamed conponent", {
     "component_type": componentType.toString(),
 
     "x": x,
@@ -135,4 +118,8 @@ ComponentSetting getDefaultComponentSetting(
 
     "settings": settings,
   });
+
+  if (inserts != null) inserts.forEach((key, val) => componentSetting.settings[key].setValue(val));
+
+  return componentSetting;
 }

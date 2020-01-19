@@ -81,10 +81,9 @@ class DoubleListComponentSettingData extends ComponentSettingData<List<double>> 
 enum ComponentType {
   SLIDER,
   BUTTON,
-  SWITCH,
   TOGGLE_BUTTON,
-  TOGGLE_SWITCH_2AXES,
-  TOGGLE_SWITCH_4AXES,
+  TOGGLE_SWITCH,
+  HAT_SWITCH,
 }
 
 class ComponentSetting {

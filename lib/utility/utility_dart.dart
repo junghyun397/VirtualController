@@ -5,9 +5,7 @@ class Pair<A, B> {
   Pair(this.a, this.b);
 
   @override
-  String toString() {
-    return "${a.toString()} : ${b.toString()}";
-  }
+  String toString() => "${a.toString()} : ${b.toString()}";
 }
 
 T getEnumFromString<T>(List<T> enumValues, String sourceString) {

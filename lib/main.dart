@@ -1,6 +1,7 @@
 import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
+import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,7 @@ Future<void> initializeGlobalComponent() async {
   ]);
   await SQLite3Helper().initializeDb();
   await AppSettings().loadSavedGlobalSettings();
+  await AppPanelManager().loadSavedPanelSettings();
   AppNetworkManager().startNotifyNetworkStateToast();
   AppNetworkManager().tryAutoReconnection();
 }

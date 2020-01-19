@@ -25,4 +25,10 @@ class AppPanelManager {
   factory AppPanelManager() =>  _singleton;
   AppPanelManager._internal();
 
+  List<PanelSetting> panelList = List<PanelSetting>();
+
+  Future<void> loadSavedPanelSettings() async {
+    return Future.value();
+  }
+
 }

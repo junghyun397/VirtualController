@@ -52,7 +52,7 @@ while True:
         packet = ParsedPacket(data)
 
         if packet.packet_type == PacketType.ERROR:
-            print("[x] failed parse packet")
+            print("[x] failed parse packet; raw:", data)
         else:
             print("[<] receive data;", str(packet))
 

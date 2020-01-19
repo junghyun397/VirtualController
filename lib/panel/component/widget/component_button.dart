@@ -64,6 +64,20 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
   AnimationController _animationController;
   Animation<double> _animationTween;
 
+  void _forwardButton() {
+    this._animationController.forward();
+    this.pressed = true;
+    UtilitySystem.vibrate();
+    if (widget.onForward != null) widget.onForward();
+  }
+
+  void _reverseButton() {
+    this._animationController.reverse();
+    this.pressed = false;
+    if (widget.toggleValue) UtilitySystem.vibrate();
+    if (widget.onReverse != null) widget.onReverse();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,51 +101,43 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
         if (!widget.toggleValue) this._reverseButton();
       },
       child: Container(
-        width: this._animationTween.value,
-        height: this._animationTween.value,
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(97, 97, 97, 1),
-          borderRadius: BorderRadius.all(Radius.circular(this._animationTween.value / 10)),
-          border: Border.all(
-            color: this._animationTween.value - (_size-_scale) != 0
-                ? Colors.black54
-                : Colors.black.withGreen(100),
-            width: 4,
-          ),
-          shape: BoxShape.rectangle,
-          boxShadow: [
-             BoxShadow(
-                color: Colors.black,
-                spreadRadius: 0.05,
-                blurRadius: this._animationTween.value - (_size-_scale),
-                offset: const Offset(0, 1)),
-          ],
-        ),
+        width: 70,
+        height: 60,
         child: Center(
-          child: Text(
-            widget.buttonText,
-            style: TextStyle(
-              fontSize: this._animationTween.value / 4,
-              color: Colors.white70,
+          child: Container(
+            width: this._animationTween.value,
+            height: this._animationTween.value,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(97, 97, 97, 1),
+              borderRadius: BorderRadius.all(Radius.circular(this._animationTween.value / 10)),
+              border: Border.all(
+                color: this._animationTween.value - (_size-_scale) != 0
+                    ? Colors.black54
+                    : Colors.black.withGreen(100),
+                width: 4,
+              ),
+              shape: BoxShape.rectangle,
+              boxShadow: [
+                 BoxShadow(
+                    color: Colors.black,
+                    spreadRadius: 0.05,
+                    blurRadius: this._animationTween.value - (_size-_scale),
+                    offset: const Offset(0, 1)),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                widget.buttonText,
+                style: TextStyle(
+                  fontSize: this._animationTween.value / 4,
+                  color: Colors.white70,
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  void _forwardButton() {
-    this._animationController.forward();
-    this.pressed = true;
-    UtilitySystem.vibrate();
-    if (widget.onForward != null) widget.onForward();
-  }
-
-  void _reverseButton() {
-    this._animationController.reverse();
-    this.pressed = false;
-    if (widget.toggleValue) UtilitySystem.vibrate();
-    if (widget.onReverse != null) widget.onReverse();
   }
 
 }

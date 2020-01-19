@@ -1,9 +1,9 @@
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_button.dart';
+import 'package:VirtualFlightThrottle/panel/component/widget/component_hat_switch.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_slider.dart';
-import 'package:VirtualFlightThrottle/panel/component/widget/component_switch.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_button.dart';
-import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_switch_2axes.dart';
+import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_switch.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:flutter/material.dart';
@@ -50,26 +50,20 @@ class Panel extends StatelessWidget {
                       blockWidth: blockWidth,
                       blockHeight: blockHeight,
                     );
-                  case ComponentType.SWITCH:
-                    return ComponentSwitch(
-                      componentSetting: val,
-                      blockWidth: blockWidth,
-                      blockHeight: blockHeight,
-                    );
                   case ComponentType.TOGGLE_BUTTON:
                     return ComponentToggleButton(
                       componentSetting: val,
                       blockWidth: blockWidth,
                       blockHeight: blockHeight,
                     );
-                  case ComponentType.TOGGLE_SWITCH_2AXES:
-                    return ComponentToggleSwitch2Axes(
+                  case ComponentType.TOGGLE_SWITCH:
+                    return ComponentToggleSwitch(
                       componentSetting: val,
                       blockWidth: blockWidth,
                       blockHeight: blockHeight,
                     );
-                  case ComponentType.TOGGLE_SWITCH_4AXES:
-                    return ComponentToggleSwitch2Axes(
+                  case ComponentType.HAT_SWITCH:
+                    return ComponentHatSwitch(
                       componentSetting: val,
                       blockWidth: blockWidth,
                       blockHeight: blockHeight,

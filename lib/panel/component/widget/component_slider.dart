@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
+import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:provider/provider.dart';
@@ -151,7 +152,7 @@ class ComponentSlider extends Component {
               ? 1
               : range / 1000,
           values: [0],
-
+          onDragStarted: (_, __, ___) => UtilitySystem.vibrate(),
           onDragging: (handlerIndex, lowerValue, _) =>
             panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt()),
         );
