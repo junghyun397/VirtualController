@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -76,14 +77,6 @@ class DoubleListComponentSettingData extends ComponentSettingData<List<double>> 
       "value": this.value.toString(),
     };
   }
-}
-
-enum ComponentType {
-  SLIDER,
-  BUTTON,
-  TOGGLE_BUTTON,
-  TOGGLE_SWITCH,
-  HAT_SWITCH,
 }
 
 class ComponentSetting {

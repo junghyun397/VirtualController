@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:VirtualFlightThrottle/panel/component/component_default_settings.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/panel.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
