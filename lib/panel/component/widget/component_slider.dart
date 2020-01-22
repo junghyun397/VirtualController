@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
@@ -20,19 +21,19 @@ class ComponentSlider extends Component {
     return this._buildSlider(
       context: context,
 
-      range: this.componentSetting.getSettingsOr("range", 100.0),
-      useIntRange: this.componentSetting.getSettingsOr("use-int-range", true),
-      unitName: this.componentSetting.getSettingsOr("unit-name", ""),
+      range: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_RANGE, 100.0),
+      useIntegerRange: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_INTEGER_RANGE, true),
+      unitName: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_UNIT_NAME, ""),
 
-      axis: this.componentSetting.getSettingsOr("axis", true),
+      useVerticalAxis: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_VERTICAL_AXIS, true),
 
-      useValuePopup: this.componentSetting.getSettingsOr("use-value-popup", true),
+      useCurrentValuePopup: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_CURRENT_VALUE_POPUP, true),
 
-      markDensity: this.componentSetting.getSettingsOr("mark-density", 0.4),
-      markSightCount: this.componentSetting.getSettingsOr("mark-sight-count", 9),
-      useMarkSightValue: this.componentSetting.getSettingsOr("use-mark-sight-value", true),
+      graduatedDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_GRADUATED_DENSITY, 0.4),
+      graduatedIndexDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_GRADUATED_INDEX_DENSITY, 9),
+      useGraduationLable: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_GRADUATION_LABEL, true),
 
-      detentPoints: this.componentSetting.getSettingsOr("detent-points", []),
+      detentPoints: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_DETENT_POINTS, []),
     );
   }
 
@@ -40,16 +41,16 @@ class ComponentSlider extends Component {
     @required BuildContext context,
 
     @required double range,
-    @required bool useIntRange,
+    @required bool useIntegerRange,
     @required String unitName,
 
-    @required bool axis,
+    @required bool useVerticalAxis,
 
-    @required bool useValuePopup,
+    @required bool useCurrentValuePopup,
 
-    @required double markDensity,
-    @required int markSightCount, // recommended 1, 4, 9
-    @required bool useMarkSightValue,
+    @required double graduatedDensity,
+    @required int graduatedIndexDensity, // recommended 1, 4, 9
+    @required bool useGraduationLable,
 
     @required List<double> detentPoints,
   }) {
@@ -59,8 +60,8 @@ class ComponentSlider extends Component {
           selectByTap: false,
 
           hatchMark: FlutterSliderHatchMark(
-            distanceFromTrackBar: axis ? 30 : 10,
-            density: markDensity,
+            distanceFromTrackBar: useVerticalAxis ? 30 : 10,
+            density: graduatedDensity,
             smallLine: const FlutterSliderSizedBox(
               height: 8,
               width: 1,
@@ -72,8 +73,8 @@ class ComponentSlider extends Component {
               decoration: const BoxDecoration(color: Colors.white),
             ),
             labels: _buildSliderHatchLabel(
-                range, useIntRange, markSightCount, unitName,
-                useMarkSightValue),
+                range, useIntegerRange, graduatedIndexDensity, unitName,
+                useGraduationLable),
           ),
 
           trackBar: FlutterSliderTrackBar(
@@ -98,8 +99,8 @@ class ComponentSlider extends Component {
           ),
 
           touchSize: 40,
-          handlerHeight: axis ? 30 : 50,
-          handlerWidth: axis ? 50 : 30,
+          handlerHeight: useVerticalAxis ? 30 : 50,
+          handlerWidth: useVerticalAxis ? 50 : 30,
           handler: FlutterSliderHandler(
             decoration: const BoxDecoration(),
             child: Stack(
@@ -121,7 +122,7 @@ class ComponentSlider extends Component {
                 ),
                 Center(
                   child: Transform.rotate(
-                    angle: (axis ? 2 : 1) * pi / 2,
+                    angle: (useVerticalAxis ? 2 : 1) * pi / 2,
                     child: Icon(
                       Icons.menu,
                       color: Colors.white70,
@@ -139,21 +140,21 @@ class ComponentSlider extends Component {
             scale: 1.2,
           ),
           tooltip: FlutterSliderTooltip(
-            disabled: !useValuePopup,
-            custom: (value) => _buildSliderToolTip(value, useIntRange, unitName),
+            disabled: !useCurrentValuePopup,
+            custom: (value) => _buildSliderToolTip(value, range, useIntegerRange, unitName, detentPoints),
           ),
 
-          axis: axis ? Axis.vertical : Axis.horizontal,
-          rtl: axis,
+          axis: useVerticalAxis ? Axis.vertical : Axis.horizontal,
+          rtl: useVerticalAxis,
 
           min: 0,
           max: range,
-          step: useIntRange
+          step: useIntegerRange
               ? 1
               : range / 1000,
           values: [0],
           onDragStarted: (_, __, ___) => UtilitySystem.vibrate(),
-          onDragging: (handlerIndex, lowerValue, _) =>
+          onDragging: (_, lowerValue, __) =>
             panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt()),
         );
       }
@@ -202,7 +203,7 @@ class ComponentSlider extends Component {
     return result;
   }
 
-  Widget _buildSliderToolTip(double value, bool useIntRange, String unitName) {
+  Widget _buildSliderToolTip(double value, double range, bool useIntRange, String unitName, List<double> detentPoints) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -215,7 +216,9 @@ class ComponentSlider extends Component {
             offset: const Offset(0, 0.1),
           ),
         ],
-        color: Colors.white70,
+        color: this._processDetentRange(value, range, detentPoints)
+            ? Colors.green.withOpacity(0.7)
+            : Colors.white70,
       ),
       child: Text(
         useIntRange
@@ -224,6 +227,15 @@ class ComponentSlider extends Component {
         style: const TextStyle(fontSize: 20),
       ),
     );
+  }
+
+  bool _processDetentRange(double value, double range, List<double> detentPoints) {
+    double stepRange = range / 100;
+    for (double detent in detentPoints) if (detent - stepRange < value) if (value < detent + stepRange) {
+      UtilitySystem.vibrate();
+      return true;
+    }
+    return false;
   }
 
 }

@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
@@ -17,18 +18,18 @@ class ComponentButton extends Component {
     return this._buildButton(
       context: context,
 
-      buttonText: this.componentSetting.getSettingsOr("button-text", ""),
+      buttonLabel: this.componentSetting.getSettingsOr(ComponentSettingType.BUTTON_LABEL, ""),
     );
   }
 
   Widget _buildButton({
     @required BuildContext context,
 
-    @required String buttonText,
+    @required String buttonLabel,
   }) {
     PanelController panelController = Provider.of<PanelController>(context, listen: false);
     return ComponentButtonWidget(
-      buttonText: buttonText,
+      buttonLabel: buttonLabel,
       toggleValue: false,
       onForward: () => panelController.eventDigital(this.componentSetting.targetInputs[0], true),
       onReverse: () => panelController.eventDigital(this.componentSetting.targetInputs[0], false),
@@ -37,7 +38,7 @@ class ComponentButton extends Component {
 }
 
 class ComponentButtonWidget extends StatefulWidget {
-  final String buttonText;
+  final String buttonLabel;
   final bool toggleValue;
 
   final Function onForward;
@@ -45,7 +46,7 @@ class ComponentButtonWidget extends StatefulWidget {
 
   ComponentButtonWidget({
     Key key,
-    this.buttonText,
+    this.buttonLabel,
     this.toggleValue,
     this.onForward,
     this.onReverse,
@@ -127,7 +128,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
             ),
             child: Center(
               child: Text(
-                widget.buttonText,
+                widget.buttonLabel,
                 style: TextStyle(
                   fontSize: this._animationTween.value / 4,
                   color: Colors.white70,

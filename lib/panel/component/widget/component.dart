@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ abstract class Component extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
-            this.componentSetting.getSettingsOr("display-name", ""),
+            this.componentSetting.getSettingsOr(ComponentSettingType.LABEL, ""),
             style: TextStyle(color: Colors.white70),
           ),
         )

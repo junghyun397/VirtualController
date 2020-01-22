@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
@@ -26,7 +28,7 @@ class ComponentToggleSwitch extends Component {
   }) {
     PanelController panelController = Provider.of<PanelController>(context, listen: false);
     return ComponentToggleSwitchWidget(
-      height: this.blockHeight * this.componentSetting.height,
+      height: min(this.blockHeight * this.componentSetting.height, 120),
 
       onForwardTop: () => panelController.eventDigital(this.componentSetting.targetInputs[0], true),
       onReverseTop: () => panelController.eventDigital(this.componentSetting.targetInputs[0], false),
@@ -98,7 +100,7 @@ class _ComponentToggleSwitchWidgetState extends State<ComponentToggleSwitchWidge
         this.dragSummary += val.delta.dy;
       },
       onVerticalDragEnd: (val) {
-        if (!(-10 < this.dragSummary && this.dragSummary < 10)) {
+        if (!(-0.5 < this.dragSummary && this.dragSummary < 0.5)) {
           bool forwardTop = this.dragSummary < 0;
           if (this.nowPosition == null && forwardTop) this._forwardTop();
           else if (this.nowPosition == null && !forwardTop) this._forwardBottom();

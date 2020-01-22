@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_button.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:flutter/material.dart';
@@ -16,18 +17,18 @@ class ComponentToggleButton extends ComponentButton {
     return this._buildButton(
       context: context,
 
-      buttonText: this.componentSetting.getSettingsOr("button-text", ""),
+      buttonLabel: this.componentSetting.getSettingsOr(ComponentSettingType.BUTTON_LABEL, ""),
     );
   }
 
   Widget _buildButton({
     @required BuildContext context,
 
-    @required String buttonText,
+    @required String buttonLabel,
   }) {
     PanelController panelController = Provider.of<PanelController>(context, listen: false);
     return ComponentButtonWidget(
-      buttonText: buttonText,
+      buttonLabel: buttonLabel,
       toggleValue: true,
       onForward: () => panelController.eventDigital(this.componentSetting.targetInputs[0], true),
       onReverse: () => panelController.eventDigital(this.componentSetting.targetInputs[0], false),

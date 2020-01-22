@@ -14,7 +14,7 @@ class PanelController with ChangeNotifier {
   }
 
   void eventAnalogue(int inputIndex, int value) {
-    if (inputIndex == -1) return;
+    if (inputIndex == -1 || this._inputState[inputIndex] == value) return;
 
     if (this._syncWith.containsKey(inputIndex)) {
       this.eventAnalogue(this._syncWith[inputIndex], value);
@@ -25,10 +25,11 @@ class PanelController with ChangeNotifier {
   }
 
   void eventDigital(int inputIndex, bool value) {
-    if (inputIndex == -1) return;
+    int serializeValue = value ? NetworkProtocol.DIGITAL_TRUE : NetworkProtocol.DIGITAL_FALSE;
+    if (inputIndex == -1 || this._inputState[inputIndex] == serializeValue) return;
 
-    this._inputState[inputIndex] = value ? NetworkProtocol.DIGITAL_TRUE : NetworkProtocol.DIGITAL_FALSE;
-    AppNetworkManager().val.sendData(NetworkData(inputIndex, value ? NetworkProtocol.DIGITAL_TRUE : NetworkProtocol.DIGITAL_FALSE));
+    this._inputState[inputIndex] = serializeValue;
+    AppNetworkManager().val.sendData(NetworkData(inputIndex, serializeValue));
   }
 
   void _syncAll() {

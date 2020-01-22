@@ -8,16 +8,14 @@ abstract class ComponentSettingData<T> {
   T value;
   Type type;
 
-  String settingName;
+  ComponentSettingType settingType;
 
-  ComponentSettingData(this.settingName, String sourceString) {
+  ComponentSettingData(this.settingType, String sourceString) {
     this.setValue(sourceString);
     this.type = this.value.runtimeType;
   }
 
   void setValue(String sourceString);
-
-  copy();
 
   Map<String, dynamic> toJSON() {
     return {
@@ -28,45 +26,35 @@ abstract class ComponentSettingData<T> {
 }
 
 class StringComponentSettingData extends ComponentSettingData<String> {
-  StringComponentSettingData(String settingName, String sourceString): super(settingName, sourceString);
-
-  StringComponentSettingData copy() => StringComponentSettingData(settingName, this.value.toString());
+  StringComponentSettingData(ComponentSettingType settingType, String sourceString): super(settingType, sourceString);
 
   @override
   void setValue(String sourceString) => this.value = sourceString;
 }
 
 class BooleanComponentSettingData extends ComponentSettingData<bool> {
-  BooleanComponentSettingData(String settingName, String sourceString): super(settingName, sourceString);
-
-  BooleanComponentSettingData copy() => BooleanComponentSettingData(settingName, this.value.toString());
+  BooleanComponentSettingData(ComponentSettingType settingType, String sourceString): super(settingType, sourceString);
 
   @override
   void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
 }
 
 class IntegerComponentSettingData extends ComponentSettingData<int> {
-  IntegerComponentSettingData(String settingName, String sourceString): super(settingName, sourceString);
-
-  IntegerComponentSettingData copy() => IntegerComponentSettingData(settingName, this.value.toString());
+  IntegerComponentSettingData(ComponentSettingType settingType, String sourceString): super(settingType, sourceString);
 
   @override
   void setValue(String sourceString) => value = int.parse(sourceString);
 }
 
 class DoubleComponentSettingData extends ComponentSettingData<double> {
-  DoubleComponentSettingData(String settingName, String sourceString): super(settingName, sourceString);
-
-  DoubleComponentSettingData copy() => DoubleComponentSettingData(settingName, this.value.toString());
+  DoubleComponentSettingData(ComponentSettingType settingType, String sourceString): super(settingType, sourceString);
 
   @override
   void setValue(String sourceString) => value = double.parse(sourceString);
 }
 
 class DoubleListComponentSettingData extends ComponentSettingData<List<double>> {
-  DoubleListComponentSettingData(String settingName, String sourceString): super(settingName, sourceString);
-
-  DoubleListComponentSettingData copy() => DoubleListComponentSettingData(settingName, this.value.toString());
+  DoubleListComponentSettingData(ComponentSettingType settingType, String sourceString): super(settingType, sourceString);
 
   @override
   void setValue(String sourceString) => value = json.decode(sourceString).cast<double>();
@@ -89,7 +77,7 @@ class ComponentSetting {
 
   List<int> targetInputs;
 
-  Map<String, ComponentSettingData> settings = Map<String, ComponentSettingData>();
+  Map<ComponentSettingType, ComponentSettingData> settings = Map<ComponentSettingType, ComponentSettingData>();
 
   ComponentSetting({
     @required this.name,
@@ -115,25 +103,26 @@ class ComponentSetting {
     this.targetInputs = json["target_inputs"];
 
     json["settings"].forEach((key, val) {
-      this.settings[key] = () {
+      ComponentSettingType settingType = getEnumFromString(ComponentSettingType.values, key);
+      this.settings[settingType] = () {
         switch (val["type"]) {
           case "String":
-            return StringComponentSettingData(key, val["value"].toString());
+            return StringComponentSettingData(settingType, val["value"].toString());
             break;
           case "bool":
-            return BooleanComponentSettingData(key, val["value"].toString());
+            return BooleanComponentSettingData(settingType, val["value"].toString());
             break;
           case "int":
-            return IntegerComponentSettingData(key, val["value"].toString());
+            return IntegerComponentSettingData(settingType, val["value"].toString());
             break;
           case "double":
-            return DoubleComponentSettingData(key, val["value"].toString());
+            return DoubleComponentSettingData(settingType, val["value"].toString());
             break;
           case "List<double>":
-            return DoubleListComponentSettingData(key, val["value"].toString());
+            return DoubleListComponentSettingData(settingType, val["value"].toString());
             break;
           default:
-            return StringComponentSettingData(key, val["value"].toString());
+            return StringComponentSettingData(settingType, val["value"].toString());
             break;
         }
       } ();
@@ -153,15 +142,14 @@ class ComponentSetting {
     result["target_inputs"] = this.targetInputs;
     
     Map<String, dynamic> data = Map<String, dynamic>();
-    this.settings.forEach((key, val) => data[key] = val.toJSON());
+    this.settings.forEach((key, val) => data[key.toString()] = val.toJSON());
     result["settings"] = data;
     
     return result;
   }
 
-  T getSettingsOr<T>(String settingName, T defaultValue) {
-    if (this.settings.containsKey(settingName))
-      return this.settings[settingName].value;
+  T getSettingsOr<T>(ComponentSettingType settingType, T defaultValue) {
+    if (this.settings.containsKey(settingType)) return this.settings[settingType].value;
     else return defaultValue;
   }
 
