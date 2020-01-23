@@ -112,7 +112,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
               color: const Color.fromRGBO(97, 97, 97, 1),
               borderRadius: BorderRadius.all(Radius.circular(this._animationTween.value / 10)),
               border: Border.all(
-                color: this._animationTween.value - (_size-_scale) != 0
+                color: this._animationTween.value - (_size-_scale) != 0 || !widget.toggleValue
                     ? Colors.black54
                     : Colors.black.withGreen(100),
                 width: 4,

@@ -1,6 +1,9 @@
 import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:VirtualFlightThrottle/page/main/page_main_panel_debug.dart';
+import 'package:VirtualFlightThrottle/panel/panel.dart';
+import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
+import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
+import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +22,24 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
   Widget _mainPanelCache;
 
   Widget _buildMainPanel(BuildContext context) {
-    if (this._mainPanelCache == null) this._mainPanelCache = buildDebugArea(context);
+    if (AppPanelManager().needMainPanelUpdate) {
+      AppPanelManager().needMainPanelUpdate = false;
+      this._mainPanelCache = null;
+    }
+
+    if (this._mainPanelCache == null) {
+      PanelSetting panelSetting = AppPanelManager().panelList[0];
+      Size blockSize = PanelUtility.getBlockSize(panelSetting, MediaQuery.of(context).size);
+      return this._mainPanelCache = Container(
+        child: Panel(
+            blockWidth: blockSize.width,
+            blockHeight: blockSize.height,
+            panelSetting: panelSetting,
+            panelController: PanelController(),
+        ),
+      );
+    }
+
     return this._mainPanelCache;
   }
 

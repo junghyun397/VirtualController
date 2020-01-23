@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class PanelUtility {
   static const double MIN_BLOCK_WIDTH = 75.0;
@@ -22,13 +25,29 @@ class PanelUtility {
 
 class AppPanelManager {
   static final AppPanelManager _singleton = new AppPanelManager._internal();
-  factory AppPanelManager() =>  _singleton;
+  factory AppPanelManager() => _singleton;
   AppPanelManager._internal();
 
+  bool needMainPanelUpdate = false;
   List<PanelSetting> panelList = List<PanelSetting>();
 
   Future<void> loadSavedPanelSettings() async {
-    return Future.value();
+    await SQLite3Helper().getSavedPanelList().then((val) async {
+      if (val.length == 0) {
+        PanelSetting defaultPanelSetting = await _getSavedDefaultPanelSettings(true);
+        SQLite3Helper().insertPanel("default", jsonEncode(defaultPanelSetting.toJSON()));
+        this.panelList.add(await _getSavedDefaultPanelSettings(true));
+      } else val.forEach((key, value) => this.panelList.add(PanelSetting.fromJSON(key, jsonDecode(value))));
+    });
   }
+
+  void insertPanelSetting(PanelSetting panelSetting) =>
+      SQLite3Helper().insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
+
+  void removeSavedPanelSetting(String panelName) =>
+      SQLite3Helper().removePanel(panelName);
+
+  Future<PanelSetting> _getSavedDefaultPanelSettings(bool loadSmall) async =>
+    PanelSetting.fromJSON("Default Panel", jsonDecode(await rootBundle.loadString("assets/jsons/default_panel_${loadSmall? "small" : "large"}.json")));
 
 }

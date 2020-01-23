@@ -100,7 +100,7 @@ class ComponentSetting {
     this.width = json["width"];
     this.height = json["height"];
 
-    this.targetInputs = json["target_inputs"];
+    this.targetInputs = json["target_inputs"].cast<int>();
 
     json["settings"].forEach((key, val) {
       ComponentSettingType settingType = getEnumFromString(ComponentSettingType.values, key);

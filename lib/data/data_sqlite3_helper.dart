@@ -35,8 +35,8 @@ class SQLite3Helper {
           "value TEXT"
       ")");
     await db.execute(
-      "CREATE TABLE IF NOT EXISTS layouts("
-        "layout_name TEXT PRIMARY KEY, "
+      "CREATE TABLE IF NOT EXISTS panels("
+        "panel_name TEXT PRIMARY KEY, "
         "value TEXT, "
         "date DATETIME DEFAULT CURRENT_TIMESTAMP"
       ")");
@@ -66,23 +66,27 @@ class SQLite3Helper {
     );
   }
 
-  // Layouts
+  // Penal
 
-  Future<Map<String, String>> getSavedLayoutList() async {
-    List<Map> list = await this._db.rawQuery('SELECT * FROM layouts');
+  Future<Map<String, String>> getSavedPanelList() async {
+    List<Map> list = await this._db.rawQuery('SELECT * FROM panels');
     Map<String, String> layoutJSON = new Map<String, String>();
-    list.forEach((value) => layoutJSON[value["layout_name"]] = value["value"]);
+    list.forEach((value) => layoutJSON[value["panel_name"]] = value["value"]);
     return layoutJSON;
   }
 
-  Future<void> insertLayout(String layoutName, String layoutJSON) async {
+  Future<void> insertPanel(String layoutName, String layoutJSON) async {
     await this._db.insert(
-      "layouts", {
-      "layout_name": layoutName,
+      "panels", {
+      "panel_name": layoutName,
       "value": layoutJSON,
     },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  Future<void> removePanel(String layoutName) async {
+    await this._db.delete("panels", where: layoutName);
   }
 
   // Network
