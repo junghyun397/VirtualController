@@ -110,36 +110,33 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             ],
           ),
         ),
-        ListView(
-          shrinkWrap: true,
-          children: deviceList.map((val) =>
-              ListTile(
-                leading: Icon(Icons.videogame_asset),
-                title: Text(val),
-                subtitle: Text("Tap to connect with this device"),
-                trailing: Text(
-                  "ACTIVE",
-                  style: TextStyle(color: Colors.green),
-                ),
-                onTap: () =>
-                    Provider.of<PageNetworkController>(context, listen: false)
-                        .connectDevice(val, () {
-                      this._scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                            "Connection with the server $val failed."),
-                        action: SnackBarAction(
-                            label: "REFRESH",
-                            textColor: Colors.green,
-                            onPressed: () {
-                              this._scaffoldKey.currentState
-                                  .hideCurrentSnackBar();
-                              Provider.of<PageNetworkController>(
-                                  context, listen: false).refreshDeviceList();
-                            }
-                        ),
-                      ));
-                    }),
-              ),).toList(),
+        Flexible(
+          child: ListView(
+            children: deviceList.map((val) =>
+                ListTile(
+                  leading: Icon(Icons.videogame_asset),
+                  title: Text(val),
+                  subtitle: Text("Tap to connect with this device"),
+                  trailing: Text(
+                    "ACTIVE",
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  onTap: () =>
+                      Provider.of<PageNetworkController>(context, listen: false).connectDevice(val, () {
+                        this._scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text("Connection with the server $val failed."),
+                          action: SnackBarAction(
+                              label: "REFRESH",
+                              textColor: Colors.green,
+                              onPressed: () {
+                                this._scaffoldKey.currentState.hideCurrentSnackBar();
+                                Provider.of<PageNetworkController>(context, listen: false).refreshDeviceList();
+                              }
+                          ),
+                        ));
+                      }),
+                ),).toList(),
+          ),
         ),
       ],
     );
@@ -164,9 +161,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   style: TextStyle(fontSize: 16),
                 ),
                 FlatButton(
-                  onPressed: Provider
-                      .of<PageNetworkController>(context)
-                      .disconnectCurrentDevice,
+                  onPressed: Provider.of<PageNetworkController>(context).disconnectCurrentDevice,
                   child: Text(
                     "DISCONNECT",
                     style: TextStyle(

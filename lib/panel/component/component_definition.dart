@@ -5,6 +5,7 @@ import 'package:VirtualFlightThrottle/panel/component/widget/component_hat_switc
 import 'package:VirtualFlightThrottle/panel/component/widget/component_slider.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_button.dart';
 import 'package:VirtualFlightThrottle/panel/component/widget/component_toggle_switch.dart';
+import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:flutter/material.dart';
 
 // --- Component Settings ---
@@ -222,3 +223,8 @@ ComponentSetting getDefaultComponentSetting(
   if (inserts != null) inserts.forEach((key, val) => componentSetting.settings[key].setValue(val));
   return componentSetting;
 }
+
+// --- Panel ---
+
+PanelSetting getBasicPanelSetting({String name, int width, int height}) =>
+    PanelSetting.fromJSON(name, {"width": width, "height": height, "components": {}});

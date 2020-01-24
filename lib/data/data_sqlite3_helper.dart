@@ -85,8 +85,8 @@ class SQLite3Helper {
     );
   }
 
-  Future<void> removePanel(String layoutName) async {
-    await this._db.delete("panels", where: layoutName);
+  Future<void> removePanel(String panelName) async {
+    await this._db.delete("panels", where: "panel_name = ?", whereArgs: [panelName]);
   }
 
   // Network

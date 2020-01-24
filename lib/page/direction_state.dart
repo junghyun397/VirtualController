@@ -6,15 +6,24 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 class FixedDirectionState<T> extends State with RouteAware {
 
   @override
+  void initState() {
+    UtilitySystem.enableDarkSoftKey();
+    UtilitySystem.enableUIOverlays(false);
+    UtilitySystem.enableFixedDirection(true);
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context));
   }
 
   @override
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    super.dispose();
+  void didPop() {
+    UtilitySystem.enableFixedDirection(false);
+    UtilitySystem.enableUIOverlays(true);
+    super.didPop();
   }
 
   @override
@@ -25,19 +34,13 @@ class FixedDirectionState<T> extends State with RouteAware {
   }
 
   @override
-  Widget build(BuildContext context) => Container();
-
-}
-
-class RootFixedDirectionState<T> extends FixedDirectionState {
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
-  void initState() {
-    UtilitySystem.enableDarkSoftKey();
-    UtilitySystem.enableUIOverlays(false);
-    UtilitySystem.enableFixedDirection(true);
-    super.initState();
-  }
+  Widget build(BuildContext context) => Container();
 
 }
 
@@ -48,6 +51,13 @@ class DynamicDirectionState<T> extends State with RouteAware {
     UtilitySystem.enableFixedDirection(false);
     UtilitySystem.enableUIOverlays(true);
     super.initState();
+  }
+
+  @override
+  void didPopNext() {
+    UtilitySystem.enableFixedDirection(false);
+    UtilitySystem.enableUIOverlays(true);
+    super.didPopNext();
   }
 
   @override

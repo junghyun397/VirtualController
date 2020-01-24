@@ -1,14 +1,14 @@
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:flutter/material.dart';
 
-class PageLayoutStore extends StatefulWidget {
-  PageLayoutStore({Key key}): super(key: key);
+class PagePanelStore extends StatefulWidget {
+  PagePanelStore({Key key}): super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _PageLayoutStoreState();
+  State<StatefulWidget> createState() => _PagePanelStoreState();
 }
 
-class _PageLayoutStoreState extends DynamicDirectionState<PageLayoutStore> {
+class _PagePanelStoreState extends DynamicDirectionState<PagePanelStore> {
 
   @override
   Widget build(BuildContext context) {

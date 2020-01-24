@@ -17,11 +17,11 @@ class PageMainPanel extends StatefulWidget {
   _PageMainPanelState createState() => new _PageMainPanelState();
 }
 
-class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
+class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
 
   Widget _mainPanelCache;
 
-  Widget _buildMainPanel(BuildContext context) {
+  Widget _buildMainPanel(BuildContext context, Size fullSize) {
     if (AppPanelManager().needMainPanelUpdate) {
       AppPanelManager().needMainPanelUpdate = false;
       this._mainPanelCache = null;
@@ -29,13 +29,13 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
 
     if (this._mainPanelCache == null) {
       PanelSetting panelSetting = AppPanelManager().panelList[0];
-      Size blockSize = PanelUtility.getBlockSize(panelSetting, MediaQuery.of(context).size);
+      Size blockSize = PanelUtility.getBlockSize(panelSetting, fullSize);
       return this._mainPanelCache = Container(
         child: Panel(
-            blockWidth: blockSize.width,
-            blockHeight: blockSize.height,
-            panelSetting: panelSetting,
-            panelController: PanelController(),
+          blockWidth: blockSize.width,
+          blockHeight: blockSize.height,
+          panelSetting: panelSetting,
+          panelController: PanelController(),
         ),
       );
     }
@@ -103,7 +103,7 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
       body: Container(
         child: Stack(
           children: <Widget>[
-            this._buildMainPanel(context),
+            this._buildMainPanel(context, MediaQuery.of(context).size),
             StreamBuilder<bool>(
                 stream: AppNetworkManager().val.networkStateStreamController.stream,
                 initialData: false,
@@ -138,11 +138,11 @@ class _PageMainPanelState extends RootFixedDirectionState<PageMainPanel> {
               color: Colors.black87,
             ),
             backgroundColor: Colors.white,
-            label: "Layout",
+            label: "Panels",
             labelStyle: const TextStyle(
               color: Colors.black54,
             ),
-            onTap: () => Navigator.pushNamed(context, Routes.PAGE_LAYOUT_LIST),
+            onTap: () => Navigator.pushNamed(context, Routes.PAGE_PANEL_LIST),
           ),
           SpeedDialChild(
             child: const Icon(

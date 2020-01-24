@@ -31,23 +31,27 @@ class AppPanelManager {
   bool needMainPanelUpdate = false;
   List<PanelSetting> panelList = List<PanelSetting>();
 
-  Future<void> loadSavedPanelSettings() async {
+  Future<void> loadSavedPanelList() async {
     await SQLite3Helper().getSavedPanelList().then((val) async {
       if (val.length == 0) {
-        PanelSetting defaultPanelSetting = await _getSavedDefaultPanelSettings(true);
-        SQLite3Helper().insertPanel("default", jsonEncode(defaultPanelSetting.toJSON()));
-        this.panelList.add(await _getSavedDefaultPanelSettings(true));
+        PanelSetting defaultPanelSetting = await _getSavedDefaultPanel(true);
+        SQLite3Helper().insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
+        this.panelList.add(await _getSavedDefaultPanel(true));
       } else val.forEach((key, value) => this.panelList.add(PanelSetting.fromJSON(key, jsonDecode(value))));
     });
   }
 
-  void insertPanelSetting(PanelSetting panelSetting) =>
-      SQLite3Helper().insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
+  void insertPanel(PanelSetting panelSetting) {
+    this.panelList.insert(0, panelSetting);
+    SQLite3Helper().insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
+  }
 
-  void removeSavedPanelSetting(String panelName) =>
-      SQLite3Helper().removePanel(panelName);
+  void removeSavedPanel(String panelName) {
+    this.panelList.removeAt(this.panelList.indexWhere((val) => val.name == panelName));
+    SQLite3Helper().removePanel(panelName);
+  }
 
-  Future<PanelSetting> _getSavedDefaultPanelSettings(bool loadSmall) async =>
+  Future<PanelSetting> _getSavedDefaultPanel(bool loadSmall) async =>
     PanelSetting.fromJSON("Default Panel", jsonDecode(await rootBundle.loadString("assets/jsons/default_panel_${loadSmall? "small" : "large"}.json")));
 
 }
