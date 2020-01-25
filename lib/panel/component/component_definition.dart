@@ -226,5 +226,5 @@ ComponentSetting getDefaultComponentSetting(
 
 // --- Panel ---
 
-PanelSetting getBasicPanelSetting({String name, int width, int height}) =>
-    PanelSetting.fromJSON(name, {"width": width, "height": height, "components": {}});
+PanelSetting getBasicPanelSetting({@required String name, @required int width, @required int height}) =>
+    PanelSetting.fromJSON(name, {"width": width, "height": height, "components": {}, "date": DateTime.now().millisecondsSinceEpoch});

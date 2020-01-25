@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_bluetooth.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';

@@ -1,10 +1,11 @@
-import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/panel/panel.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
+import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,22 +22,20 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
 
   Widget _mainPanelCache;
 
-  Widget _buildMainPanel(BuildContext context, Size fullSize) {
+  Widget _buildMainPanel(BuildContext context) {
     if (AppPanelManager().needMainPanelUpdate) {
       AppPanelManager().needMainPanelUpdate = false;
       this._mainPanelCache = null;
     }
 
     if (this._mainPanelCache == null) {
-      PanelSetting panelSetting = AppPanelManager().panelList[0];
-      Size blockSize = PanelUtility.getBlockSize(panelSetting, fullSize);
-      return this._mainPanelCache = Container(
-        child: Panel(
-          blockWidth: blockSize.width,
-          blockHeight: blockSize.height,
-          panelSetting: panelSetting,
-          panelController: PanelController(),
-        ),
+      PanelSetting panelSetting = AppPanelManager().getMainPanel();
+      Size blockSize = PanelUtility.getBlockSize(panelSetting, UtilitySystem.fullScreenSize);
+      return this._mainPanelCache = Panel(
+        blockWidth: blockSize.width,
+        blockHeight: blockSize.height,
+        panelSetting: panelSetting,
+        panelController: PanelController(),
       );
     }
 
@@ -103,7 +102,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
       body: Container(
         child: Stack(
           children: <Widget>[
-            this._buildMainPanel(context, MediaQuery.of(context).size),
+            this._buildMainPanel(context),
             StreamBuilder<bool>(
                 stream: AppNetworkManager().val.networkStateStreamController.stream,
                 initialData: false,

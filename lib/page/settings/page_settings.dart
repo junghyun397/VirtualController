@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
@@ -148,6 +148,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () => this._resetSettings(context),
+            tooltip: "Reset settings",
           ),
         ],
       ),

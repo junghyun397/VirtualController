@@ -1,11 +1,14 @@
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'dart:ui';
+
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
-import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/panel/builder/page_panel_builder.dart';
 import 'package:VirtualFlightThrottle/page/panel/list/page_panel_list.dart';
 import 'package:VirtualFlightThrottle/page/panel/store/page_panel_store.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
+import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,6 +65,8 @@ Future<void> initializeGlobalComponent() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+  UtilitySystem.fullScreenSize =
+      Size(window.physicalSize.width / window.devicePixelRatio, window.physicalSize.height / window.devicePixelRatio);
   await SQLite3Helper().initializeDb();
   await AppSettings().loadSavedGlobalSettings();
   await AppPanelManager().loadSavedPanelList();

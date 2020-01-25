@@ -1,11 +1,9 @@
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/panel/list/page_panel_list_controller.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
+import 'package:VirtualFlightThrottle/page/panel/list/widget/panel_builder_dialog.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
-import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
-import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,12 +25,12 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
           content: Text("Do you want to remove the saved panel?"),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: Text("REMOVE"),
-              ),
-              FlatButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
                 child: Text("CENCLE"),
+              ),
+              FlatButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text("REMOVE"),
               ),
             ],
         );
@@ -40,88 +38,19 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
     ); 
   }
 
-  Future<PanelSetting> _showBuildPanelFrame(BuildContext context) async {
-    Pair<int, int> maxSize = PanelUtility.getMaxPanelSize(MediaQuery.of(context).size);
-    String name = "Unnamed Panel ${DateTime.now().toIso8601String().substring(0, 19)}";
-    int width = maxSize.a, height = maxSize.b;
+  Future<PanelSetting> _showBuildPanelDialog(BuildContext context, bool jsonMode) async {
     return await showDialog<PanelSetting>(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return Dialog(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          child: Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: Form(
-              child: CardSettings.sectioned(
-                shrinkWrap: true,
-                showMaterialonIOS: true,
-                children: <CardSettingsSection>[
-                  CardSettingsSection(
-                    header: CardSettingsHeader(
-                      label: "Panel Preferences",
-                    ),
-                    children: [
-                      CardSettingsText(
-                        maxLength: 35,
-                        label: "Panel name",
-                        hintText: name,
-                        initialValue: "",
-                        requiredIndicator: Text("*", style: TextStyle(color: Colors.red)),
-                        autovalidate: true,
-                        validator: (val) {
-                          if (val.length > 35 && val != "") return "max 35 word.";
-                          else return null;
-                        },
-                        onChanged: (val) => name = val,
-                      ),
-                      CardSettingsInt(
-                        label: "Panel width",
-                        unitLabel: "blocks",
-                        initialValue: maxSize.a,
-                        onChanged: (val) => width = val,
-                      ),
-                      CardSettingsInt(
-                        label: "Panel height",
-                        unitLabel: "blocks",
-                        initialValue: maxSize.b,
-                        onChanged: (val) => height = val,
-                      ),
-                    ],
-                  ),
-                  CardSettingsSection(
-                    header: CardSettingsHeader(
-                      label: "Action",
-                    ),
-                    children: [
-                      CardSettingsButton(
-                        label: "BUILD",
-                        backgroundColor: Colors.green,
-                        onPressed: () {
-                          PanelSetting panelSetting = getBasicPanelSetting(name: name, width: width, height: height);
-                          Navigator.pop(context, panelSetting);
-                        },
-                      ),
-                      CardSettingsButton(
-                        label: "CENCLE",
-                        backgroundColor: Colors.red,
-                        onPressed: () => Navigator.pop(context, null),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }
+      builder: (BuildContext dialogContext) => PanelBuilderDialog(jsonMode: jsonMode),
     );
   }
 
   Widget _buildPanelListTile(BuildContext context, PanelSetting panelSetting, int index) {
     return ListTile(
-      leading: Icon(Icons.layers),
+      leading: index == 0 ? Icon(Icons.check) : Icon(Icons.layers),
       title: Text(panelSetting.name),
-      subtitle: Text("${panelSetting.width}x${panelSetting.height} panel with ${panelSetting.components.length} components"),
+      subtitle: Text("${panelSetting.width}x${panelSetting.height} panel with ${panelSetting.components.length} components\n"
+          "Last activation at ${DateTime.fromMillisecondsSinceEpoch(panelSetting.date).toIso8601String().substring(0, 19)}."),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -142,6 +71,7 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
           ),
         ],
       ),
+      onTap: () => Provider.of<PagePanelListController>(context, listen: false).setAsMainPanel(panelSetting),
     );
   }
 
@@ -158,6 +88,21 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
             icon: Icon(Icons.arrow_back),
             onPressed:() => Navigator.pop(context),
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.file_download),
+              onPressed: () => this._showBuildPanelDialog(context, true).then((val) {
+                if (val == null) return;
+                pagePanelListController.insertPanel(val);
+              }),
+              tooltip: "Import panel",
+            ),
+            IconButton(
+              icon: Icon(Icons.help_outline),
+              onPressed: () => null,
+              tooltip: "Help",
+            ),
+          ],
         ),
         body: Container(
           child: Consumer<PagePanelListController>(
@@ -170,7 +115,7 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () => this._showBuildPanelFrame(context).then((val) {
+          onPressed: () => this._showBuildPanelDialog(context, false).then((val) {
             if (val == null) return;
             pagePanelListController.insertPanel(val);
             Navigator.pushNamed(context, Routes.PAGE_PANEL_BUILDER, arguments: val);

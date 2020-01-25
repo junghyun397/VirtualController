@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';

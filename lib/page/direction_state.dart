@@ -44,6 +44,47 @@ class FixedDirectionState<T> extends State with RouteAware {
 
 }
 
+class FixedDirectionWithUIState<T> extends State with RouteAware {
+
+  @override
+  void initState() {
+    UtilitySystem.enableDarkSoftKey();
+    UtilitySystem.enableUIOverlays(true);
+    UtilitySystem.enableFixedDirection(true);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void didPop() {
+    UtilitySystem.enableFixedDirection(false);
+    UtilitySystem.enableUIOverlays(true);
+    super.didPop();
+  }
+
+  @override
+  void didPopNext() {
+    UtilitySystem.enableFixedDirection(true);
+    UtilitySystem.enableUIOverlays(false);
+    super.didPopNext();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Container();
+
+}
+
 class DynamicDirectionState<T> extends State with RouteAware {
 
   @override

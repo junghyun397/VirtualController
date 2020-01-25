@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 
 class NetworkProtocol {
@@ -21,9 +21,7 @@ class NetworkData {
   NetworkData(this.targetInput, this.value);
 
   @override
-  String toString() {
-    return targetInput.toString()+":"+value.toString();
-  }
+  String toString() => "d${targetInput.toString()}:${value.toString()}";
 }
 
 class ValidationNetworkData extends NetworkData {
@@ -69,8 +67,7 @@ abstract class NetworkManager {
   bool isConnected = false;
 
   // ignore: close_sinks
-  StreamController<bool> networkStateStreamController = StreamController<
-      bool>.broadcast();
+  StreamController<bool> networkStateStreamController = StreamController<bool>.broadcast();
 
   NetworkAgent targetNetworkAgent;
 
@@ -103,11 +100,11 @@ abstract class NetworkManager {
   }
 
   void sendData(NetworkData networkData) {
-    if (!this.isConnected) {
-      this._buffer.add(networkData);
-      return;
+    if (!this.isConnected) this._buffer.add(networkData);
+    else if (this._buffer.isNotEmpty) {
+      this._buffer.forEach((val) => this.targetNetworkAgent.sendData(networkData));
+      this._buffer.clear();
     }
-
-    this.targetNetworkAgent.sendData(networkData);
+    else this.targetNetworkAgent.sendData(networkData);
   }
 }

@@ -1,9 +1,11 @@
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vibrate/vibrate.dart';
 
 class UtilitySystem {
+
+  static Size fullScreenSize;
 
   static void enableUIOverlays(bool enable) {
     if (enable) SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);

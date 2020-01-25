@@ -7,11 +7,15 @@ class PanelSetting {
 
   Map<String, ComponentSetting> components = Map<String, ComponentSetting>();
 
+  int date;
+
   PanelSetting.fromJSON(this.name, Map<String, dynamic> json) {
     this.width = json["width"];
     this.height = json["height"];
 
     json["components"].forEach((key, val) => this.components[key] = ComponentSetting.fromJSON(key, val));
+
+    this.date = json["date"];
   }
 
   Map<String, dynamic> toJSON() {
@@ -25,6 +29,8 @@ class PanelSetting {
     this.components.forEach((key, val) => data[key] = val.toJSON());
 
     result["components"] = data;
+
+    result["date"] = this.date;
 
     return result;
   }

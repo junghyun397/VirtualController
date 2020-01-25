@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class PanelUtility {
@@ -34,24 +37,50 @@ class AppPanelManager {
   Future<void> loadSavedPanelList() async {
     await SQLite3Helper().getSavedPanelList().then((val) async {
       if (val.length == 0) {
-        PanelSetting defaultPanelSetting = await _getSavedDefaultPanel(true);
+        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(UtilitySystem.fullScreenSize).a <= 10);
         SQLite3Helper().insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
-        this.panelList.add(await _getSavedDefaultPanel(true));
+        this.panelList.add(defaultPanelSetting);
+        this.setAsMainPanel(defaultPanelSetting);
       } else val.forEach((key, value) => this.panelList.add(PanelSetting.fromJSON(key, jsonDecode(value))));
     });
+    this._sort();
+  }
+
+  PanelSetting getMainPanel() {
+    if (this.panelList.length == 0) return getBasicPanelSetting(name: "NONE", width: 1, height: 1);
+    return this.panelList[0];
+  }
+
+  void setAsMainPanel(PanelSetting panelSetting) {
+    panelSetting.date = DateTime.now().millisecondsSinceEpoch;
+    this.updatePanel(panelSetting);
+    this._sort();
+    this.needMainPanelUpdate = true;
   }
 
   void insertPanel(PanelSetting panelSetting) {
     this.panelList.insert(0, panelSetting);
+    this.updatePanel(panelSetting);
+  }
+
+  void updatePanel(PanelSetting panelSetting) {
+    this.savePanel(panelSetting);
+    this.needMainPanelUpdate = true;
+  }
+
+  void savePanel(PanelSetting panelSetting) {
     SQLite3Helper().insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
   }
 
   void removeSavedPanel(String panelName) {
     this.panelList.removeAt(this.panelList.indexWhere((val) => val.name == panelName));
     SQLite3Helper().removePanel(panelName);
+    this.needMainPanelUpdate = true;
   }
 
   Future<PanelSetting> _getSavedDefaultPanel(bool loadSmall) async =>
     PanelSetting.fromJSON("Default Panel", jsonDecode(await rootBundle.loadString("assets/jsons/default_panel_${loadSmall? "small" : "large"}.json")));
+
+  void _sort() => this.panelList.sort((a, b) => a.date > b.date ? -1 : 1);
 
 }

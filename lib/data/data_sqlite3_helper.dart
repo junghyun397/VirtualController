@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:VirtualFlightThrottle/data/data_app_settings.dart';
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,7 +15,7 @@ class SQLite3Helper {
   SQLite3Helper._internal();
 
   static const String DB_NAME = "virtual_throttle_database.db";
-  static const int DB_VERSION = 4;
+  static const int DB_VERSION = 5;
 
   Database _db;
 
@@ -37,8 +37,7 @@ class SQLite3Helper {
     await db.execute(
       "CREATE TABLE IF NOT EXISTS panels("
         "panel_name TEXT PRIMARY KEY, "
-        "value TEXT, "
-        "date DATETIME DEFAULT CURRENT_TIMESTAMP"
+        "value TEXT"
       ")");
     await db.execute(
       "CREATE TABLE IF NOT EXISTS registered_devices("

@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/network/page_network_controller.dart';
 import 'package:flutter/material.dart';
@@ -189,6 +189,13 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.help_outline),
+              onPressed: () => null,
+              tooltip: "Help",
+            ),
+          ],
         ),
         body: SafeArea(
           child: Consumer<PageNetworkController>(

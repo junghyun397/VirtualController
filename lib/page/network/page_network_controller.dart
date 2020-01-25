@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

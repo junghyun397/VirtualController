@@ -1,12 +1,16 @@
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
-import 'package:VirtualFlightThrottle/network/network_app_manager.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:flutter/material.dart';
 
 class PanelController with ChangeNotifier {
 
-  List<int> _inputState = List<int>(NetworkProtocol.ANALOGUE_INPUT_COUNT + NetworkProtocol.DIGITAL_INPUT_COUNT);
+  List<int> _inputState = List<int>.filled(NetworkProtocol.ANALOGUE_INPUT_COUNT + NetworkProtocol.DIGITAL_INPUT_COUNT, 0, growable: false);
 
   Map<int, int> _syncWith = Map<int, int>();
+
+  PanelController() {
+    this._syncAll();
+  }
 
   void enableSync({int sourceInput, int targetInput, bool enable}) {
     if (enable) this._syncWith.putIfAbsent(sourceInput, () => targetInput);
@@ -32,11 +36,7 @@ class PanelController with ChangeNotifier {
     AppNetworkManager().val.sendData(NetworkData(inputIndex, serializeValue));
   }
 
-  void _syncAll() {
-    this._inputState.asMap().forEach((idx, val) {
-      if (val < NetworkProtocol.ANALOGUE_INPUT_COUNT) AppNetworkManager().val.sendData(NetworkData(idx, val));
-      else AppNetworkManager().val.sendData(NetworkData(idx, val));
-    });
-  }
+  void _syncAll() =>
+      this._inputState.asMap().forEach((idx, val) => AppNetworkManager().val.sendData(NetworkData(idx, val)));
 
 }

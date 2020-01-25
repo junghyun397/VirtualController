@@ -229,12 +229,17 @@ class ComponentSlider extends Component {
     );
   }
 
+  double _prvDetentPoint = 0.0;
   bool _processDetentRange(double value, double range, List<double> detentPoints) {
     double stepRange = range / 100;
     for (double detent in detentPoints) if (detent - stepRange < value) if (value < detent + stepRange) {
-      UtilitySystem.vibrate();
+      if (this._prvDetentPoint != detent) {
+        this._prvDetentPoint = detent;
+        UtilitySystem.vibrate();
+      }
       return true;
     }
+    this._prvDetentPoint = 0.0;
     return false;
   }
 
