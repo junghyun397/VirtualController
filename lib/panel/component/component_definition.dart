@@ -18,83 +18,102 @@ enum ComponentSettingType {
   SLIDER_UNIT_NAME,
   SLIDER_USE_VERTICAL_AXIS,
   SLIDER_USE_CURRENT_VALUE_POPUP,
-  SLIDER_GRADUATED_DENSITY,
-  SLIDER_GRADUATED_INDEX_DENSITY,
-  SLIDER_USE_GRADUATION_LABEL,
+  SLIDER_HATCH_MARK_DENSITY,
+  SLIDER_HATCH_MARK_INDEX_COUNT,
+  SLIDER_USE_HATCH_MARK_LABEL,
   SLIDER_DETENT_POINTS,
 
   BUTTON_LABEL,
 }
 
 class ComponentSettingDefinition {
-  final ComponentSettingData defaultValue;
-  
   final String displaySettingName;
+  final String description;
+
+  String Function(BuildContext) getL10nComponentName;
+  String Function(BuildContext) getL10nDescription;
+
+  final ComponentSettingData defaultValue;
   final String regexp;
 
-  ComponentSettingDefinition({this.defaultValue, this.displaySettingName, this.regexp});
+  ComponentSettingDefinition({
+    @required this.displaySettingName,
+    @required this.description,
 
-  String getL10nDescription(BuildContext context) => "";
+    @required this.defaultValue,
+    @required this.regexp,
+  });
+
 }
 
 // ignore: non_constant_identifier_names
 final Map<ComponentSettingType, ComponentSettingDefinition> COMPONENT_SETTING_DEFINITION = {
   ComponentSettingType.LABEL: ComponentSettingDefinition(
     defaultValue: StringComponentSettingData(ComponentSettingType.LABEL, "NAME"),
-    displaySettingName: "Name tag",
+    displaySettingName: "Label",
+    description: "Set component label",
     regexp: "",
   ),
 
   ComponentSettingType.SLIDER_RANGE: ComponentSettingDefinition(
     defaultValue: DoubleComponentSettingData(ComponentSettingType.SLIDER_RANGE, "100.0"),
     displaySettingName: "Range",
+    description: "Set slider range",
     regexp: "",
   ),
   ComponentSettingType.SLIDER_USE_INTEGER_RANGE: ComponentSettingDefinition(
     defaultValue: BooleanComponentSettingData(ComponentSettingType.SLIDER_USE_INTEGER_RANGE, "false"),
-    displaySettingName: "Display name",
+    displaySettingName: "Use Integer range",
+    description: "Enable integer units on the slider",
     regexp: "",
   ),
   ComponentSettingType.SLIDER_UNIT_NAME: ComponentSettingDefinition(
     defaultValue: StringComponentSettingData(ComponentSettingType.SLIDER_UNIT_NAME, "v"),
-    displaySettingName: "Display name",
+    displaySettingName: "Unit name",
+    description: "Set slider unit name",
     regexp: "",
   ),
   ComponentSettingType.SLIDER_USE_VERTICAL_AXIS: ComponentSettingDefinition(
     defaultValue: BooleanComponentSettingData(ComponentSettingType.SLIDER_USE_VERTICAL_AXIS, "true"),
-    displaySettingName: "Display name",
+    displaySettingName: "Use vertical axis",
+    description: "Use vertical axis (use horizontal axis when disabled)",
     regexp: "",
   ),
   ComponentSettingType.SLIDER_USE_CURRENT_VALUE_POPUP: ComponentSettingDefinition(
     defaultValue: BooleanComponentSettingData(ComponentSettingType.SLIDER_USE_CURRENT_VALUE_POPUP, "true"),
-    displaySettingName: "Display name",
+    displaySettingName: "Use current value popup",
+    description: "Enable display of current values popup",
     regexp: "",
   ),
-  ComponentSettingType.SLIDER_GRADUATED_DENSITY: ComponentSettingDefinition(
-    defaultValue: DoubleComponentSettingData(ComponentSettingType.SLIDER_GRADUATED_DENSITY, "0.4"),
-    displaySettingName: "Display name",
+  ComponentSettingType.SLIDER_HATCH_MARK_DENSITY: ComponentSettingDefinition(
+    defaultValue: DoubleComponentSettingData(ComponentSettingType.SLIDER_HATCH_MARK_DENSITY, "0.4"),
+    displaySettingName: "Hatch mark density",
+    description: "Set hatch mark density",
     regexp: "",
   ),
-  ComponentSettingType.SLIDER_GRADUATED_INDEX_DENSITY: ComponentSettingDefinition(
-    defaultValue: IntegerComponentSettingData(ComponentSettingType.SLIDER_GRADUATED_INDEX_DENSITY, "9"),
-
-    displaySettingName: "Display name",
+  ComponentSettingType.SLIDER_HATCH_MARK_INDEX_COUNT: ComponentSettingDefinition(
+    defaultValue: IntegerComponentSettingData(ComponentSettingType.SLIDER_HATCH_MARK_INDEX_COUNT, "9"),
+    displaySettingName: "Hatch mark index count",
+    description: "Set hatch mark index count",
     regexp: "",
   ),
-  ComponentSettingType.SLIDER_USE_GRADUATION_LABEL: ComponentSettingDefinition(
-    defaultValue: BooleanComponentSettingData(ComponentSettingType.SLIDER_USE_GRADUATION_LABEL, "true"),
-    displaySettingName: "Display name",
+  ComponentSettingType.SLIDER_USE_HATCH_MARK_LABEL: ComponentSettingDefinition(
+    defaultValue: BooleanComponentSettingData(ComponentSettingType.SLIDER_USE_HATCH_MARK_LABEL, "true"),
+    displaySettingName: "Use hatch mark lable",
+    description: "Enable hatch mark label display",
     regexp: "",
   ),
   ComponentSettingType.SLIDER_DETENT_POINTS: ComponentSettingDefinition(
     defaultValue: DoubleListComponentSettingData(ComponentSettingType.SLIDER_DETENT_POINTS, "[]"),
-    displaySettingName: "Display name",
+    displaySettingName: "Detent points",
+    description: "Set detent positions",
     regexp: "",
   ),
   
   ComponentSettingType.BUTTON_LABEL: ComponentSettingDefinition(
     defaultValue: StringComponentSettingData(ComponentSettingType.BUTTON_LABEL, "BTN"),
-    displaySettingName: "Display name",
+    displaySettingName: "Button lable",
+    description: "Set button lable",
     regexp: "",
   ),
 };
@@ -110,6 +129,12 @@ enum ComponentType {
 }
 
 class ComponentDefinition {
+  final String displayComponentName;
+  final String description;
+
+  String Function(BuildContext) getL10nComponentName;
+  String Function(BuildContext) getL10nDescription;
+
   final int minWidth;
   final int minHeight;
   final int minTargetInputs;
@@ -119,6 +144,9 @@ class ComponentDefinition {
   final Component Function(ComponentSetting componentSetting, double blockWidth, double blockHeight) build;
 
   ComponentDefinition({
+    @required this.displayComponentName,
+    @required this.description,
+
     @required this.minWidth,
     @required this.minHeight,
     @required this.minTargetInputs,
@@ -128,11 +156,15 @@ class ComponentDefinition {
   }) {
     defaultSettings.forEach((val) => this.defaultSettings[val.toString()] = COMPONENT_SETTING_DEFINITION[val].defaultValue.toJSON());
   }
+
 }
 
 // ignore: non_constant_identifier_names
 final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
   ComponentType.SLIDER: ComponentDefinition(
+      displayComponentName: "Slider",
+      description: "Configurable Throttle",
+
       minWidth: 1,
       minHeight: 1,
       minTargetInputs: 1,
@@ -144,15 +176,18 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
         ComponentSettingType.SLIDER_UNIT_NAME,
         ComponentSettingType.SLIDER_USE_VERTICAL_AXIS,
         ComponentSettingType.SLIDER_USE_CURRENT_VALUE_POPUP,
-        ComponentSettingType.SLIDER_GRADUATED_DENSITY,
-        ComponentSettingType.SLIDER_GRADUATED_INDEX_DENSITY,
-        ComponentSettingType.SLIDER_USE_GRADUATION_LABEL,
+        ComponentSettingType.SLIDER_HATCH_MARK_DENSITY,
+        ComponentSettingType.SLIDER_HATCH_MARK_INDEX_COUNT,
+        ComponentSettingType.SLIDER_USE_HATCH_MARK_LABEL,
         ComponentSettingType.SLIDER_DETENT_POINTS,
       ],
       build: (ComponentSetting componentSetting, double blockWidth, double blockHeight) => ComponentSlider(componentSetting: componentSetting, blockWidth: blockWidth, blockHeight: blockHeight),
   ),
   
   ComponentType.BUTTON: ComponentDefinition(
+      displayComponentName: "Button",
+      description: "Square button",
+
       minWidth: 1,
       minHeight: 1,
       minTargetInputs: 1,
@@ -165,6 +200,9 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
   ),
   
   ComponentType.TOGGLE_BUTTON: ComponentDefinition(
+      displayComponentName: "Toggle Button",
+      description: "Square toggle button",
+
       minWidth: 1,
       minHeight: 1,
       minTargetInputs: 1,
@@ -177,6 +215,9 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
   ),
   
   ComponentType.TOGGLE_SWITCH: ComponentDefinition(
+      displayComponentName: "Toggle Switch",
+      description: "2-channel toggle switch",
+
       minWidth: 1,
       minHeight: 1,
       minTargetInputs: 1,
@@ -187,6 +228,9 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
   ),
 
   ComponentType.HAT_SWITCH: ComponentDefinition(
+      displayComponentName: "Hat Switch",
+      description: "Simple hat switch",
+
       minWidth: 1,
       minHeight: 1,
       minTargetInputs: 1,

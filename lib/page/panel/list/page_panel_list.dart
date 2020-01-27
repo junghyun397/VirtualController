@@ -38,7 +38,7 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
     ); 
   }
 
-  Future<PanelSetting> _showBuildPanelDialog(BuildContext context, bool jsonMode) async {
+  Future<PanelSetting> _showPanelBuilderDialog(BuildContext context, bool jsonMode) async {
     return await showDialog<PanelSetting>(
       context: context,
       builder: (BuildContext dialogContext) => PanelBuilderDialog(jsonMode: jsonMode),
@@ -91,9 +91,10 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.file_download),
-              onPressed: () => this._showBuildPanelDialog(context, true).then((val) {
+              onPressed: () => this._showPanelBuilderDialog(context, true).then((val) {
                 if (val == null) return;
                 pagePanelListController.insertPanel(val);
+                Navigator.pushNamed(context, Routes.PAGE_PANEL_BUILDER, arguments: val);
               }),
               tooltip: "Import panel",
             ),
@@ -115,7 +116,7 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () => this._showBuildPanelDialog(context, false).then((val) {
+          onPressed: () => this._showPanelBuilderDialog(context, false).then((val) {
             if (val == null) return;
             pagePanelListController.insertPanel(val);
             Navigator.pushNamed(context, Routes.PAGE_PANEL_BUILDER, arguments: val);

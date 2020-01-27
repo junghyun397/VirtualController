@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class ComponentSlider extends Component {
   ComponentSlider(
       {Key key,
@@ -29,9 +30,9 @@ class ComponentSlider extends Component {
 
       useCurrentValuePopup: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_CURRENT_VALUE_POPUP, true),
 
-      graduatedDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_GRADUATED_DENSITY, 0.4),
-      graduatedIndexDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_GRADUATED_INDEX_DENSITY, 9),
-      useGraduationLable: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_GRADUATION_LABEL, true),
+      hatchMarkDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_HATCH_MARK_DENSITY, 0.4),
+      hatchMarkIndexDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_HATCH_MARK_INDEX_COUNT, 9),
+      useHatchMarkLabel: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_HATCH_MARK_LABEL, true),
 
       detentPoints: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_DETENT_POINTS, []),
     );
@@ -48,9 +49,9 @@ class ComponentSlider extends Component {
 
     @required bool useCurrentValuePopup,
 
-    @required double graduatedDensity,
-    @required int graduatedIndexDensity, // recommended 1, 4, 9
-    @required bool useGraduationLable,
+    @required double hatchMarkDensity,
+    @required int hatchMarkIndexDensity, // recommended 1, 4, 9
+    @required bool useHatchMarkLabel,
 
     @required List<double> detentPoints,
   }) {
@@ -61,7 +62,7 @@ class ComponentSlider extends Component {
 
           hatchMark: FlutterSliderHatchMark(
             distanceFromTrackBar: useVerticalAxis ? 30 : 10,
-            density: graduatedDensity,
+            density: hatchMarkDensity,
             smallLine: const FlutterSliderSizedBox(
               height: 8,
               width: 1,
@@ -73,8 +74,8 @@ class ComponentSlider extends Component {
               decoration: const BoxDecoration(color: Colors.white),
             ),
             labels: _buildSliderHatchLabel(
-                range, useIntegerRange, graduatedIndexDensity, unitName,
-                useGraduationLable),
+                range, useIntegerRange, hatchMarkIndexDensity, unitName,
+                useHatchMarkLabel),
           ),
 
           trackBar: FlutterSliderTrackBar(

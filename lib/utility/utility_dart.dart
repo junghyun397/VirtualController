@@ -14,6 +14,15 @@ T getEnumFromString<T>(List<T> enumValues, String sourceString) {
   return result;
 }
 
-void printWrapped(String text) {
-  RegExp('.{1,800}').allMatches(text).forEach((match) => print(match.group(0)));
+List<T> mixTwoList<T>(List<T> a, List<T> b) {
+  List<T> result = List<T>(a.length+b.length);
+  for (int idx = 0; idx < a.length; idx++) {
+    result[idx*2] = a[idx];
+    result[idx*2+1] = b[idx];
+  }
+  return result;
+}
+
+void printWrapped(String text, {int chunk = 800}) {
+  RegExp('.{1, $chunk}').allMatches(text).forEach((match) => print(match.group(0)));
 }

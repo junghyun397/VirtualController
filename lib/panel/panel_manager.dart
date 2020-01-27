@@ -11,7 +11,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class PanelUtility {
   static const double MIN_BLOCK_WIDTH = 75.0;
-  static const double MIN_BLOCK_HEIGHT = 100.0;
+  static const double MIN_BLOCK_HEIGHT = 80.0;
 
   static const double TOP_MARGIN = 20;
 

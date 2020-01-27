@@ -1,9 +1,6 @@
-
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/panel/builder/page_panel_builder_controller.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
-import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,84 +12,74 @@ class PagePanelBuilder extends StatefulWidget {
 }
 
 class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder> {
-
-  Widget _buildSelectorAreaPanel(BuildContext context) {
-    return Container(
-
-    );
-  }
-
-  Widget _buildComponentPanel(BuildContext context) {
-    return Container(
-
-    );
-  }
-
-  // ignore: missing_return
-  FormField _buildComponentSettingSection(BuildContext context, ComponentSettingData componentSettingData) {
-    switch (componentSettingData.type.toString()) {
-      case "bool":
-        return CardSettingsSwitch(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
-          initialValue: componentSettingData.value,
-        );
-      case "int":
-        return CardSettingsInt(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
-          initialValue: componentSettingData.value,
-        );
-      case "double":
-        return CardSettingsDouble(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
-          initialValue: componentSettingData.value,
-        );
-      case "List<double>":
-        return CardSettingsText(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
-          initialValue: componentSettingData.value,
-        );
-      case "String":
-        return CardSettingsText(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
-          initialValue: componentSettingData.value,
-        );
-    }
-  }
-
-  Future<void> _showSetupComponentDialog(BuildContext context, ComponentSetting componentSetting) async {
-    return await showDialog<void>(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return Dialog(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+  
+  Widget _buildComponentSelectorArea(BuildContext context) {
+    return Consumer<PagePanelBuilderController>(
+      builder: (context, controller, __) {
+        Size size = MediaQuery.of(context).size;
+        return Expanded(
           child: Container(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Form(
-              child: CardSettings.sectioned(
-                shrinkWrap: true,
-                showMaterialonIOS: true,
-                children: <CardSettingsSection>[
-                  CardSettingsSection(
-                    children: componentSetting.settings.entries.map((e) => _buildComponentSettingSection(context, e.value)).toList(),
-                  ),
-                  CardSettingsSection(
-                    header: CardSettingsHeader(
-                      label: "Action",
-                    ),
-                    children: [
-                      CardSettingsButton(
-                        label: "OK",
-                        backgroundColor: Colors.green,
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+            child: Stack(
+              children: <Widget>[
+
+              ],
             ),
           ),
         );
-      },
+      }
+    );
+  }
+
+  Widget _buildComponentListArea(BuildContext context) {
+    List<MapEntry<ComponentType, ComponentDefinition>> definitionList = COMPONENT_DEFINITION.entries.toList();
+    return Container(
+      decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          shape: BoxShape.rectangle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 5.0,
+            ),
+          ]),
+      width: 180,
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(20, 10, 0, 10),
+            alignment: Alignment.centerLeft,
+            child: Text("Components", style: TextStyle(fontSize: 15, color: Colors.white70)),
+          ),
+          Consumer<PagePanelBuilderController>(
+            builder: (context, controller, __) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: COMPONENT_DEFINITION.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    MapEntry<ComponentType, ComponentDefinition> definition = definitionList[index];
+                    return ListTile(
+                      title: Text(
+                        definition.value.displayComponentName,
+                        style: TextStyle(color: controller.isSelectionMode ? Colors.white10 : Colors.white),
+                      ),
+                      subtitle: Text(
+                        definition.value.description,
+                        style: TextStyle(color: controller.isSelectionMode ? Colors.white10 : Colors.white60),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.add),
+                        color: controller.isSelectionMode ? Colors.white10 : Colors.white,
+                        onPressed: () => controller.selectComponent(definition.key),
+                      ),
+                      enabled: !controller.isSelectionMode,
+                    );
+                  },
+                ),
+              );
+            }
+          ),
+        ],
+      ),
     );
   }
 
@@ -104,8 +91,10 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
-        body: Column(
+        body: Row(
           children: <Widget>[
+            this._buildComponentSelectorArea(context),
+            this._buildComponentListArea(context),
           ],
         ),
         appBar: AppBar(
@@ -117,7 +106,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.file_upload),
-              onPressed: controller.copyPanelToClipboard,
+              onPressed: controller.copyPanelJsonToClipboard,
               tooltip: "Export panel",
             ),
             IconButton(
