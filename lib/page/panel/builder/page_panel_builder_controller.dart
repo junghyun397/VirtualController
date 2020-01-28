@@ -33,11 +33,22 @@ class PagePanelBuilderController with ChangeNotifier {
 
   bool checkComponentName(String componentName) => !this.panelSetting.components.containsKey(componentName);
 
-  void addComponent(String componentName, ComponentSetting componentSetting) {
+  void addComponent(ComponentSetting componentSetting) {
     this.isSelectionMode = false;
     this.selectedComponent = null;
-    this.panelSetting.components[componentName] = componentSetting;
-    this.savePanel();
+    this.panelSetting.components[componentSetting.name] = componentSetting;
+    AppPanelManager().updatePanel(this.panelSetting);
+    notifyListeners();
+  }
+
+  void updateComponent(ComponentSetting componentSetting) {
+    AppPanelManager().updatePanel(this.panelSetting);
+    notifyListeners();
+  }
+
+  void removeComponent(String componentName) {
+    this.panelSetting.components.remove(componentName);
+    AppPanelManager().updatePanel(this.panelSetting);
     notifyListeners();
   }
 
@@ -52,7 +63,7 @@ class PagePanelBuilderController with ChangeNotifier {
   }
 
   void savePanel() {
-    AppPanelManager().savePanel(this.panelSetting);
+    AppPanelManager().updatePanel(this.panelSetting);
     Fluttertoast.showToast(
       msg: "Panel saved.",
       toastLength: Toast.LENGTH_SHORT,

@@ -13,7 +13,7 @@ class PanelUtility {
   static const double MIN_BLOCK_WIDTH = 75.0;
   static const double MIN_BLOCK_HEIGHT = 80.0;
 
-  static const double TOP_MARGIN = 20;
+  static const double TOP_MARGIN = 5;
 
   static bool canBuildPanelPerfectly(PanelSetting panelSetting, Size screenSize) =>
       screenSize.width / panelSetting.width < MIN_BLOCK_WIDTH || (screenSize.height - TOP_MARGIN) / panelSetting.height < MIN_BLOCK_HEIGHT;
@@ -21,8 +21,8 @@ class PanelUtility {
   static Pair<int, int> getMaxPanelSize(Size screenSize) =>
       Pair(screenSize.width ~/ MIN_BLOCK_WIDTH, screenSize.height ~/ MIN_BLOCK_HEIGHT);
 
-  static Size getBlockSize(PanelSetting panelSetting, Size screenSize) =>
-      Size(screenSize.width / panelSetting.width, (screenSize.height - TOP_MARGIN) / panelSetting.height);
+  static Size getBlockSize(PanelSetting panelSetting, Size screenSize, {double topMargin = TOP_MARGIN}) =>
+      Size(screenSize.width / panelSetting.width, (screenSize.height - topMargin) / panelSetting.height);
 
 }
 

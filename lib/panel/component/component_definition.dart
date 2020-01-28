@@ -220,7 +220,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
 
       minWidth: 1,
       minHeight: 1,
-      minTargetInputs: 1,
+      minTargetInputs: 2,
       defaultSettings: [
         ComponentSettingType.LABEL,
       ],
@@ -233,7 +233,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
 
       minWidth: 1,
       minHeight: 1,
-      minTargetInputs: 1,
+      minTargetInputs: 4,
       defaultSettings: [
         ComponentSettingType.LABEL,
       ],

@@ -22,8 +22,8 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
 
   Widget _mainPanelCache;
 
-  Widget _buildMainPanel(BuildContext context) {
-    if (AppPanelManager().needMainPanelUpdate) {
+  Widget _buildMainPanel(BuildContext context, BoxConstraints constraints) {
+    if (AppPanelManager().needMainPanelUpdate && constraints.maxHeight == UtilitySystem.fullScreenSize.height) {
       AppPanelManager().needMainPanelUpdate = false;
       this._mainPanelCache = null;
     }
@@ -31,11 +31,15 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
     if (this._mainPanelCache == null) {
       PanelSetting panelSetting = AppPanelManager().getMainPanel();
       Size blockSize = PanelUtility.getBlockSize(panelSetting, UtilitySystem.fullScreenSize);
-      return this._mainPanelCache = Panel(
-        blockWidth: blockSize.width,
-        blockHeight: blockSize.height,
-        panelSetting: panelSetting,
-        panelController: PanelController(),
+      return this._mainPanelCache = SizedBox(
+        width: UtilitySystem.fullScreenSize.width,
+        height: UtilitySystem.fullScreenSize.height,
+        child: Panel(
+          blockWidth: blockSize.width,
+          blockHeight: blockSize.height,
+          panelSetting: panelSetting,
+          panelController: PanelController(),
+        ),
       );
     }
 
@@ -94,15 +98,17 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
 
   @override
   Widget build(BuildContext context) {
+    UtilitySystem.fullScreenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white12,
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
       extendBody: true,
       body: Container(
         child: Stack(
           children: <Widget>[
-            this._buildMainPanel(context),
+            LayoutBuilder(builder: (context, constraints) => this._buildMainPanel(context, constraints)),
             StreamBuilder<bool>(
                 stream: AppNetworkManager().val.networkStateStreamController.stream,
                 initialData: false,

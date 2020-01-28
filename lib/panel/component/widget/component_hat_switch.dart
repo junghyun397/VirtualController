@@ -54,8 +54,6 @@ class ComponentHatSwitch extends Component {
     );
   }
 
-  bool _inRange(double value, double min, double max) {
-    if (min < value) if (value < max) return true;
-    return false;
-  }
+  bool _inRange(double value, double min, double max) =>
+      (min > max && (min < value) || (value < max)) || (min < value && value < max);
 }

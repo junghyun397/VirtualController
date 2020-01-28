@@ -7,8 +7,8 @@ class NetworkProtocol {
   static const int PASS = -1;
   static const int VALIDATION = -2;
 
-  static const int ANALOGUE_INPUT_COUNT = 10;
-  static const int DIGITAL_INPUT_COUNT = 100;
+  static const int ANALOGUE_INPUT_COUNT = 8;
+  static const int DIGITAL_INPUT_COUNT = 128;
 
   static const int DIGITAL_TRUE = 1;
   static const int DIGITAL_FALSE = 0;
@@ -102,6 +102,7 @@ abstract class NetworkManager {
   void sendData(NetworkData networkData) {
     if (!this.isConnected) this._buffer.add(networkData);
     else if (this._buffer.isNotEmpty) {
+      this._buffer.add(networkData);
       this._buffer.forEach((val) => this.targetNetworkAgent.sendData(networkData));
       this._buffer.clear();
     }

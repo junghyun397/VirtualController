@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
@@ -10,7 +11,7 @@ class ComponentBuilderDialog extends StatefulWidget {
 
   final ComponentSetting targetComponentSetting;
 
-  ComponentBuilderDialog({Key key, this.targetComponentSetting}) : super(key: key);
+  ComponentBuilderDialog({Key key, @required this.targetComponentSetting}) : super(key: key);
 
   @override
   State<ComponentBuilderDialog> createState() => _ComponentBuilderDialogState();
@@ -20,6 +21,16 @@ class ComponentBuilderDialog extends StatefulWidget {
 class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Widget _buildTargetInputSection(BuildContext context, bool isAnalogue, int index) {
+    return CardSettingsNumberPicker(
+      label: isAnalogue ? "Target axes" : "Target button ${index+1}",
+      initialValue: widget.targetComponentSetting.targetInputs[index] + 1,
+      min: 0,
+      max: isAnalogue ? NetworkProtocol.ANALOGUE_INPUT_COUNT : NetworkProtocol.DIGITAL_INPUT_COUNT,
+      onSaved: (val) => widget.targetComponentSetting.targetInputs[index] = val - 1,
+    );
+  }
 
   Widget _buildComponentSettingDescription(BuildContext context, ComponentSettingData componentSettingData) =>
       CardSettingsInstructions(text: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].description);
@@ -45,20 +56,16 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
           initialValue: componentSettingData.value,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
-      case "List<double>":
+      case "CastList<dynamic, double>":
         return CardSettingsText(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
-          initialValue: componentSettingData.value,
+          initialValue: componentSettingData.value.toString(),
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "String":
         return CardSettingsText(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value,
-          validator: (val) {
-            if (RegExp(COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].regexp).hasMatch(val)) return "";
-            else return null;
-          },
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
     }
@@ -74,15 +81,29 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
           key: this._formKey,
           autovalidate: true,
           child: CardSettings.sectioned(
+            labelWidth: 200,
             shrinkWrap: true,
             showMaterialonIOS: true,
             children: <CardSettingsSection>[
               CardSettingsSection(
+                header: CardSettingsHeader(label: "Component Information"),
+                children: [
+                  CardSettingsText(
+                    label: "Name",
+                    initialValue: widget.targetComponentSetting.name,
+                  ),
+                  for (int idx = 0; idx < COMPONENT_DEFINITION[widget.targetComponentSetting.componentType].minTargetInputs; idx++)
+                    this._buildTargetInputSection(context, widget.targetComponentSetting.componentType == ComponentType.SLIDER, idx),
+                ],
+              ),
+              CardSettingsSection(
+                header: CardSettingsHeader(label: "Component Perferences"),
                 children: mixTwoList(
-                    widget.targetComponentSetting.settings.entries.map((val) =>
-                    this._buildComponentSettingSection(context, val.value)).toList(),
-                    widget.targetComponentSetting.settings.entries.map((val) =>
-                    this._buildComponentSettingDescription(context, val.value)).toList()),
+                  widget.targetComponentSetting.settings.entries.map((val) =>
+                      this._buildComponentSettingDescription(context, val.value)).toList(),
+                  widget.targetComponentSetting.settings.entries.map((val) =>
+                      this._buildComponentSettingSection(context, val.value)).toList(),
+                ),
               ),
               CardSettingsSection(
                 header: CardSettingsHeader(
@@ -90,11 +111,13 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
                 ),
                 children: [
                   CardSettingsButton(
-                    label: "SAVE",
+                    label: "APPLY",
                     backgroundColor: Colors.green,
                     onPressed: () {
-                      if (this._formKey.currentState.validate()) this._formKey.currentState.save();
-                      else Fluttertoast.showToast(
+                      if (this._formKey.currentState.validate()) {
+                        this._formKey.currentState.save();
+                        Navigator.pop(context, true);
+                      } else Fluttertoast.showToast(
                         msg: "Invalid setting exists",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
@@ -105,9 +128,10 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
                     },
                   ),
                   CardSettingsButton(
-                    label: "CLOSE",
+                    label: "REMOVE",
+                    isDestructive: true,
                     backgroundColor: Colors.red,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context, false),
                   ),
                 ],
               )

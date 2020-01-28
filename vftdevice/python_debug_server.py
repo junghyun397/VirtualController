@@ -1,6 +1,8 @@
 import socket
 from enum import Enum
 
+import pyvjoy
+
 PORT = 42424
 
 
@@ -35,38 +37,61 @@ class ParsedPacket:
                + " data: " + str(packet.body)
 
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.bind(("", PORT))
-server_socket.listen(5)
+print("[*] start loading vjoy device...")
 
-print("[o] listen at:", PORT)
+joystick = pyvjoy.VJoyDevice(1)
+
+joystick.reset()
+joystick.reset_buttons()
+joystick.reset_povs()
+
+print("[o] succeed loading vjoy device.")
 
 while True:
-    client_socket, address = server_socket.accept()
-    print("[+] connection by:", address)
+    # noinspection PyBroadException
+    try:
+        print("[*] start Opening VFT-device server socket...")
 
-    while True:
-        data = client_socket.recv(1024).decode()
-        if data == "":
-            print("[-] disconnected by:", address)
-            break
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.bind(("", PORT))
+        server_socket.listen(5)
 
-        packets = data.split("d")[1:]
-        if len(packets) == 0:
-            print("[x] failed parse packets; raw:", data)
-            continue
+        print("[o] succeed Opening server-socket; listen at:", PORT)
 
-        for m_packet in packets:
-            packet = ParsedPacket(m_packet)
+        while True:
+            client_socket, address = server_socket.accept()
+            print("[+] connection by:", address)
 
-            if packet.packet_type == PacketType.ERROR:
-                print("[x] failed parse packet; raw:", data)
-                continue
-            else:
-                print("[<] receive data;", str(packet))
+            while True:
+                data = client_socket.recv(1024).decode()
+                if data == "":
+                    print("[-] disconnected by:", address)
+                    break
 
-            if packet.packet_type == PacketType.VALIDATION:
-                response = "alive"
-                print("[>] send validation response: ", response)
-                client_socket.send(response.encode())
+                packets = data.split("d")[1:]
+                if len(packets) == 0:
+                    print("[x] failed parse packets; raw:", data)
+                    continue
+
+                for m_packet in packets:
+                    packet = ParsedPacket(m_packet)
+
+                    if packet.packet_type == PacketType.ERROR:
+                        print("[x] failed parse packet; raw:", data)
+                        continue
+                    else:
+                        print("[<] receive data;", str(packet))
+
+                    if packet.packet_type == PacketType.VALIDATION:
+                        response = "alive"
+                        print("[>] send validation response:", response)
+                        client_socket.send(response.encode())
+                    elif packet.packet_type == PacketType.ANALOGUE:
+                        joystick.set_axis(packet.target_input + 0x30, int(packet.body / 1000 * 32768))
+                    elif packet.packet_type == PacketType.DIGITAL:
+                        joystick.set_button(packet.target_input - 7, packet.body)
+
+    except Exception:
+        print("[!] an error occurred. re-create server socket ....")
+        continue
