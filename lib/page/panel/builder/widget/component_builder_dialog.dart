@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
@@ -23,12 +25,21 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Widget _buildTargetInputSection(BuildContext context, bool isAnalogue, int index) {
-    return CardSettingsNumberPicker(
-      label: isAnalogue ? "Target axes" : "Target button ${index+1}",
-      initialValue: widget.targetComponentSetting.targetInputs[index] + 1,
+    if (isAnalogue) return CardSettingsNumberPicker(
+      label: "Target Axes ${index+1}",
+      initialValue: widget.targetComponentSetting.targetInputs[index],
       min: 0,
-      max: isAnalogue ? NetworkProtocol.ANALOGUE_INPUT_COUNT : NetworkProtocol.DIGITAL_INPUT_COUNT,
-      onSaved: (val) => widget.targetComponentSetting.targetInputs[index] = val - 1,
+      max: NetworkProtocol.ANALOGUE_INPUT_COUNT,
+      onChanged: (val) => widget.targetComponentSetting.targetInputs[index] = val,
+    );
+    else return CardSettingsNumberPicker(
+      label: "Target button ${index+1}",
+      initialValue: widget.targetComponentSetting.targetInputs[index] == 0
+          ? 0 : widget.targetComponentSetting.targetInputs[index] - NetworkProtocol.ANALOGUE_INPUT_COUNT + 1,
+      min: 0,
+      max: NetworkProtocol.DIGITAL_INPUT_COUNT,
+      onChanged: (val) => widget.targetComponentSetting.targetInputs[index] = val == 0
+          ? 0 : val + NetworkProtocol.ANALOGUE_INPUT_COUNT - 1,
     );
   }
 
@@ -42,31 +53,40 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
         return CardSettingsSwitch(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value,
+          validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "int":
         return CardSettingsInt(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value,
+          validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "double":
         return CardSettingsDouble(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value,
+          validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "CastList<dynamic, double>":
         return CardSettingsText(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value.toString(),
-          onSaved: (val) => componentSettingData.setValue(val.toString()),
+          validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
+          onSaved: (val) {
+            List<double> rs = List<double>();
+            jsonDecode(val).forEach((val) => rs.add(double.parse(val.toString())));
+            componentSettingData.setValue(rs.toString());
+          },
         );
       case "String":
         return CardSettingsText(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value,
-          onSaved: (val) => componentSettingData.setValue(val.toString()),
+          validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
+          onSaved: (val) => componentSettingData.setValue(val),
         );
     }
   }
@@ -88,11 +108,13 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
               CardSettingsSection(
                 header: CardSettingsHeader(label: "Component Information"),
                 children: [
-                  CardSettingsText(
-                    label: "Name",
-                    initialValue: widget.targetComponentSetting.name,
-                  ),
-                  for (int idx = 0; idx < COMPONENT_DEFINITION[widget.targetComponentSetting.componentType].minTargetInputs; idx++)
+//                  TODO: Implement safe name change
+//                  CardSettingsText(
+//                    label: "Name",
+//                    initialValue: widget.targetComponentSetting.name,
+//                    onChanged: (val) => widget.targetComponentSetting.name = val,
+//                  ),
+                  for (int idx = 0; idx < COMPONENT_DEFINITION[widget.targetComponentSetting.componentType].needInputs; idx++)
                     this._buildTargetInputSection(context, widget.targetComponentSetting.componentType == ComponentType.SLIDER, idx),
                 ],
               ),

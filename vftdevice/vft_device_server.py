@@ -21,12 +21,12 @@ class ParsedPacket:
             self.packet_type = PacketType.ERROR
             return
 
-        self.target_input = int(splitted_data[0])
+        self.target_input = int(splitted_data[0]) - 1
         self.body = int(splitted_data[1])
 
-        if self.target_input == -2:
+        if self.target_input == -3:
             self.packet_type = PacketType.VALIDATION
-        elif self.target_input < 10:
+        elif self.target_input < 8:
             self.packet_type = PacketType.ANALOGUE
         else:
             self.packet_type = PacketType.DIGITAL
@@ -49,6 +49,7 @@ print("[o] succeed loading vjoy device.")
 
 while True:
     # noinspection PyBroadException
+    server_socket = None
     try:
         print("[*] start Opening VFT-device server socket...")
 
@@ -93,5 +94,6 @@ while True:
                         joystick.set_button(packet.target_input - 7, packet.body)
 
     except Exception:
+        server_socket.close()
         print("[!] an error occurred. re-create server socket ....")
         continue

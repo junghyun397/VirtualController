@@ -1,7 +1,6 @@
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/panel/panel.dart';
-import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
@@ -31,14 +30,13 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
     if (this._mainPanelCache == null) {
       PanelSetting panelSetting = AppPanelManager().getMainPanel();
       Size blockSize = PanelUtility.getBlockSize(panelSetting, UtilitySystem.fullScreenSize);
-      return this._mainPanelCache = SizedBox(
+      this._mainPanelCache = SizedBox(
         width: UtilitySystem.fullScreenSize.width,
         height: UtilitySystem.fullScreenSize.height,
         child: Panel(
           blockWidth: blockSize.width,
           blockHeight: blockSize.height,
           panelSetting: panelSetting,
-          panelController: PanelController(),
         ),
       );
     }
@@ -50,14 +48,14 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        padding: EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(left: 10),
         height: 30,
         decoration: BoxDecoration(
           color: Theme.of(context).errorColor,
           boxShadow: [
-            new BoxShadow(
+            BoxShadow(
               color: Colors.black,
-              offset: new Offset(0, 1),
+              offset: const Offset(0, 1),
               blurRadius: 1,
               spreadRadius: 1,
             )
@@ -66,14 +64,14 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
         child: Row(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(right: 5),
+              padding: const EdgeInsets.only(right: 5),
               child: Icon(
                 Icons.error_outline,
                 color: Colors.white,
                 size: 20,
               ),
             ),
-            Text(
+            const Text(
               "Target device not found.",
               style: TextStyle(
                 color: Colors.white,
@@ -82,7 +80,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
             Spacer(),
             FlatButton(
               onPressed: () => Navigator.pushNamed(context, Routes.PAGE_NETWORK),
-              child: Text(
+              child: const Text(
                 "Go to network settings",
                 style: TextStyle(
                   color: Colors.blue,

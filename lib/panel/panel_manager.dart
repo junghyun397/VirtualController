@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
@@ -23,6 +24,32 @@ class PanelUtility {
 
   static Size getBlockSize(PanelSetting panelSetting, Size screenSize, {double topMargin = TOP_MARGIN}) =>
       Size(screenSize.width / panelSetting.width, (screenSize.height - topMargin) / panelSetting.height);
+
+  static String findNewName(PanelSetting panelSetting, ComponentType componentType) {
+    for (int idx = 1; idx < 100; idx ++) {
+      if (!panelSetting.components.containsKey("${COMPONENT_DEFINITION[componentType].displayComponentName}#$idx"))
+        return "${COMPONENT_DEFINITION[componentType].displayComponentName}#$idx";
+    }
+    return "UNNAMED";
+  }
+
+  static List<int> findTargetInput(PanelSetting panelSetting, ComponentType componentType) {
+    Set<int> usedInputs = Set<int>();
+    panelSetting.components.forEach((key, val) {
+      if (COMPONENT_DEFINITION[componentType].outputType == COMPONENT_DEFINITION[val.componentType].outputType)
+        usedInputs.addAll(val.targetInputs);
+    });
+    Set<int> diff = Set.from(Iterable.generate(
+      COMPONENT_DEFINITION[componentType].outputType == ComponentOutputType.ANALOGUE
+          ? NetworkProtocol.ANALOGUE_INPUT_COUNT
+          : NetworkProtocol.DIGITAL_INPUT_COUNT,
+          (idx) => COMPONENT_DEFINITION[componentType].outputType == ComponentOutputType.ANALOGUE
+              ? idx + 1 : idx + NetworkProtocol.ANALOGUE_INPUT_COUNT,
+    )).cast<int>().difference(usedInputs);
+    if (diff.length < COMPONENT_DEFINITION[componentType].needInputs) 
+      return List.filled(COMPONENT_DEFINITION[componentType].needInputs, 0);
+    return diff.toList().sublist(0, COMPONENT_DEFINITION[componentType].needInputs);
+  }
 
 }
 

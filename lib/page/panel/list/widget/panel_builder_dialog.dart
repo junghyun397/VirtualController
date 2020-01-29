@@ -61,7 +61,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
     else return [
       CardSettingsParagraph(
         label: "JSON data",
-        maxLength: 999999999999999,
+        maxLength: 100000000,
         showCounter: false,
         autovalidate: true,
         validator: (val) {

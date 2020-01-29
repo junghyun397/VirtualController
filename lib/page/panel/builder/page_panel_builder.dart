@@ -5,7 +5,9 @@ import 'package:VirtualFlightThrottle/panel/component/component_definition.dart'
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PagePanelBuilder extends StatefulWidget {
@@ -38,7 +40,6 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
                   : "Tap on components to modify components.",
                 style: TextStyle(
                   fontSize: 12,
-                  color: controller.isSelectionMode ? Colors.red : Theme.of(context).textTheme.body1.color
                 ),
               ),
             ],
@@ -50,29 +51,21 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
 
   Widget _buildComponentSingleArea(BuildContext context, ComponentSetting component, PagePanelBuilderController controller, Size blockSize) {
     return GestureDetector(
-      onTap: controller.isSelectionMode ? null : () => this._showComponentBuilderDialog(context, component).then((val) {
+      onTap: () => this._showComponentBuilderDialog(context, component).then((val) {
         if (val != null && !val) controller.removeComponent(component.name);
-        else if (val != null && val) controller.updateComponent(component);
+        else if (val != null && val) controller.updateComponent();
       }),
       child: Container(
         padding: EdgeInsets.all(3),
         width: component.width * blockSize.width,
         height: component.height * blockSize.height,
-        child: Container(
-          decoration: BoxDecoration(
-            color: controller.isSelectionMode ? Colors.red : Colors.indigo,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 5.0,
-              ),
-            ],
-          ),
+        child: DottedBorder(
+          strokeWidth: 2,
           child: Container(
             child: Center(
               child: Text(
                 component.name,
-                style: TextStyle(fontSize: 10, color: Colors.white),
+                style: TextStyle(fontSize: 10),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -83,8 +76,23 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
   }
   
   Widget _buildComponentSelectAbleArea(BuildContext context, Pair<int, int> position, PagePanelBuilderController controller, Size blockSize) {
+    SelectableTileState tileInfo = controller.componentPositionMap[position.a][position.b];
     return GestureDetector(
-      
+      onTap: tileInfo == SelectableTileState.USABLE || tileInfo == SelectableTileState.SELECTED ? () {
+        controller.selectArea(position);
+      } : null,
+      child: Container(
+        padding: EdgeInsets.all(3),
+        width: blockSize.width,
+        height: blockSize.height,
+        child: DottedBorder(
+          strokeWidth: 2,
+          child: Container(
+            color: tileInfo == SelectableTileState.USED
+                ? Colors.red : tileInfo == SelectableTileState.SELECTED ? Colors.green : null,
+          ),
+        ),
+      ),
     );
   }
   
@@ -97,14 +105,24 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
             child: LayoutBuilder(
               builder: (context, constraints) {
                 Size blockSize = PanelUtility.getBlockSize(controller.panelSetting, constraints.biggest, topMargin: 0);
-                return Stack(
+                if (!controller.isSelectionMode) return Stack(
                   children: controller.panelSetting.components.entries.map((component) {
                     return Positioned(
                       left: component.value.x * blockSize.width,
                       bottom: component.value.y * blockSize.height,
-                      child: _buildComponentSingleArea(context, component.value, controller, blockSize),
+                      child: this._buildComponentSingleArea(context, component.value, controller, blockSize),
                     );
-                }).toList(),
+                  }).toList(),
+                );
+                else return Stack(
+                  children: <Widget>[
+                    for (int w = 0; w < controller.panelSetting.width; w++) for (int h = 0; h < controller.panelSetting.height; h++)
+                      Positioned(
+                        left: w * blockSize.width,
+                        bottom: h * blockSize.height,
+                        child: this._buildComponentSelectAbleArea(context, Pair(w, h), controller, blockSize),
+                      ),
+                  ],
                 );
               }
             ),
@@ -153,7 +171,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
                       trailing: IconButton(
                         icon: Icon(Icons.add),
                         color: controller.isSelectionMode ? Colors.white10 : Colors.white,
-                        onPressed: () => controller.selectComponent(definition.key),
+                        onPressed: () => controller.choiceComponent(definition.key),
                       ),
                       enabled: !controller.isSelectionMode,
                     );
@@ -200,7 +218,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
             ),
             IconButton(
               icon: Icon(Icons.help_outline),
-              onPressed: () => controller.savePanel(),
+              onPressed: () => null,
               tooltip: "Help",
             ),
           ],

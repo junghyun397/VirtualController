@@ -55,8 +55,10 @@ class ComponentSlider extends Component {
 
     @required List<double> detentPoints,
   }) {
-    return Consumer<PanelController> (
-      builder: (BuildContext context, PanelController panelController, Widget _) {
+    return Selector<PanelController, double> (
+      selector: (context, value) => value.inputState[this.componentSetting.targetInputs[0]] / 1000 * range,
+      builder: (BuildContext context, double data, Widget _) {
+        PanelController panelController = Provider.of<PanelController>(context, listen: false);
         return FlutterSlider(
           selectByTap: false,
 
@@ -153,7 +155,7 @@ class ComponentSlider extends Component {
           step: useIntegerRange
               ? 1
               : range / 1000,
-          values: [0],
+          values: [panelController.inputState[this.componentSetting.targetInputs[0]].toDouble() / 1000 * range],
           onDragStarted: (_, __, ___) => UtilitySystem.vibrate(),
           onDragging: (_, lowerValue, __) =>
             panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt()),
