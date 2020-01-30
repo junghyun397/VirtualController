@@ -55,112 +55,118 @@ class ComponentSlider extends Component {
 
     @required List<double> detentPoints,
   }) {
-    return Selector<PanelController, double> (
-      selector: (context, value) => value.inputState[this.componentSetting.targetInputs[0]] / 1000 * range,
-      builder: (BuildContext context, double data, Widget _) {
-        PanelController panelController = Provider.of<PanelController>(context, listen: false);
-        return FlutterSlider(
-          selectByTap: false,
+    return Container(
+      padding: useVerticalAxis ? null : EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Selector<PanelController, double> (
+        selector: (context, value) => value.inputState[this.componentSetting.targetInputs[0]] / 1000 * range,
+        builder: (BuildContext context, double data, Widget _) {
+          PanelController panelController = Provider.of<PanelController>(context, listen: false);
+          return FlutterSlider(
+            selectByTap: false,
 
-          hatchMark: FlutterSliderHatchMark(
-            distanceFromTrackBar: useVerticalAxis ? 30 : 10,
-            density: hatchMarkDensity,
-            smallLine: const FlutterSliderSizedBox(
-              height: 8,
-              width: 1,
-              decoration: const BoxDecoration(color: Colors.white),
-            ),
-            bigLine: const FlutterSliderSizedBox(
-              height: 16,
-              width: 2,
-              decoration: const BoxDecoration(color: Colors.white),
-            ),
-            labels: _buildSliderHatchLabel(
-                range, useIntegerRange, hatchMarkIndexDensity, unitName,
-                useHatchMarkLabel),
-          ),
-
-          trackBar: FlutterSliderTrackBar(
-            inactiveTrackBarHeight: 8,
-            activeTrackBarHeight: 8,
-            inactiveTrackBar: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              border: Border.all(
-                color: Colors.black38,
-                width: 2,
+            hatchMark: FlutterSliderHatchMark(
+              distanceFromTrackBar: useVerticalAxis ? 30 : 10,
+              density: hatchMarkDensity,
+              smallLine: const FlutterSliderSizedBox(
+                height: 8,
+                width: 1,
+                decoration: const BoxDecoration(color: Colors.white),
               ),
-              color: Colors.black87,
-            ),
-            activeTrackBar: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              border: Border.all(
-                color: Colors.black38,
+              bigLine: const FlutterSliderSizedBox(
+                height: 16,
                 width: 2,
+                decoration: const BoxDecoration(color: Colors.white),
               ),
-              color: Colors.black87,
+              labels: _buildSliderHatchLabel(
+                  range, useIntegerRange, hatchMarkIndexDensity, unitName,
+                  useHatchMarkLabel),
             ),
-          ),
 
-          touchSize: 40,
-          handlerHeight: useVerticalAxis ? 30 : 50,
-          handlerWidth: useVerticalAxis ? 50 : 30,
-          handler: FlutterSliderHandler(
-            decoration: const BoxDecoration(),
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(97, 97, 97, 1),
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    border: Border.all(color: Colors.black54, width: 4),
-                    shape: BoxShape.rectangle,
-                    boxShadow: [
-                      const BoxShadow(
-                          color: Colors.black,
-                          spreadRadius: 0.05,
-                          blurRadius: 10,
-                          offset: const Offset(0, 2)),
-                    ],
-                  ),
+            trackBar: FlutterSliderTrackBar(
+              inactiveTrackBarHeight: 8,
+              activeTrackBarHeight: 8,
+              inactiveTrackBar: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                border: Border.all(
+                  color: Colors.black38,
+                  width: 2,
                 ),
-                Center(
-                  child: Transform.rotate(
-                    angle: (useVerticalAxis ? 2 : 1) * pi / 2,
-                    child: Icon(
-                      Icons.menu,
-                      color: Colors.white70,
-                      size: 20,
+                color: Colors.black87,
+              ),
+              activeTrackBar: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                border: Border.all(
+                  color: Colors.black38,
+                  width: 2,
+                ),
+                color: Colors.black87,
+              ),
+            ),
+
+            touchSize: 40,
+            handlerHeight: useVerticalAxis ? 30 : 50,
+            handlerWidth: useVerticalAxis ? 50 : 30,
+            handler: FlutterSliderHandler(
+              decoration: const BoxDecoration(),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(97, 97, 97, 1),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      border: Border.all(color: Colors.black54, width: 4),
+                      shape: BoxShape.rectangle,
+                      boxShadow: [
+                        const BoxShadow(
+                            color: Colors.black,
+                            spreadRadius: 0.05,
+                            blurRadius: 10,
+                            offset: const Offset(0, 2)),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Center(
+                    child: Transform.rotate(
+                      angle: (useVerticalAxis ? 2 : 1) * pi / 2,
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white70,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          handlerAnimation: FlutterSliderHandlerAnimation(
-            curve: Curves.elasticOut,
-            reverseCurve: Curves.elasticOut.flipped,
-            duration: Duration(milliseconds: 500),
-            scale: 1.2,
-          ),
-          tooltip: FlutterSliderTooltip(
-            disabled: !useCurrentValuePopup,
-            custom: (value) => _buildSliderToolTip(value, range, useIntegerRange, unitName, detentPoints),
-          ),
+            handlerAnimation: FlutterSliderHandlerAnimation(
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.elasticOut.flipped,
+              duration: Duration(milliseconds: 500),
+              scale: 1.2,
+            ),
+            tooltip: FlutterSliderTooltip(
+              disabled: !useCurrentValuePopup,
+              custom: (value) => _buildSliderToolTip(value, range, useIntegerRange, unitName, detentPoints),
+            ),
 
-          axis: useVerticalAxis ? Axis.vertical : Axis.horizontal,
-          rtl: useVerticalAxis,
+            axis: useVerticalAxis ? Axis.vertical : Axis.horizontal,
+            rtl: useVerticalAxis,
 
-          min: 0,
-          max: range,
-          step: useIntegerRange
-              ? 1
-              : range / 1000,
-          values: [panelController.inputState[this.componentSetting.targetInputs[0]].toDouble() / 1000 * range],
-          onDragStarted: (_, __, ___) => UtilitySystem.vibrate(),
-          onDragging: (_, lowerValue, __) =>
-            panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt()),
-        );
-      }
+            min: 0,
+            max: range,
+            step: useIntegerRange
+                ? 1
+                : range / 1000,
+            values: [panelController.inputState[this.componentSetting.targetInputs[0]].toDouble() / 1000 * range],
+            onDragStarted: (_, __, ___) => UtilitySystem.vibrate(),
+            onDragging: (_, lowerValue, __) {
+              if (!this._processDetentPoint(panelController, lowerValue, range, detentPoints)) {
+                panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt());
+              }
+            },
+          );
+        }
+      ),
     );
   }
 
@@ -171,7 +177,7 @@ class ComponentSlider extends Component {
         FlutterSliderHatchMarkLabel>.generate(markSightCount, (idx) {
       double percent = (idx + 1) * 100 /
           (markSightCount + 1).floor().toDouble();
-      return new FlutterSliderHatchMarkLabel(
+      return FlutterSliderHatchMarkLabel(
         percent: percent,
         label: Text(
           useMarkSightValue
@@ -186,14 +192,14 @@ class ComponentSlider extends Component {
 
     result.insert(
         0,
-        new FlutterSliderHatchMarkLabel(
+        FlutterSliderHatchMarkLabel(
           percent: 0,
           label: Text(
             useMarkSightValue ? "0" : "",
             style: const TextStyle(color: Colors.white),
           ),
         ));
-    result.add(new FlutterSliderHatchMarkLabel(
+    result.add(FlutterSliderHatchMarkLabel(
       percent: 100,
       label: Text(
         useMarkSightValue
@@ -207,6 +213,7 @@ class ComponentSlider extends Component {
   }
 
   Widget _buildSliderToolTip(double value, double range, bool useIntRange, String unitName, List<double> detentPoints) {
+    if (this._currentDetentValue != null) value = this._currentDetentValue;
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -219,7 +226,7 @@ class ComponentSlider extends Component {
             offset: const Offset(0, 0.1),
           ),
         ],
-        color: this._processDetentRange(value, range, detentPoints)
+        color: this._currentDetentValue != null
             ? Colors.green.withOpacity(0.7)
             : Colors.white70,
       ),
@@ -232,16 +239,20 @@ class ComponentSlider extends Component {
     );
   }
 
+  double _currentDetentValue;
   double _prvDetentPoint = 0.0;
-  bool _processDetentRange(double value, double range, List<double> detentPoints) {
+  bool _processDetentPoint(PanelController controller, double value, double range, List<double> detentPoints) {
     double stepRange = range / 100;
     for (double detent in detentPoints) if (detent - stepRange < value) if (value < detent + stepRange) {
       if (this._prvDetentPoint != detent) {
         this._prvDetentPoint = detent;
         UtilitySystem.vibrate();
       }
+      controller.eventAnalogue(this.componentSetting.targetInputs[0], (detent / range * 1000).floor().toInt());
+      this._currentDetentValue = detent;
       return true;
     }
+    this._currentDetentValue = null;
     this._prvDetentPoint = 0.0;
     return false;
   }

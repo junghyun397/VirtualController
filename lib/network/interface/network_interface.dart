@@ -4,7 +4,7 @@ import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 
 class NetworkProtocol {
-  static const int PASS = -1;
+  static const int PASS = 0;
   static const int VALIDATION = -2;
 
   static const int ANALOGUE_INPUT_COUNT = 8;
@@ -14,9 +14,9 @@ class NetworkProtocol {
   static const int DIGITAL_FALSE = 0;
 }
 
-class NetworkData {
+class NetworkData<T> {
   int targetInput;
-  int value;
+  T value;
 
   NetworkData(this.targetInput, this.value);
 
@@ -25,7 +25,8 @@ class NetworkData {
 }
 
 class ValidationNetworkData extends NetworkData {
-  ValidationNetworkData() : super(NetworkProtocol.VALIDATION, DateTime.now().millisecondsSinceEpoch);
+  ValidationNetworkData() : super(NetworkProtocol.VALIDATION,
+      "${AppSettings().settingsMap[SettingsType.USER_NAME].value}/${DateTime.now().millisecondsSinceEpoch}");
 }
 
 abstract class NetworkAgent {

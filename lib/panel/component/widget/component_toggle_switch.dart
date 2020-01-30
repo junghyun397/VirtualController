@@ -93,12 +93,8 @@ class _ComponentToggleSwitchWidgetState extends State<ComponentToggleSwitchWidge
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onVerticalDragStart: (_) {
-        this.onDragging = true;
-      },
-      onVerticalDragUpdate: (val) {
-        this.dragSummary += val.delta.dy;
-      },
+      onVerticalDragStart: (_) => this.onDragging = true,
+      onVerticalDragUpdate: (val) => this.dragSummary += val.delta.dy,
       onVerticalDragEnd: (val) {
         if (!(-0.5 < this.dragSummary && this.dragSummary < 0.5)) {
           bool forwardTop = this.dragSummary < 0;

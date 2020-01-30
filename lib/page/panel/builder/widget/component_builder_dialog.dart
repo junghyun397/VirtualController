@@ -74,6 +74,8 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
         return CardSettingsText(
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
           initialValue: componentSettingData.value.toString(),
+          maxLength: 500,
+          maxLengthEnforced: false,
           validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) {
             List<double> rs = List<double>();

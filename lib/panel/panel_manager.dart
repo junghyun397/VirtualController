@@ -44,7 +44,7 @@ class PanelUtility {
           ? NetworkProtocol.ANALOGUE_INPUT_COUNT
           : NetworkProtocol.DIGITAL_INPUT_COUNT,
           (idx) => COMPONENT_DEFINITION[componentType].outputType == ComponentOutputType.ANALOGUE
-              ? idx + 1 : idx + NetworkProtocol.ANALOGUE_INPUT_COUNT,
+              ? idx + 1 : idx + NetworkProtocol.ANALOGUE_INPUT_COUNT + 1,
     )).cast<int>().difference(usedInputs);
     if (diff.length < COMPONENT_DEFINITION[componentType].needInputs) 
       return List.filled(COMPONENT_DEFINITION[componentType].needInputs, 0);
@@ -64,10 +64,9 @@ class AppPanelManager {
   Future<void> loadSavedPanelList() async {
     await SQLite3Helper().getSavedPanelList().then((val) async {
       if (val.length == 0) {
-        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(UtilitySystem.fullScreenSize).a <= 10);
+        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(UtilitySystem.fullScreenSize));
         SQLite3Helper().insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
         this.panelList.add(defaultPanelSetting);
-        this.setAsMainPanel(defaultPanelSetting);
       } else val.forEach((key, value) => this.panelList.add(PanelSetting.fromJSON(key, jsonDecode(value))));
     });
     this._sort();
@@ -105,8 +104,14 @@ class AppPanelManager {
     this.needMainPanelUpdate = true;
   }
 
-  Future<PanelSetting> _getSavedDefaultPanel(bool loadSmall) async =>
-    PanelSetting.fromJSON("Default Panel", jsonDecode(await rootBundle.loadString("assets/jsons/default_panel_${loadSmall? "small" : "large"}.json")));
+  Future<PanelSetting> _getSavedDefaultPanel(Pair<int, int> maxPanelSize) async {
+    String size;
+    if (maxPanelSize.a >= 12 && maxPanelSize.b >= 7) size = "large";
+    else if (maxPanelSize.a >= 10 && maxPanelSize.b >= 5) size = "medium";
+    else size = "small";
+    return PanelSetting.fromJSON("Default Panel",
+        jsonDecode(await rootBundle.loadString("assets/jsons/default_panel_$size.json")));
+  }
 
   void _sort() => this.panelList.sort((a, b) => a.date > b.date ? -1 : 1);
 
