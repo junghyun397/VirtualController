@@ -12,7 +12,7 @@ setup(
     name="VFT-device-server",
     version="0.1",
     author="JeongHyeon Choi",
-    description="VFT device server",
+    description="VFT device server for windows",
     options=dict(build_exe=buildOptions),
     executables=exe,
 )

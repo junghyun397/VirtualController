@@ -20,12 +20,5 @@ if __name__ == '__main__':
 
     print("[o] succeed loading vjoy device.")
 
-    socket = SocketListener(on_packet_receive=on_packet_receive)
-
+    socket = SocketListener(on_packet_receive=on_packet_receive, use_recover_socket=True)
     socket.start_socket()
-
-    while True:
-        command = input()
-        if command.lower() == "stop":
-            socket.kill_socket()
-            print("[i] shutdown server...")

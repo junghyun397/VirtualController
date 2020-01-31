@@ -54,8 +54,10 @@ class ParsedPacket:
 
 class SocketListener:
 
-    def __init__(self, on_packet_receive: Callable[[ParsedPacket], None]):
+    def __init__(self, on_packet_receive: Callable[[ParsedPacket], None], use_recover_socket: bool = False):
         self._on_packet_receive = on_packet_receive
+        self._use_recover_socket = use_recover_socket
+
         self._thread = None
 
         self._server_socket = None
@@ -68,7 +70,12 @@ class SocketListener:
         self._thread.start()
 
     def kill_socket(self):
+        self._server_socket.close()
         self._thread.join()
+
+        if self._use_recover_socket:
+            print("[!] an error occurred. recover server socket...")
+            self._run_socket()
 
     def _run_socket(self):
         print("[*] start opening VFT-device-server socket...")
@@ -83,7 +90,12 @@ class SocketListener:
 
             prv_validation_time = 0
             while True:
-                data = client_socket.recv(1024).decode()
+                try:
+                    data = client_socket.recv(1024).decode()
+                except ConnectionResetError:
+                    self.kill_socket()
+                    return
+
                 if data == "":
                     print("[-] disconnected by:", address)
                     break
