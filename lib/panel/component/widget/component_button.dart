@@ -27,17 +27,22 @@ class ComponentButton extends Component {
 
     @required String buttonLabel,
   }) {
-    PanelController panelController = Provider.of<PanelController>(context, listen: false);
+    PanelController controller = Provider.of<PanelController>(context, listen: false);
     return ComponentButtonWidget(
+      width: this.componentSetting.width * 50.0,
+      height: this.componentSetting.height * 50.0,
       buttonLabel: buttonLabel,
       toggleValue: false,
-      onForward: () => panelController.eventDigital(this.componentSetting.targetInputs[0], true),
-      onReverse: () => panelController.eventDigital(this.componentSetting.targetInputs[0], false),
+      onForward: () => controller.eventDigital(this.componentSetting.targetInputs[0], true),
+      onReverse: () => controller.eventDigital(this.componentSetting.targetInputs[0], false),
     );
   }
 }
 
 class ComponentButtonWidget extends StatefulWidget {
+  final double width;
+  final double height;
+
   final String buttonLabel;
   final bool toggleValue;
 
@@ -46,10 +51,12 @@ class ComponentButtonWidget extends StatefulWidget {
 
   ComponentButtonWidget({
     Key key,
-    this.buttonLabel,
-    this.toggleValue,
-    this.onForward,
-    this.onReverse,
+    @required this.width,
+    @required this.height,
+    @required this.buttonLabel,
+    @required this.toggleValue,
+    @required this.onForward,
+    @required this.onReverse,
   }) : super(key: key);
 
   @override
@@ -57,7 +64,6 @@ class ComponentButtonWidget extends StatefulWidget {
 }
 
 class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with SingleTickerProviderStateMixin {
-  static const double _size = 50.0;
   static const double _scale = 5.0;
 
   bool pressed = false;
@@ -87,7 +93,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
       duration: const Duration(milliseconds: 40),
       vsync: this,
     );
-    this._animationTween = Tween(begin: _size, end: _size - _scale).animate(this._animationController);
+    this._animationTween = Tween(begin: 0.0, end: _scale).animate(this._animationController);
     this._animationController.addListener(() => setState(() {}));
   }
 
@@ -102,17 +108,17 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
         if (!widget.toggleValue) this._reverseButton();
       },
       child: Container(
-        width: 70,
-        height: 60,
+        width: widget.width,
+        height: widget.height,
         child: Center(
           child: Container(
-            width: this._animationTween.value,
-            height: this._animationTween.value,
+            width: widget.width - this._animationTween.value,
+            height: widget.height - this._animationTween.value,
             decoration: BoxDecoration(
               color: const Color.fromRGBO(97, 97, 97, 1),
-              borderRadius: BorderRadius.all(Radius.circular(this._animationTween.value / 10)),
+              borderRadius: BorderRadius.all(Radius.circular(4)),
               border: Border.all(
-                color: this._animationTween.value - (_size-_scale) != 0 || !widget.toggleValue
+                color: this._animationTween.value == 0 || !widget.toggleValue
                     ? Colors.black54
                     : Colors.black.withGreen(100),
                 width: 4,
@@ -122,7 +128,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
                  BoxShadow(
                     color: Colors.black,
                     spreadRadius: 0.05,
-                    blurRadius: this._animationTween.value - (_size-_scale),
+                    blurRadius: _scale - this._animationTween.value,
                     offset: const Offset(0, 1)),
               ],
             ),
@@ -130,7 +136,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
               child: Text(
                 widget.buttonLabel,
                 style: TextStyle(
-                  fontSize: this._animationTween.value / 4,
+                  fontSize: (50 - this._animationTween.value) / 4,
                   color: Colors.white70,
                 ),
               ),

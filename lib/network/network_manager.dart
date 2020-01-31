@@ -37,7 +37,7 @@ class AppNetworkManager {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-      else
+      else {
         Fluttertoast.showToast(
           msg: "Disconnected with device.",
           toastLength: Toast.LENGTH_SHORT,
@@ -47,18 +47,17 @@ class AppNetworkManager {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+        this.tryAutoReconnection();
+      }
     });
   }
 
   Future<void> tryAutoReconnection() async {
-    if ((!this.val.isConnected) &&
-        AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value) {
-      List<String> registered =
-          await SQLite3Helper().getSavedRegisteredDevices();
-      this.val.findAliveTargetList().then((val) => val.forEach((target) {
-            if (registered.contains(target))
-              this.val.connectToTarget(target, () => null);
-          }));
+    if ((!this.val.isConnected) && AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value) {
+      List<String> registered = await SQLite3Helper().getSavedRegisteredDevices();
+      await this.val.findAliveTargetList().then((val) => val.forEach((target) {
+            if (registered.contains(target)) this.val.connectToTarget(target, () => null);
+      }));
     }
   }
 }

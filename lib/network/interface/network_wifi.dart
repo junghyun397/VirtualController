@@ -37,7 +37,7 @@ class WiFiNetworkAgent extends NetworkAgent {
 
 class WifiNetworkManager extends NetworkManager {
 
-  static const int _port = 42424;
+  static const int PORT = 10204;
 
   @override
   Future<bool> checkInterfaceAlive() async => await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
@@ -52,7 +52,7 @@ class WifiNetworkManager extends NetworkManager {
     final String subnet = ip.substring(0, ip.lastIndexOf("."));
 
     final stream = NetworkAnalyzer.discover2(
-      subnet, _port,
+      subnet, PORT,
       timeout: Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
     );
 
@@ -75,7 +75,7 @@ class WifiNetworkManager extends NetworkManager {
 
     Function() onSessionKilled = this.setDisconnectedState;
 
-    Socket.connect(deviceAddress, _port).then((socket) {
+    Socket.connect(deviceAddress, PORT).then((socket) {
       this.targetNetworkAgent = WiFiNetworkAgent(socket, deviceAddress, onSessionKilled);
       this.setConnectedState();
       completer.complete();

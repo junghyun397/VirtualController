@@ -1,10 +1,11 @@
 import socket
 import threading
+import time
 from enum import Enum
 from math import floor
 from typing import Callable
 
-PORT = 42424
+WIFI_PORT = 10204
 
 
 class NetworkProtocol:
@@ -60,7 +61,7 @@ class SocketListener:
         self._server_socket = None
         self._server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._server_socket.bind(("", PORT))
+        self._server_socket.bind(("", WIFI_PORT))
 
     def start_socket(self):
         self._thread = threading.Thread(target=self._run_socket)
@@ -74,7 +75,7 @@ class SocketListener:
 
         self._server_socket.listen(5)
 
-        print("[o] succeed opening server-socket; listen at:", PORT)
+        print("[o] succeed opening server-socket; listen at:", WIFI_PORT)
 
         while True:
             client_socket, address = self._server_socket.accept()
@@ -102,9 +103,9 @@ class SocketListener:
 
                     if packet.packet_type == PacketType.VALIDATION:
                         validation_time = int(packet.body.split("/")[1])
-                        response = socket.gethostname() + "/" + str(0 if prv_validation_time == 0
-                                                                    else validation_time - prv_validation_time)
-
+                        response = [str(NetworkProtocol.VALIDATION), ":",
+                                    socket.gethostname(), "/", str(floor(time.time()))]
+                        response = "".join(response)
                         print("[>] send validation response; delay:",
                               floor((validation_time - prv_validation_time) / 1000), "ms")
 

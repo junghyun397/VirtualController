@@ -23,4 +23,9 @@ if __name__ == '__main__':
     socket = SocketListener(on_packet_receive=on_packet_receive)
 
     socket.start_socket()
-    # print("[!] an error occurred. re-create server socket ....")
+
+    while True:
+        command = input()
+        if command.lower() == "stop":
+            socket.kill_socket()
+            print("[i] shutdown server...")

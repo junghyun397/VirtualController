@@ -28,6 +28,8 @@ class ComponentToggleButton extends ComponentButton {
   }) {
     PanelController panelController = Provider.of<PanelController>(context, listen: false);
     return ComponentButtonWidget(
+      width: this.componentSetting.width * 50.0,
+      height: this.componentSetting.height * 50.0,
       buttonLabel: buttonLabel,
       toggleValue: true,
       onForward: () => panelController.eventDigital(this.componentSetting.targetInputs[0], true),
