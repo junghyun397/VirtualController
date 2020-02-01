@@ -6,8 +6,10 @@ import 'package:vibrate/vibrate.dart';
 class UtilitySystem {
   
   static Size _fullScreenSizeCache = Size(0, 0);
-  static set fullScreenSize(Size size) {
-    if (_fullScreenSizeCache.height < size.height || _fullScreenSizeCache.width < size.width) _fullScreenSizeCache = size;
+  static set fullScreenSize(Size screenSize) {
+    if (screenSize.height > screenSize.width) screenSize = Size(screenSize.height, screenSize.width);
+    if (_fullScreenSizeCache.height < screenSize.height || _fullScreenSizeCache.width < screenSize.width)
+      _fullScreenSizeCache = screenSize;
   }
   static Size get fullScreenSize => _fullScreenSizeCache;
 
