@@ -12,6 +12,7 @@ import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'generated/l10n.dart';
 import 'page/direction_state.dart';
@@ -23,9 +24,10 @@ class VirtualThrottleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S.delegate.supportedLocales.forEach((val) => print(val.countryCode));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "VirtualThrottle",
+      title: "VFT Flight Throttle",
       theme: ThemeData(
         primarySwatch: primaryBlack,
       ),
@@ -41,7 +43,11 @@ class VirtualThrottleApp extends StatelessWidget {
           ? ThemeMode.dark
           : ThemeMode.system,
 
-      localizationsDelegates: [S.delegate],
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       supportedLocales: S.delegate.supportedLocales,
 
       initialRoute: "/",

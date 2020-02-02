@@ -1,0 +1,156 @@
+{
+  "appTitle": "VFT Flight Throttle",
+
+
+
+  "pageMainPanel_warning_deviceServerNotFound": "디바이스 서버를 찾을 수 없습니다.",
+  "pageMainPanel_warning_goToNetworkSetting": "네트워크 설정으로 이동",
+
+  "pageMainPanel_FAB_panels": "패널",
+  "pageMainPanel_FAB_network": "네트워크",
+  "pageMainPanel_FAB_settings": "설정",
+
+
+
+  "pageSettings_title": "설정",
+
+  "pageSettings_resetDialog_title": "설정 초기화",
+  "pageSettings_resetDialog_content": "정말로 설청을 초기화 하시겠어요?",
+  "pageSettings_resetDialog_cancel": "아니요",
+  "pageSettings_resetDialog_ok": "초기화",
+
+  "pageSettings_section_userAccount": "계정",
+
+  "settingsInfo_userName_name": "닉네임",
+  "settingsInfo_userName_description": "패널을 공유할 때 사용할 닉네임을 지정합니다.",
+  "settingsInfo_userPassword_name": "비밀번호",
+  "settingsInfo_userPassword_description": "패널을 공유할 때 사용할 비밀번호를 지정합니다.",
+
+  "pageSettings_section_UIOption": "UI 설정",
+
+  "settingsInfo_useDarkTheme_name": "어두운 테마 사용",
+  "settingsInfo_useDarkTheme_description": "어두운 테마를 사용합니다. (재시작 후 적용)",
+  "settingsInfo_hideTopBar_name": "탑 바 숨기기",
+  "settingsInfo_hideTopBar_description": "자동으로 탑 바를 숨깁니다.",
+  "settingsInfo_hideHomeKey_name": "홈 키 숨기기",
+  "settingsInfo_hideHomeKey_description": "자동으로 홈 키를 숨깁니다.",
+  "settingsInfo_useVibration_name": "진동 사용",
+  "settingsInfo_useVibration_description": "진동 피드백을 활성화 합니다.",
+
+  "pageSettings_section_network": "네트워크",
+
+  "settingsInfo_networkType_name": "네트워크 종류",
+  "settingsInfo_networkType_description": "PC와의 연결에 사용할 네트워크 종류",
+  "settingsInfo_networkTimeOut_name": "네트워크 시간제한",
+  "settingsInfo_networkTimeOut_description": "기기를 찾거나 연결 할 때 적용될 시간제한을 설정합니다. (ms)",
+  "settingsInfo_autoReconnection_name": "자동 연결",
+  "settingsInfo_autoReconnection_description": "앱이 시작될 때 자동으로 VFT Device Server를 찾아 연결합니다.",
+
+
+
+  "pageNetwork_title": "네트워크",
+
+  "pageNetwork_refresh": "새로고침",
+  "pageNetwork_active": "활성화 됨",
+  "pageNetwork_disconnect": "연결 끊기",
+
+  "pageNetwork_state_findingDeviceServer": "디바이스 서버를 찾는중...",
+
+  "pageNetwork_state_notFound": "디바이스 서버를 찾을 수 없습니다.",
+  "pageNetwork_state_notFound_description": "{interfaceName}가 켜져 있는지와 디바이스 서버가 실행되고 있는지 확인 해주세요.",
+
+  "pageNetwork_state_found": "{count}개의 실행되고 있는 디바이스 서버를 찾았습니다.",
+  "pageNetwork_state_found_tapToConnection": "여기를 눌러서 이 디바이스 서버와 연결 합니다.",
+  "pageNetwork_state_found_connectionFailed": "디바이스 서버 {address}와의 연결에 실패 했습니다.",
+  "pageNetwork_state_found_connectionSucceed": "디바이스 서버 {address}와 연결에 성공 했습니다.",
+
+
+
+  "pagePanelList_title": "패널",
+
+  "pagePanelList_panelTile_info": "{componentLength}개의 구성요소가 포함된 {width}x{height}크기의 패널\n{lastActivation}에 마지막으로 활성화 됨.",
+
+  "pagePanelList_removeDialog_title": "패널 삭제",
+  "pagePanelList_removeDialog_content": "정말로 이 패널을 삭제 하시겠어요?",
+  "pagePanelList_removeDialog_cancel": "아니요",
+  "pagePanelList_removeDialog_remove": "삭제",
+
+
+
+  "dialogPanelBuilder_panelPreferences_header": "패널 설정",
+  "dialogPanelBuilder_panelPreferences_panelName": "패널 이름",
+  "dialogPanelBuilder_panelPreferences_panelName_error": "최대 35글자가 허용됩니다.",
+
+  "dialogPanelBuilder_panelPreferences_blocks": "블록",
+
+  "dialogPanelBuilder_panelPreferences_width": "패널 너비",
+  "dialogPanelBuilder_panelPreferences_widthError": "이 기기에서는 최대 {maxWidth}칸의 너비만을 지원합니다.",
+  "dialogPanelBuilder_panelPreferences_height": "패널 높이",
+  "dialogPanelBuilder_panelPreferences_heightError": "이 기기에서는 최대 {maxHeight}칸의 높이만을 지원합니다.",
+
+  "dialogPanelBuilder_panelPreferences_jsonData": "JSON 데이터",
+  "dialogPanelBuilder_panelPreferences_jsonDataError_tooLarge": "이 패널은 이 기기에서 지원하는 최대 크기보다 큽니다.",
+  "dialogPanelBuilder_panelPreferences_jsonDataError_failToParse": "JSON 패널 데이터를 파싱하는데 실패 했습니다.",
+
+  "dialogPanelBuilder_action_header": "행동",
+  "dialogPanelBuilder_action_build": "생성",
+  "dialogPanelBuilder_action_cancel": "취소",
+
+  "dialogPanelBuilder_toast_invalidSettings": "잘못된 설정이 존재합니다.",
+
+
+
+  "pagePanelBuilder_components": "구성요소",
+  "pagePanelBuilder_infoBar_selectMode": "빈 공간을 터치해서 새로 추가할 구성요소의 크기와 위치를 정해주세요.",
+  "pagePanelBuilder_infoBar_editMode": "구성요소를 터치해서 구성요소의 세부 설정을 변경할 수 있습니다.",
+
+
+
+  "dialogComponentBuilder_componentInformation_header": "구성요소 정보",
+  "dialogComponentBuilder_componentPreferences_header": "구성요소 설정",
+
+  "dialogComponentBuilder_target_axes": "목표 입력 축 {index}",
+  "dialogComponentBuilder_target_button": "목표 입력 버튼 {index}",
+
+  "dialogComponentBuilder_action_header": "행동",
+  "dialogComponentBuilder_action_apply": "적용",
+  "dialogComponentBuilder_action_remove": "삭제",
+
+  "dialogComponentBuilder_toast_invalidSettings": "잘못된 설정이 존재합니다.",
+
+  "componentInfo_slider_name": "슬라이더",
+  "componentInfo_slider_description": "설정 가능한 스로틀",
+  "componentInfo_button_name": "버튼",
+  "componentInfo_button_description": "네모네모한 버튼",
+  "componentInfo_toggleButton_name": "토글 버튼",
+  "componentInfo_toggleButton_description": "네모네모한 토글 버튼",
+  "componentInfo_toggleSwitch_name": "토글 스위치",
+  "componentInfo_toggleSwitch_description": "2채널 토글 스위치",
+  "componentInfo_hatSwitch_name": "햇 스위치",
+  "componentInfo_hatSwitch_description": "간단한 햇 스위치",
+
+  "componentSettingInfo_label_name": "라벨",
+  "componentSettingInfo_label_description": "구성 요소 아래 표시되는 라벨을 설정합니다.",
+
+  "componentSettingInfo_sliderRange_name": "범위",
+  "componentSettingInfo_sliderRange_description": "슬라이더 범위를 설정합니다.",
+  "componentSettingInfo_sliderUseIntegerRange_name": "정수 단위 사용",
+  "componentSettingInfo_sliderUseIntegerRange_description": "슬라이더에 정수 단위를 활성화 합니다.",
+  "componentSettingInfo_sliderUnitName_name": "단위 이름",
+  "componentSettingInfo_sliderUnitName_description": "슬라이더에서 사용할 단위 이름 설정 합니다.",
+  "componentSettingInfo_sliderUseVerticalAxis_name": "수직 축 사용",
+  "componentSettingInfo_sliderUseVerticalAxis_description": "슬라이더를 수직 슬라이더로 설정 합니다.(비활성화시 수평 슬라이더로 설정 합니다.)",
+  "componentSettingInfo_sliderUseCurrentValuePopup_name": "현재 값 안내 사용",
+  "componentSettingInfo_sliderUseCurrentValuePopup_description": "현재 값을 팝업으로 보여주기를 활성화 합니다.",
+  "componentSettingInfo_sliderTrackBarDensity_name": "눈금 밀도",
+  "componentSettingInfo_sliderTrackBarDensity_description": "눈금 밀도를 설정 합니다.",
+  "componentSettingInfo_sliderTrackBarIndexCount_name": "긴 눈금 개수",
+  "componentSettingInfo_sliderTrackBarIndexCount_description": "긴 눈금 개수를 설정 합니다.",
+  "componentSettingInfo_sliderUseTrackBarLabel_name": "눈금 값 사용",
+  "componentSettingInfo_sliderUseTrackBarLabel_description": "긴 눈금 옆에 값 표시하기를 활성화 합니다.",
+  "componentSettingInfo_sliderDetentPoints_name": "멈춤쇠 위치",
+  "componentSettingInfo_sliderDetentPoints_description": "멈춤쇠 위치를 설정 합니다",
+
+  "componentSettingInfo_buttonLabel_name": "버튼 라벨",
+  "componentSettingInfo_buttonLabel_description": "버튼 위에 표시되는 라벨을 설정합니다."
+}
