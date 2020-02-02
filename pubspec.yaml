@@ -36,6 +36,9 @@ dependencies:
 
   dotted_border: ^1.0.4
 
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -45,3 +48,6 @@ flutter:
 
   assets:
   - assets/jsons/
+
+flutter_intl:
+  enabled: true

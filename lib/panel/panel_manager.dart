@@ -27,8 +27,8 @@ class PanelUtility {
 
   static String findNewName(PanelSetting panelSetting, ComponentType componentType) {
     for (int idx = 1; idx < 100; idx ++) {
-      if (!panelSetting.components.containsKey("${COMPONENT_DEFINITION[componentType].displayComponentName}#$idx"))
-        return "${COMPONENT_DEFINITION[componentType].displayComponentName}#$idx";
+      if (!panelSetting.components.containsKey("${COMPONENT_DEFINITION[componentType].shortName}#$idx"))
+        return "${COMPONENT_DEFINITION[componentType].shortName}#$idx";
     }
     return "UNNAMED";
   }

@@ -1,5 +1,6 @@
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:card_settings/card_settings.dart';
@@ -26,17 +27,17 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Reset Settings"),
-          content: const Text("Reset settings?"),
+          title: Text(S.of(context).pageSettings_resetDialog_title),
+          content: Text(S.of(context).pageSettings_resetDialog_content),
           actions: <Widget>[
             FlatButton(
-              child: Text("CANCEL"),
+              child: Text(S.of(context).pageSettings_resetDialog_cancel),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             FlatButton(
-              child: Text("OK"),
+              child: Text(S.of(context).pageSettings_resetDialog_ok),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -47,22 +48,22 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-    Widget _buildHeader(BuildContext context, String category) {
+  Widget _buildHeader(BuildContext context, String category) {
     return Theme(
       data: Theme.of(context).copyWith(brightness: Brightness.light, accentColor: Theme.of(context).primaryColor),
       child: CardSettingsHeader(label: category),
     );
   }
 
-  CardSettingsInstructions _buildInstruction(SettingsType settingsType) {
+  CardSettingsInstructions _buildInstruction(BuildContext context, SettingsType settingsType) {
     return CardSettingsInstructions(
-      text: AppSettings().settingsMap[settingsType].description,
+      text: AppSettings().settingsMap[settingsType].getL10nDescription(context),
     );
   }
 
-  CardSettingsInt _buildIntSection(SettingsType settingsType, String unitLabel) {
+  CardSettingsInt _buildIntSection(BuildContext context, SettingsType settingsType, String unitLabel) {
     return CardSettingsInt(
-        label: AppSettings().settingsMap[settingsType].settingName,
+        label: AppSettings().settingsMap[settingsType].getL10nName(context),
         initialValue: AppSettings().settingsMap[settingsType].value,
         unitLabel: unitLabel,
         onChanged: (val) {
@@ -74,9 +75,9 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-  CardSettingsText _buildStringSection(SettingsType settingsType, bool required, String Function(String) validator) {
+  CardSettingsText _buildStringSection(BuildContext context, SettingsType settingsType, bool required, String Function(String) validator) {
     return CardSettingsText(
-      label: AppSettings().settingsMap[settingsType].settingName,
+      label: AppSettings().settingsMap[settingsType].getL10nName(context),
       hintText: AppSettings().settingsMap[settingsType].defaultValue,
       initialValue: AppSettings().settingsMap[settingsType].value,
       requiredIndicator: required ? Text("*", style: TextStyle(color: Colors.red)) : Text(""),
@@ -91,7 +92,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-  CardSettingsPassword _buildPasswordSection(SettingsType settingsType, String Function(String) validator) {
+  CardSettingsPassword _buildPasswordSection(BuildContext context, SettingsType settingsType, String Function(String) validator) {
     return CardSettingsPassword(
       initialValue: AppSettings().settingsMap[settingsType].value,
       autovalidate: true,
@@ -105,9 +106,9 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-  CardSettingsListPicker _buildListPickerSection(SettingsType settingsType) {
+  CardSettingsListPicker _buildListPickerSection(BuildContext context, SettingsType settingsType) {
     return CardSettingsListPicker(
-      label: AppSettings().settingsMap[settingsType].settingName,
+      label: AppSettings().settingsMap[settingsType].getL10nName(context),
       initialValue: AppSettings().settingsMap[settingsType].value.toString(),
       autovalidate: true,
       options: <String>["WiFi", "Bluetooth"],
@@ -121,9 +122,9 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-  CardSettingsSwitch _buildSwitchSection(SettingsType settingsType) {
+  CardSettingsSwitch _buildSwitchSection(BuildContext context, SettingsType settingsType) {
     return CardSettingsSwitch(
-      label: AppSettings().settingsMap[settingsType].settingName,
+      label: AppSettings().settingsMap[settingsType].getL10nName(context),
       initialValue: AppSettings().settingsMap[settingsType].value,
       onChanged: (val) {
         setState(() {
@@ -139,7 +140,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text("Settings"),
+        title: Text(S.of(context).pageSettings_title),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -157,16 +158,17 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
           labelWidth: 150,
           children: <CardSettingsSection>[
             CardSettingsSection(
-              header: this._buildHeader(context, "User Account"),
+              header: this._buildHeader(context, S.of(context).pageSettings_section_userAccount),
               children: <Widget>[
-                this._buildInstruction(SettingsType.USER_NAME),
-                this._buildStringSection(SettingsType.USER_NAME, false, (val) {
+                this._buildInstruction(context, SettingsType.USER_NAME),
+                this._buildStringSection(context, SettingsType.USER_NAME, false, (val) {
                   if ((!new RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val)) && val != "")
                     return "Only alphabets and numbers are allowed.";
                   else return null;
                 }),
-                this._buildInstruction(SettingsType.USER_PWD),
-                this._buildPasswordSection(SettingsType.USER_PWD, (val) {
+
+                this._buildInstruction(context, SettingsType.USER_PWD),
+                this._buildPasswordSection(context, SettingsType.USER_PWD, (val) {
                   if (val.length != 0 && val.length < 5)
                     return "Only more than 4 characters are allowed.";
                   else return null;
@@ -174,29 +176,32 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               ],
             ),
             CardSettingsSection(
-              header: this._buildHeader(context, "Network"),
+              header: this._buildHeader(context, S.of(context).pageSettings_section_network),
               children: <Widget>[
                 // this._buildInstruction(SettingsType.NETWORK_TYPE),
                 // this._buildListPickerSection(SettingsType.NETWORK_TYPE),
 
-                this._buildInstruction(SettingsType.AUTO_CONNECTION),
-                this._buildSwitchSection(SettingsType.AUTO_CONNECTION),
+                this._buildInstruction(context, SettingsType.AUTO_CONNECTION),
+                this._buildSwitchSection(context, SettingsType.AUTO_CONNECTION),
 
-                this._buildInstruction(SettingsType.NETWORK_TIMEOUT),
-                this._buildIntSection(SettingsType.NETWORK_TIMEOUT, "ms"),
+                this._buildInstruction(context, SettingsType.NETWORK_TIMEOUT),
+                this._buildIntSection(context, SettingsType.NETWORK_TIMEOUT, "ms"),
               ],
             ),
             CardSettingsSection(
-              header: this._buildHeader(context, "UI Option"),
+              header: this._buildHeader(context, S.of(context).pageSettings_section_UIOption),
               children: <Widget>[
-                this._buildInstruction(SettingsType.USE_DARK_THEME),
-                this._buildSwitchSection(SettingsType.USE_DARK_THEME),
-                this._buildInstruction(SettingsType.HIDE_TOP_BAR),
-                this._buildSwitchSection(SettingsType.HIDE_TOP_BAR),
-                this._buildInstruction(SettingsType.HIDE_HOME_KEY),
-                this._buildSwitchSection(SettingsType.HIDE_HOME_KEY),
-                this._buildInstruction(SettingsType.USE_VIBRATION),
-                this._buildSwitchSection(SettingsType.USE_VIBRATION),
+                this._buildInstruction(context, SettingsType.USE_DARK_THEME),
+                this._buildSwitchSection(context, SettingsType.USE_DARK_THEME),
+
+                this._buildInstruction(context, SettingsType.HIDE_TOP_BAR),
+                this._buildSwitchSection(context, SettingsType.HIDE_TOP_BAR),
+
+                this._buildInstruction(context, SettingsType.HIDE_HOME_KEY),
+                this._buildSwitchSection(context, SettingsType.HIDE_HOME_KEY),
+
+                this._buildInstruction(context, SettingsType.USE_VIBRATION),
+                this._buildSwitchSection(context, SettingsType.USE_VIBRATION),
               ],
             ),
           ],

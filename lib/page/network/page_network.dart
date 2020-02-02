@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/network/page_network_controller.dart';
@@ -25,9 +26,9 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             width: 80,
             height: 80,
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 16),
-            child: Text("Finding target device..."),
+            child: Text(S.of(context).pageNetwork_state_findingDeviceServer),
           )
         ],
       ),
@@ -49,17 +50,14 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             child: Column(
               children: <Widget>[
                 Text(
-                  "PC side device not found.",
+                  S.of(context).pageNetwork_state_notFound,
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(
                   width: 300,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      "Please check if " +
-                          AppNetworkManager().val.toString() +
-                          " is turned on or PC side device is running.",
+                    child: Text(S.of(context).pageNetwork_state_notFound_description(AppNetworkManager().val.toString()),
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -70,7 +68,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                       .of<PageNetworkController>(context)
                       .refreshDeviceList,
                   child: Text(
-                    "REFRESH",
+                    S.of(context).pageNetwork_refresh,
                     style: TextStyle(
                       color: Colors.blue,
                     ),
@@ -91,16 +89,14 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           padding: const EdgeInsets.only(left: 15),
           child: Row(
             children: <Widget>[
-              Text(
-                "Found ${deviceList.length} PC-side devices.",
-              ),
+              Text(S.of(context).pageNetwork_state_found(deviceList.length)),
               Spacer(),
               FlatButton(
                 onPressed: Provider
                     .of<PageNetworkController>(context)
                     .refreshDeviceList,
                 child: Text(
-                  "REFRESH",
+                  S.of(context).pageNetwork_refresh,
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.blue,
@@ -116,17 +112,17 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                 ListTile(
                   leading: Icon(Icons.videogame_asset),
                   title: Text(val),
-                  subtitle: Text("Tap to connect with this device"),
+                  subtitle: Text(S.of(context).pageNetwork_state_found_tapToConnection),
                   trailing: Text(
-                    "ACTIVE",
+                    S.of(context).pageNetwork_active,
                     style: TextStyle(color: Colors.green),
                   ),
                   onTap: () =>
                       Provider.of<PageNetworkController>(context, listen: false).connectDevice(val, () {
                         this._scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text("Connection with the server $val failed."),
+                          content: Text(S.of(context).pageNetwork_state_found_connectionFailed(val)),
                           action: SnackBarAction(
-                              label: "REFRESH",
+                              label: S.of(context).pageNetwork_refresh,
                               textColor: Colors.green,
                               onPressed: () {
                                 this._scaffoldKey.currentState.hideCurrentSnackBar();
@@ -157,13 +153,13 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             child: Column(
               children: <Widget>[
                 Text(
-                  "Conntcted with device ${AppNetworkManager().val.targetNetworkAgent.address}",
+                  S.of(context).pageNetwork_state_found_connectionSucceed(AppNetworkManager().val.targetNetworkAgent.address),
                   style: TextStyle(fontSize: 16),
                 ),
                 FlatButton(
                   onPressed: Provider.of<PageNetworkController>(context).disconnectCurrentDevice,
                   child: Text(
-                    "DISCONNECT",
+                    S.of(context).pageNetwork_disconnect,
                     style: TextStyle(
                       color: Colors.blue,
                     ),
@@ -184,7 +180,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
       child: Scaffold(
         key: this._scaffoldKey,
         appBar: AppBar(
-          title: Text("Network"),
+          title: Text(S.of(context).pageNetwork_title),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),

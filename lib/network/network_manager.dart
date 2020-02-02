@@ -47,7 +47,6 @@ class AppNetworkManager {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        this.tryAutoReconnection();
       }
     });
   }

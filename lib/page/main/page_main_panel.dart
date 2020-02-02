@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/panel/panel.dart';
@@ -71,8 +72,8 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
                 size: 20,
               ),
             ),
-            const Text(
-              "Target device not found.",
+            Text(
+              S.of(context).pageMainPanel_warning_deviceServerNotFound,
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -80,8 +81,8 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
             Spacer(),
             FlatButton(
               onPressed: () => Navigator.pushNamed(context, Routes.PAGE_NETWORK),
-              child: const Text(
-                "Go to network settings",
+              child: Text(
+                S.of(context).pageMainPanel_warning_goToNetworkSetting,
                 style: TextStyle(
                   color: Colors.blue,
                   decoration: TextDecoration.underline,
@@ -141,7 +142,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
               color: Colors.black87,
             ),
             backgroundColor: Colors.white,
-            label: "Panels",
+            label: S.of(context).pageMainPanel_FAB_panels,
             labelStyle: const TextStyle(
               color: Colors.black54,
             ),
@@ -153,7 +154,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
               color: Colors.black87,
             ),
             backgroundColor: Colors.white,
-            label: "Network",
+            label: S.of(context).pageMainPanel_FAB_network,
             labelStyle: const TextStyle(
               color: Colors.black54,
             ),
@@ -165,7 +166,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
               color: Colors.black87,
             ),
             backgroundColor: Colors.white,
-            label: "Setting",
+            label: S.of(context).pageMainPanel_FAB_settings,
             labelStyle: const TextStyle(
               color: Colors.black54,
             ),

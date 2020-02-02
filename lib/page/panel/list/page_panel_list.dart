@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/panel/list/page_panel_list_controller.dart';
 import 'package:VirtualFlightThrottle/page/panel/list/widget/panel_builder_dialog.dart';
@@ -21,16 +22,16 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text("Remove panel"),
-          content: Text("Do you want to remove the saved panel?"),
+          title: Text(S.of(context).pagePanelList_removeDialog_title),
+          content: Text(S.of(context).pagePanelList_removeDialog_content),
             actions: <Widget>[
               FlatButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: Text("CENCLE"),
+                child: Text(S.of(context).pagePanelList_removeDialog_cancel),
               ),
               FlatButton(
                 onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: Text("REMOVE"),
+                child: Text(S.of(context).pagePanelList_removeDialog_remove),
               ),
             ],
         );
@@ -49,8 +50,11 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
     return ListTile(
       leading: index == 0 ? Icon(Icons.check) : Icon(Icons.layers),
       title: Text(panelSetting.name),
-      subtitle: Text("${panelSetting.width}x${panelSetting.height} panel with ${panelSetting.components.length} components\n"
-          "Last activation at ${DateTime.fromMillisecondsSinceEpoch(panelSetting.date).toIso8601String().substring(0, 19)}."),
+      subtitle: Text(S.of(context).pagePanelList_panelTile_info(
+          panelSetting.width, panelSetting.height,
+          panelSetting.components.length,
+          DateTime.fromMillisecondsSinceEpoch(panelSetting.date).toIso8601String().substring(0, 19)),
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -83,7 +87,7 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          title: Text("Panels"),
+          title: Text(S.of(context).pagePanelList_title),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed:() => Navigator.pop(context),

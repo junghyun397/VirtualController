@@ -13,6 +13,7 @@ import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'generated/l10n.dart';
 import 'page/direction_state.dart';
 import 'page/main/page_main_panel.dart';
 import 'page/network/page_network.dart';
@@ -40,10 +41,8 @@ class VirtualThrottleApp extends StatelessWidget {
           ? ThemeMode.dark
           : ThemeMode.system,
 
-      // TODO: i8n initialize
-      // localizationsDelegates: [S.delegate],
-      // supportedLocales: S.delegate.supportedLocales,
-      // localeResolutionCallback: S.delegate.resolution(fallback: Locale('en')),
+      localizationsDelegates: [S.delegate],
+      supportedLocales: S.delegate.supportedLocales,
 
       initialRoute: "/",
       routes: {

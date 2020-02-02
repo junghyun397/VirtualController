@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/panel/builder/page_panel_builder_controller.dart';
 import 'package:VirtualFlightThrottle/page/panel/builder/widget/component_builder_dialog.dart';
@@ -36,8 +37,8 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
             children: <Widget>[
               Text(
                 controller.isSelectionMode
-                  ? "Select an empty space to specify location and size of the component."
-                  : "Tap on components to modify components.",
+                  ? S.of(context).pagePanelBuilder_infoBar_selectMode
+                  : S.of(context).pagePanelBuilder_infoBar_editMode,
                 style: TextStyle(
                   fontSize: 12,
                 ),
@@ -150,7 +151,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
           Container(
             margin: EdgeInsets.fromLTRB(15, 10, 0, 10),
             alignment: Alignment.centerLeft,
-            child: Text("Components", style: TextStyle(fontSize: 15, color: Colors.white70)),
+            child: Text(S.of(context).pagePanelBuilder_components, style: TextStyle(fontSize: 15, color: Colors.white70)),
           ),
           Consumer<PagePanelBuilderController>(
             builder: (context, controller, __) {
@@ -161,11 +162,11 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
                     MapEntry<ComponentType, ComponentDefinition> definition = definitionList[index];
                     return ListTile(
                       title: Text(
-                        definition.value.displayComponentName,
+                        definition.value.getL10nComponentName(context),
                         style: TextStyle(color: controller.isSelectionMode ? Colors.white10 : Colors.white),
                       ),
                       subtitle: Text(
-                        definition.value.description,
+                        definition.value.getL10nDescription(context),
                         style: TextStyle(color: controller.isSelectionMode ? Colors.white10 : Colors.white60),
                       ),
                       trailing: IconButton(

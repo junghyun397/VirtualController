@@ -30,9 +30,9 @@ class ComponentSlider extends Component {
 
       useCurrentValuePopup: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_CURRENT_VALUE_POPUP, true),
 
-      hatchMarkDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_HATCH_MARK_DENSITY, 0.4),
-      hatchMarkIndexDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_HATCH_MARK_INDEX_COUNT, 9),
-      useHatchMarkLabel: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_HATCH_MARK_LABEL, true),
+      hatchMarkDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_TRACK_BAR_DENSITY, 0.4),
+      hatchMarkIndexDensity: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_TRACK_BAR_INDEX_COUNT, 9),
+      useHatchMarkLabel: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_USE_TRACK_BAR_LABEL, true),
 
       detentPoints: this.componentSetting.getSettingsOr(ComponentSettingType.SLIDER_DETENT_POINTS, []),
     );

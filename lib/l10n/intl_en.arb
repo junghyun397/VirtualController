@@ -1,0 +1,156 @@
+{
+    "appTitle": "VFT Flight Throttle",
+
+
+
+    "pageMainPanel_warning_deviceServerNotFound": "VFT Device Server not found.",
+    "pageMainPanel_warning_goToNetworkSetting": "Go to network setting",
+
+    "pageMainPanel_FAB_panels": "Panels",
+    "pageMainPanel_FAB_network": "Network",
+    "pageMainPanel_FAB_settings": "Settings",
+
+
+
+    "pageSettings_title": "Settings",
+
+    "pageSettings_resetDialog_title": "Reset Settings",
+    "pageSettings_resetDialog_content": "Reset Settings?",
+    "pageSettings_resetDialog_cancel": "CANCEL",
+    "pageSettings_resetDialog_ok": "OK",
+
+    "pageSettings_section_userAccount": "User Account",
+
+    "settingsInfo_userName_name": "User name",
+    "settingsInfo_userName_description": "Set nickname when sharing layout",
+    "settingsInfo_userPassword_name": "User password",
+    "settingsInfo_userPassword_description": "Use password when sharing layout",
+
+    "pageSettings_section_UIOption": "UI Option",
+
+    "settingsInfo_useDarkTheme_name": "Use dark theme",
+    "settingsInfo_useDarkTheme_description": "Use a Dark theme (Applies after restart)",
+    "settingsInfo_hideTopBar_name": "Hide top-bar",
+    "settingsInfo_hideTopBar_description": "Enable auto top bar hide",
+    "settingsInfo_hideHomeKey_name": "Hide home-key",
+    "settingsInfo_hideHomeKey_description": "Enable auto home key hide",
+    "settingsInfo_useVibration_name": "Use vibration",
+    "settingsInfo_useVibration_description": "Enable vibration feedback",
+
+    "pageSettings_section_network": "Network",
+
+    "settingsInfo_networkType_name": "Network Type",
+    "settingsInfo_networkType_description": "Set network interface for PC side device (Applies after restart)",
+    "settingsInfo_networkTimeOut_name": "Network Timeout",
+    "settingsInfo_networkTimeOut_description": "Set device discovery and connection timeout (ms)",
+    "settingsInfo_autoReconnection_name": "Auto connection",
+    "settingsInfo_autoReconnection_description": "Enable automatic connection at startup",
+
+
+
+    "pageNetwork_title": "Network",
+
+    "pageNetwork_refresh": "REFRESH",
+    "pageNetwork_active": "ACTIVE",
+    "pageNetwork_disconnect": "DISCONNECT",
+
+    "pageNetwork_state_findingDeviceServer": "Finding Device Server...",
+
+    "pageNetwork_state_notFound": "PC side Device Server not found.",
+    "pageNetwork_state_notFound_description": "Please check if {interfaceName}  is turned on or PC side device is running.",
+
+    "pageNetwork_state_found": "Found {count} PC-side devices.",
+    "pageNetwork_state_found_tapToConnection": "Tap to connect with this device",
+    "pageNetwork_state_found_connectionFailed": "Connection with Device Server {address} failed.",
+    "pageNetwork_state_found_connectionSucceed": "Connected with device {address}",
+
+
+
+    "pagePanelList_title": "Panels",
+
+    "pagePanelList_panelTile_info": "{width}x{height} panel with {componentLength} components\nLast activation at {lastActivation}",
+
+    "pagePanelList_removeDialog_title": "Remove panel",
+    "pagePanelList_removeDialog_content": "Do you want to remove the saved panel?",
+    "pagePanelList_removeDialog_cancel": "CANCEL",
+    "pagePanelList_removeDialog_remove": "REMOVE",
+
+
+
+    "dialogPanelBuilder_panelPreferences_header": "Panel Preferences",
+    "dialogPanelBuilder_panelPreferences_panelName": "Panel name",
+    "dialogPanelBuilder_panelPreferences_panelName_error": "max 35 word.",
+
+    "dialogPanelBuilder_panelPreferences_blocks": "blocks",
+
+    "dialogPanelBuilder_panelPreferences_width": "Panel width",
+    "dialogPanelBuilder_panelPreferences_widthError": "This device allows up to {maxWidth} width.",
+    "dialogPanelBuilder_panelPreferences_height": "Panel height",
+    "dialogPanelBuilder_panelPreferences_heightError": "This device allows up to {maxHeight} height.",
+
+    "dialogPanelBuilder_panelPreferences_jsonData": "JSON data",
+    "dialogPanelBuilder_panelPreferences_jsonDataError_tooLarge": "This panel is larger than the maximum size supported by this device.",
+    "dialogPanelBuilder_panelPreferences_jsonDataError_failToParse": "Fail to parse panel from JSON data.",
+
+    "dialogPanelBuilder_action_header": "Action",
+    "dialogPanelBuilder_action_build": "BUILD",
+    "dialogPanelBuilder_action_cancel": "CANCEL",
+
+    "dialogPanelBuilder_toast_invalidSettings": "Invalid setting exists",
+
+
+
+    "pagePanelBuilder_components": "Components",
+    "pagePanelBuilder_infoBar_selectMode": "Select an empty space to specify location and size of the component.",
+    "pagePanelBuilder_infoBar_editMode": "Tap on components to modify components.",
+
+
+
+    "dialogComponentBuilder_componentInformation_header": "Component Information",
+    "dialogComponentBuilder_componentPreferences_header": "Component Preferences",
+
+    "dialogComponentBuilder_target_axes": "Target Axes {index}",
+    "dialogComponentBuilder_target_button": "Target Button {index}",
+
+    "dialogComponentBuilder_action_header": "Action",
+    "dialogComponentBuilder_action_apply": "APPLY",
+    "dialogComponentBuilder_action_remove": "REMOVE",
+
+    "dialogComponentBuilder_toast_invalidSettings": "Invalid setting exists",
+
+    "componentInfo_slider_name": "Slider",
+    "componentInfo_slider_description": "Configurable Throttle",
+    "componentInfo_button_name": "Button",
+    "componentInfo_button_description": "Square button",
+    "componentInfo_toggleButton_name": "Toggle Button",
+    "componentInfo_toggleButton_description": "Square toggle button",
+    "componentInfo_toggleSwitch_name": "Toggle Switch",
+    "componentInfo_toggleSwitch_description": "2-channel toggle switch",
+    "componentInfo_hatSwitch_name": "Hat Switch",
+    "componentInfo_hatSwitch_description": "Simple hat switch",
+
+    "componentSettingInfo_label_name": "Label",
+    "componentSettingInfo_label_description": "Set component label",
+
+    "componentSettingInfo_sliderRange_name": "Range",
+    "componentSettingInfo_sliderRange_description": "Set slider range",
+    "componentSettingInfo_sliderUseIntegerRange_name": "Use Integer range",
+    "componentSettingInfo_sliderUseIntegerRange_description": "Enable integer units on the slider",
+    "componentSettingInfo_sliderUnitName_name": "Unit name",
+    "componentSettingInfo_sliderUnitName_description": "Set slider unit name",
+    "componentSettingInfo_sliderUseVerticalAxis_name": "Use vertical axis",
+    "componentSettingInfo_sliderUseVerticalAxis_description": "Use vertical axis (use horizontal axis when disabled)",
+    "componentSettingInfo_sliderUseCurrentValuePopup_name": "Use current value popup",
+    "componentSettingInfo_sliderUseCurrentValuePopup_description": "Enable display of current values popup",
+    "componentSettingInfo_sliderTrackBarDensity_name": "Track-bar density",
+    "componentSettingInfo_sliderTrackBarDensity_description": "Set track bar density",
+    "componentSettingInfo_sliderTrackBarIndexCount_name": "Track-bar index count",
+    "componentSettingInfo_sliderTrackBarIndexCount_description": "Set track bar index count",
+    "componentSettingInfo_sliderUseTrackBarLabel_name": "Use Track-bar label",
+    "componentSettingInfo_sliderUseTrackBarLabel_description": "Enable track bar label display",
+    "componentSettingInfo_sliderDetentPoints_name": "Detent points",
+    "componentSettingInfo_sliderDetentPoints_description": "Set detent positions",
+
+    "componentSettingInfo_buttonLabel_name": "Button label",
+    "componentSettingInfo_buttonLabel_description": "Set button label"
+}

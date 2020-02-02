@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
@@ -26,14 +27,14 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
 
   Widget _buildTargetInputSection(BuildContext context, bool isAnalogue, int index) {
     if (isAnalogue) return CardSettingsNumberPicker(
-      label: "Target Axes ${index+1}",
+      label: S.of(context).dialogComponentBuilder_target_axes(index + 1),
       initialValue: widget.targetComponentSetting.targetInputs[index],
       min: 0,
       max: NetworkProtocol.ANALOGUE_INPUT_COUNT,
       onChanged: (val) => widget.targetComponentSetting.targetInputs[index] = val,
     );
     else return CardSettingsNumberPicker(
-      label: "Target button ${index+1}",
+      label: S.of(context).dialogComponentBuilder_target_button(index + 1),
       initialValue: widget.targetComponentSetting.targetInputs[index] == 0
           ? 0 : widget.targetComponentSetting.targetInputs[index] - NetworkProtocol.ANALOGUE_INPUT_COUNT + 1,
       min: 0,
@@ -44,35 +45,35 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
   }
 
   Widget _buildComponentSettingDescription(BuildContext context, ComponentSettingData componentSettingData) =>
-      CardSettingsInstructions(text: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].description);
+      CardSettingsInstructions(text: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nDescription(context));
 
   // ignore: missing_return
   Widget _buildComponentSettingSection(BuildContext context, ComponentSettingData componentSettingData) {
     switch (componentSettingData.type.toString()) {
       case "bool":
         return CardSettingsSwitch(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
+          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nComponentName(context),
           initialValue: componentSettingData.value,
           validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "int":
         return CardSettingsInt(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
+          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nComponentName(context),
           initialValue: componentSettingData.value,
           validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "double":
         return CardSettingsDouble(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
+          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nComponentName(context),
           initialValue: componentSettingData.value,
           validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val.toString()),
         );
       case "CastList<dynamic, double>":
         return CardSettingsText(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
+          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nComponentName(context),
           initialValue: componentSettingData.value.toString(),
           maxLength: 500,
           maxLengthEnforced: false,
@@ -85,7 +86,7 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
         );
       case "String":
         return CardSettingsText(
-          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].displaySettingName,
+          label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nComponentName(context),
           initialValue: componentSettingData.value,
           validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
           onSaved: (val) => componentSettingData.setValue(val),
@@ -108,7 +109,7 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
             showMaterialonIOS: true,
             children: <CardSettingsSection>[
               CardSettingsSection(
-                header: CardSettingsHeader(label: "Component Information"),
+                header: CardSettingsHeader(label: S.of(context).dialogComponentBuilder_componentInformation_header),
                 children: [
 //                  TODO: Implement safe name change
 //                  CardSettingsText(
@@ -121,7 +122,7 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
                 ],
               ),
               CardSettingsSection(
-                header: CardSettingsHeader(label: "Component Perferences"),
+                header: CardSettingsHeader(label: S.of(context).dialogComponentBuilder_componentPreferences_header),
                 children: mixTwoList(
                   widget.targetComponentSetting.settings.entries.map((val) =>
                       this._buildComponentSettingDescription(context, val.value)).toList(),
@@ -131,18 +132,18 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
               ),
               CardSettingsSection(
                 header: CardSettingsHeader(
-                  label: "Actions",
+                  label: S.of(context).dialogComponentBuilder_action_header,
                 ),
                 children: [
                   CardSettingsButton(
-                    label: "APPLY",
+                    label: S.of(context).dialogComponentBuilder_action_apply,
                     backgroundColor: Colors.green,
                     onPressed: () {
                       if (this._formKey.currentState.validate()) {
                         this._formKey.currentState.save();
                         Navigator.pop(context, true);
                       } else Fluttertoast.showToast(
-                        msg: "Invalid setting exists",
+                        msg: S.of(context).dialogComponentBuilder_toast_invalidSettings,
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIos: 1,
@@ -152,7 +153,7 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
                     },
                   ),
                   CardSettingsButton(
-                    label: "REMOVE",
+                    label: S.of(context).dialogComponentBuilder_action_remove,
                     isDestructive: true,
                     backgroundColor: Colors.red,
                     onPressed: () => Navigator.pop(context, false),
