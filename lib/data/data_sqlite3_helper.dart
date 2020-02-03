@@ -15,7 +15,7 @@ class SQLite3Helper {
   SQLite3Helper._internal();
 
   static const String DB_NAME = "virtual_throttle_database.db";
-  static const int DB_VERSION = 5;
+  static const int DB_VERSION = 6;
 
   Database _db;
 

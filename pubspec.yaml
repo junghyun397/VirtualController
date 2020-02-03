@@ -1,7 +1,7 @@
 name: VirtualFlightThrottle
 description: Customizable Virtual Flight-Throttle&#x2F;Controller
 
-version: 0.1.0+1
+version: 0.2.0
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -36,6 +36,8 @@ dependencies:
 
   dotted_border: ^1.0.4
 
+  url_launcher: ^5.4.1
+
   flutter_localizations:
     sdk: flutter
 
@@ -48,6 +50,7 @@ flutter:
 
   assets:
   - assets/jsons/
+  - assets/images/
 
 flutter_intl:
   enabled: true

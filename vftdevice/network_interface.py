@@ -92,7 +92,8 @@ class SocketListener:
             while True:
                 try:
                     data = client_socket.recv(1024).decode()
-                except ConnectionResetError:
+                except ConnectionResetError as error:
+                    print("[!] handle error:", str(error))
                     self.kill_socket()
                     return
 

@@ -3,9 +3,6 @@ import 'dart:ui';
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
-import 'package:VirtualFlightThrottle/page/panel/builder/page_panel_builder.dart';
-import 'package:VirtualFlightThrottle/page/panel/list/page_panel_list.dart';
-import 'package:VirtualFlightThrottle/page/panel/store/page_panel_store.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
@@ -16,9 +13,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'generated/l10n.dart';
 import 'page/direction_state.dart';
-import 'page/main/page_main_panel.dart';
-import 'page/network/page_network.dart';
-import 'page/settings/page_settings.dart';
 
 class VirtualThrottleApp extends StatelessWidget {
 
@@ -50,15 +44,8 @@ class VirtualThrottleApp extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
 
-      initialRoute: "/",
-      routes: {
-        Routes.PAGE_MAIN_PANEL: (context) => PageMainPanel(),
-        Routes.PAGE_PANEL_LIST: (context) => PagePanelList(),
-        Routes.PAGE_PANEL_BUILDER: (context) => PagePanelBuilder(),
-        Routes.PAGE_PANEL_STORE: (context) => PagePanelStore(),
-        Routes.PAGE_NETWORK: (context) => PageNetwork(),
-        Routes.PAGE_SETTING: (context) => PageSettings(),
-      },
+      initialRoute: Routes.PAGE_MAIN_PANEL,
+      routes: Routes.routes,
       navigatorObservers: [routeObserver],
     );
   }

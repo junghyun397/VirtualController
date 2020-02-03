@@ -9,6 +9,7 @@
   "pageMainPanel_FAB_panels": "Panel",
   "pageMainPanel_FAB_network": "Network",
   "pageMainPanel_FAB_settings": "Setting",
+  "pageMainPanel_FAB_about": "About",
 
 
 
@@ -56,8 +57,8 @@
 
   "pageNetwork_state_findingDeviceServer": "Finding Device Server...",
 
-  "pageNetwork_state_notFound": "PC side Device Server not found.",
-  "pageNetwork_state_notFound_description": "Please check if {interfaceName}  is turned on or PC side device is running.",
+  "pageNetwork_state_notFound": "VFT Device Server not found.",
+  "pageNetwork_state_notFound_description": "Please check if {interfaceName}  is turned on or VFT Device Server is running.",
 
   "pageNetwork_state_found": "Found {count} PC-side devices.",
   "pageNetwork_state_found_tapToConnection": "Tap to connect with this device",
@@ -84,9 +85,9 @@
   "dialogPanelBuilder_panelPreferences_blocks": "blocks",
 
   "dialogPanelBuilder_panelPreferences_width": "Panel width",
-  "dialogPanelBuilder_panelPreferences_widthError": "This device allows up to {maxWidth} width.",
+  "dialogPanelBuilder_panelPreferences_widthError": "This device allows up to {maxWidth}blocks width.",
   "dialogPanelBuilder_panelPreferences_height": "Panel height",
-  "dialogPanelBuilder_panelPreferences_heightError": "This device allows up to {maxHeight} height.",
+  "dialogPanelBuilder_panelPreferences_heightError": "This device allows up to {maxHeight}blocks height.",
 
   "dialogPanelBuilder_panelPreferences_jsonData": "JSON data",
   "dialogPanelBuilder_panelPreferences_jsonDataError_tooLarge": "This panel is larger than the maximum size supported by this device.",
@@ -101,8 +102,8 @@
 
 
   "pagePanelBuilder_components": "Components",
-  "pagePanelBuilder_infoBar_selectMode": "Select an empty space to specify location and size of the component.",
-  "pagePanelBuilder_infoBar_editMode": "Tap on components to modify components.",
+  "pagePanelBuilder_infoBar_selectMode": "Select an empty space to specify location and size of component.",
+  "pagePanelBuilder_infoBar_editMode": "Tap component to modify component preference.",
 
 
 
@@ -152,5 +153,12 @@
   "componentSettingInfo_sliderDetentPoints_description": "Set detent positions",
 
   "componentSettingInfo_buttonLabel_name": "Button label",
-  "componentSettingInfo_buttonLabel_description": "Set button label"
+  "componentSettingInfo_buttonLabel_description": "Set button label",
+
+
+
+  "pageAboutApp_title": "About VFT Flight Throttle app",
+
+  "pageAboutApp_developerInfo": "Developed by junghyun397."
+
 }
