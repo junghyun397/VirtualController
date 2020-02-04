@@ -4,6 +4,7 @@ import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/page/network/page_network_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PageNetwork extends StatefulWidget {
   PageNetwork({Key key}): super(key: key);
@@ -188,7 +189,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.help_outline),
-              onPressed: () => null,
+              onPressed: () => launch(S.of(context).helpWikiLink_network),
               tooltip: "Help",
             ),
           ],

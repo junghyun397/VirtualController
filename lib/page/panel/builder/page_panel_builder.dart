@@ -10,6 +10,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PagePanelBuilder extends StatefulWidget {
   PagePanelBuilder({Key key}): super(key: key);
@@ -117,12 +118,13 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
                 );
                 else return Stack(
                   children: <Widget>[
-                    for (int w = 0; w < controller.panelSetting.width; w++) for (int h = 0; h < controller.panelSetting.height; h++)
-                      Positioned(
-                        left: w * blockSize.width,
-                        bottom: h * blockSize.height,
-                        child: this._buildComponentSelectAbleArea(context, Pair(w, h), controller, blockSize),
-                      ),
+                    for (int w = 0; w < controller.panelSetting.width; w++) 
+                      for (int h = 0; h < controller.panelSetting.height; h++)
+                        Positioned(
+                          left: w * blockSize.width,
+                          bottom: h * blockSize.height,
+                          child: this._buildComponentSelectAbleArea(context, Pair(w, h), controller, blockSize),
+                        ),
                   ],
                 );
               }
@@ -219,7 +221,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
             ),
             IconButton(
               icon: Icon(Icons.help_outline),
-              onPressed: () => null,
+              onPressed: () => launch(S.of(context).helpWikiLink_buildPanel),
               tooltip: "Help",
             ),
           ],

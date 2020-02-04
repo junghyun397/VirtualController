@@ -3,6 +3,12 @@
 
 
 
+  "helpWikiLink_network": "https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-connect-with-your-PC#KOR-도움말-PC와-앱을-연결하는-방법",
+  "helpWikiLink_createPanel": "https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-create-new-panel#KOR-도움말-새-패널을-만드는-방법",
+  "helpWikiLink_buildPanel": "https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#KOR-도움말-구성요소를-배치하고-설정해-패널을-만드는-방법",
+
+
+
   "pageMainPanel_warning_deviceServerNotFound": "디바이스 서버를 찾을 수 없습니다.",
   "pageMainPanel_warning_goToNetworkSetting": "네트워크 설정으로 이동",
 
@@ -40,7 +46,7 @@
   "pageSettings_section_network": "네트워크",
 
   "settingsInfo_networkType_name": "네트워크 종류",
-  "settingsInfo_networkType_description": "PC와의 연결에 사용할 네트워크 종류",
+  "settingsInfo_networkType_description": "PC와의 연결에 사용할 네트워크 종류를 설정합니다.",
   "settingsInfo_networkTimeOut_name": "네트워크 시간제한",
   "settingsInfo_networkTimeOut_description": "기기를 찾거나 연결 할 때 적용될 시간제한을 설정합니다. (ms)",
   "settingsInfo_autoReconnection_name": "자동 연결",
@@ -57,7 +63,7 @@
   "pageNetwork_state_findingDeviceServer": "디바이스 서버를 찾는중...",
 
   "pageNetwork_state_notFound": "디바이스 서버를 찾을 수 없습니다.",
-  "pageNetwork_state_notFound_description": "{interfaceName}가 켜져 있는지와 디바이스 서버가 실행되고 있는지 확인 해주세요.",
+  "pageNetwork_state_notFound_description": "{interfaceName}가 켜져 있는지와 디바이스 서버가 실행되고 있는지를 확인 해주세요.",
 
   "pageNetwork_state_found": "{count}개의 실행되고 있는 디바이스 서버를 찾았습니다.",
   "pageNetwork_state_found_tapToConnection": "여기를 눌러서 이 디바이스 서버와 연결 합니다.",
@@ -68,7 +74,7 @@
 
   "pagePanelList_title": "패널",
 
-  "pagePanelList_panelTile_info": "{componentLength}개의 구성요소가 포함된 {width}x{height}크기의 패널\n{lastActivation}에 마지막으로 활성화 됨.",
+  "pagePanelList_panelTile_info": "{componentLength}개의 구성요소가 포함된 {width}x{height}크기의 패널.\n{lastActivation}에 마지막으로 활성화 됨",
 
   "pagePanelList_removeDialog_title": "패널 삭제",
   "pagePanelList_removeDialog_content": "정말로 이 패널을 삭제 하시겠어요?",
@@ -79,7 +85,7 @@
 
   "dialogPanelBuilder_panelPreferences_header": "패널 설정",
   "dialogPanelBuilder_panelPreferences_panelName": "패널 이름",
-  "dialogPanelBuilder_panelPreferences_panelName_error": "최대 35글자가 허용됩니다.",
+  "dialogPanelBuilder_panelPreferences_panelName_error": "패널 이름으로는 최대 35글자가 허용됩니다.",
 
   "dialogPanelBuilder_panelPreferences_blocks": "블록",
 
@@ -90,7 +96,7 @@
 
   "dialogPanelBuilder_panelPreferences_jsonData": "JSON 데이터",
   "dialogPanelBuilder_panelPreferences_jsonDataError_tooLarge": "이 패널은 이 기기에서 지원하는 최대 크기보다 큽니다.",
-  "dialogPanelBuilder_panelPreferences_jsonDataError_failToParse": "JSON 패널 데이터를 파싱하는데 실패 했습니다.",
+  "dialogPanelBuilder_panelPreferences_jsonDataError_failToParse": "JSON 패널 데이터를 가져오는데 실패 했습니다.",
 
   "dialogPanelBuilder_action_header": "행동",
   "dialogPanelBuilder_action_build": "생성",

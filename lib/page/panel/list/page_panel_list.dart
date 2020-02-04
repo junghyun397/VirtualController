@@ -7,6 +7,7 @@ import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PagePanelList extends StatefulWidget {
   PagePanelList({Key key}): super(key: key);
@@ -104,7 +105,7 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
             ),
             IconButton(
               icon: Icon(Icons.help_outline),
-              onPressed: () => null,
+              onPressed: () => launch(S.of(context).helpWikiLink_createPanel),
               tooltip: "Help",
             ),
           ],

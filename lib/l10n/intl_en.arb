@@ -3,6 +3,12 @@
 
 
 
+  "helpWikiLink_network": "https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-connect-with-your-PC#eng-help-how-to-connect-with-your-pc",
+  "helpWikiLink_createPanel": "https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-create-new-panel#eng-help-how-to-create-new-panel",
+  "helpWikiLink_buildPanel": "https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#eng-help-how-to-place-and-modify-components-to-build-panel",
+
+
+
   "pageMainPanel_warning_deviceServerNotFound": "VFT Device Server not found.",
   "pageMainPanel_warning_goToNetworkSetting": "Go to network setting",
 
