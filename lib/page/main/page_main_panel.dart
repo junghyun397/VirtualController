@@ -23,17 +23,17 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
   Widget _mainPanelCache;
 
   Widget _buildMainPanel(BuildContext context, BoxConstraints constraints) {
-    if (AppPanelManager().needMainPanelUpdate && constraints.maxHeight == UtilitySystem.fullScreenSize.height) {
+    if (AppPanelManager().needMainPanelUpdate && constraints.maxHeight == SystemUtility.fullScreenSize.height) {
       AppPanelManager().needMainPanelUpdate = false;
       this._mainPanelCache = null;
     }
 
     if (this._mainPanelCache == null) {
       PanelSetting panelSetting = AppPanelManager().getMainPanel();
-      Size blockSize = PanelUtility.getBlockSize(panelSetting, UtilitySystem.fullScreenSize);
+      Size blockSize = PanelUtility.getBlockSize(panelSetting, SystemUtility.fullScreenSize);
       this._mainPanelCache = SizedBox(
-        width: UtilitySystem.fullScreenSize.width,
-        height: UtilitySystem.fullScreenSize.height,
+        width: SystemUtility.fullScreenSize.width,
+        height: SystemUtility.fullScreenSize.height,
         child: Panel(
           blockWidth: blockSize.width,
           blockHeight: blockSize.height,
@@ -97,7 +97,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
 
   @override
   Widget build(BuildContext context) {
-    UtilitySystem.fullScreenSize = MediaQuery.of(context).size;
+    SystemUtility.fullScreenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white12,
       resizeToAvoidBottomPadding: false,

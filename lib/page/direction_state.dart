@@ -7,9 +7,9 @@ class FixedDirectionState<T> extends State with RouteAware {
 
   @override
   void initState() {
-    UtilitySystem.enableDarkSoftKey();
-    UtilitySystem.enableUIOverlays(false);
-    UtilitySystem.enableFixedDirection(true);
+    SystemUtility.enableDarkSoftKey();
+    SystemUtility.enableUIOverlays(false);
+    SystemUtility.enableFixedDirection(true);
     super.initState();
   }
 
@@ -21,15 +21,15 @@ class FixedDirectionState<T> extends State with RouteAware {
 
   @override
   void didPop() {
-    UtilitySystem.enableFixedDirection(false);
-    UtilitySystem.enableUIOverlays(true);
+    SystemUtility.enableFixedDirection(false);
+    SystemUtility.enableUIOverlays(true);
     super.didPop();
   }
 
   @override
   void didPopNext() {
-    UtilitySystem.enableFixedDirection(true);
-    UtilitySystem.enableUIOverlays(false);
+    SystemUtility.enableFixedDirection(true);
+    SystemUtility.enableUIOverlays(false);
     super.didPopNext();
   }
 
@@ -48,9 +48,9 @@ class FixedDirectionWithUIState<T> extends State with RouteAware {
 
   @override
   void initState() {
-    UtilitySystem.enableDarkSoftKey();
-    UtilitySystem.enableUIOverlays(true);
-    UtilitySystem.enableFixedDirection(true);
+    SystemUtility.enableDarkSoftKey();
+    SystemUtility.enableUIOverlays(true);
+    SystemUtility.enableFixedDirection(true);
     super.initState();
   }
 
@@ -62,15 +62,15 @@ class FixedDirectionWithUIState<T> extends State with RouteAware {
 
   @override
   void didPop() {
-    UtilitySystem.enableFixedDirection(false);
-    UtilitySystem.enableUIOverlays(true);
+    SystemUtility.enableFixedDirection(false);
+    SystemUtility.enableUIOverlays(true);
     super.didPop();
   }
 
   @override
   void didPopNext() {
-    UtilitySystem.enableFixedDirection(true);
-    UtilitySystem.enableUIOverlays(false);
+    SystemUtility.enableFixedDirection(true);
+    SystemUtility.enableUIOverlays(false);
     super.didPopNext();
   }
 
@@ -89,15 +89,15 @@ class DynamicDirectionState<T> extends State with RouteAware {
 
   @override
   void initState() {
-    UtilitySystem.enableFixedDirection(false);
-    UtilitySystem.enableUIOverlays(true);
+    SystemUtility.enableFixedDirection(false);
+    SystemUtility.enableUIOverlays(true);
     super.initState();
   }
 
   @override
   void didPopNext() {
-    UtilitySystem.enableFixedDirection(false);
-    UtilitySystem.enableUIOverlays(true);
+    SystemUtility.enableFixedDirection(false);
+    SystemUtility.enableUIOverlays(true);
     super.didPopNext();
   }
 

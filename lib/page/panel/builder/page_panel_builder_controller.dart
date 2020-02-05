@@ -6,6 +6,7 @@ import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,12 +52,7 @@ class PagePanelBuilderController with ChangeNotifier {
       int width = (this.firstPoint.a - position.a).abs() + 1;
       int height = (this.firstPoint.b - position.b).abs() + 1;
       if (!this.checkComponentSize(width, height)) {
-        Fluttertoast.showToast(
-          msg: "The selected area is smaller than the minimum size required by component.",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0,
-        );
+        SystemUtility.showToast(message: "The selected area is smaller than the minimum size required by component.");
         return;
       }
       else if (!this.checkComponentPosition(x, y, width, height)) return;
@@ -105,12 +101,7 @@ class PagePanelBuilderController with ChangeNotifier {
 
   void copyPanelJsonToClipboard() {
     Clipboard.setData(ClipboardData(text: jsonEncode(this.panelSetting.toJSON())));
-    Fluttertoast.showToast(
-      msg: "Copied to clipboard.",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      fontSize: 16.0,
-    );
+    SystemUtility.showToast(message: "Copied to clipboard.");
   }
 
 }

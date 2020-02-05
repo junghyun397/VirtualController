@@ -74,14 +74,14 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
   void _forwardButton() {
     this._animationController.forward();
     this.pressed = true;
-    UtilitySystem.vibrate();
+    SystemUtility.vibrate();
     if (widget.onForward != null) widget.onForward();
   }
 
   void _reverseButton() {
     this._animationController.reverse();
     this.pressed = false;
-    if (widget.toggleValue) UtilitySystem.vibrate();
+    if (widget.toggleValue) SystemUtility.vibrate();
     if (widget.onReverse != null) widget.onReverse();
   }
 

@@ -158,7 +158,7 @@ class ComponentSlider extends Component {
                 ? 1
                 : range / 1000,
             values: [panelController.inputState[this.componentSetting.targetInputs[0]].toDouble() / 1000 * range],
-            onDragStarted: (_, __, ___) => UtilitySystem.vibrate(),
+            onDragStarted: (_, __, ___) => SystemUtility.vibrate(),
             onDragging: (_, lowerValue, __) {
               if (!this._processDetentPoint(panelController, lowerValue, range, detentPoints)) {
                 panelController.eventAnalogue(this.componentSetting.targetInputs[0], (lowerValue / range * 1000).floor().toInt());
@@ -246,7 +246,7 @@ class ComponentSlider extends Component {
     for (double detent in detentPoints) if (detent - stepRange < value) if (value < detent + stepRange) {
       if (this._prvDetentPoint != detent) {
         this._prvDetentPoint = detent;
-        UtilitySystem.vibrate();
+        SystemUtility.vibrate();
       }
       controller.eventAnalogue(this.componentSetting.targetInputs[0], (detent / range * 1000).floor().toInt());
       this._currentDetentValue = detent;

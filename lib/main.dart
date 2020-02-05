@@ -18,7 +18,6 @@ class VirtualThrottleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S.delegate.supportedLocales.forEach((val) => print(val.countryCode));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "VFT Flight Throttle",
@@ -33,9 +32,7 @@ class VirtualThrottleApp extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
       ),
-      themeMode: AppSettings().settingsMap[SettingsType.USE_DARK_THEME].value
-          ? ThemeMode.dark
-          : ThemeMode.system,
+      themeMode: AppSettings().settingsMap[SettingsType.USE_DARK_THEME].value ? ThemeMode.dark : ThemeMode.system,
 
       localizationsDelegates: [
         S.delegate,
@@ -51,13 +48,13 @@ class VirtualThrottleApp extends StatelessWidget {
   }
 }
 
-Future<void> initializeGlobalComponent() async {
+Future<void> initializeGlobalModules() async {
   await SystemChrome.setEnabledSystemUIOverlays([]);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  UtilitySystem.fullScreenSize =
+  SystemUtility.fullScreenSize =
       Size(window.physicalSize.width / window.devicePixelRatio, window.physicalSize.height / window.devicePixelRatio);
   await SQLite3Helper().initializeDb();
   await AppSettings().loadSavedGlobalSettings();
@@ -68,6 +65,6 @@ Future<void> initializeGlobalComponent() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeGlobalComponent();
+  await initializeGlobalModules();
   runApp(VirtualThrottleApp());
 }

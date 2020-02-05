@@ -83,7 +83,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
   void initState() {
     this._jsonMode = widget.jsonMode;
     this._name = "Unnamed Panel ${DateTime.now().toIso8601String().substring(0, 19)}";
-    this._maxSize = PanelUtility.getMaxPanelSize(UtilitySystem.fullScreenSize);
+    this._maxSize = PanelUtility.getMaxPanelSize(SystemUtility.fullScreenSize);
     if (!this._jsonMode) this._panelSetting = getBasicPanelSetting(name: this._name, width: this._maxSize.a, height: this._maxSize.b);
     super.initState();
   }
@@ -131,14 +131,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
                     isDestructive: true,
                     onPressed: () {
                       if (this._formKey.currentState.validate()) Navigator.pop(context, this._panelSetting);
-                      else Fluttertoast.showToast(
-                          msg: S.of(context).dialogPanelBuilder_toast_invalidSettings,
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIos: 1,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
+                      else SystemUtility.showToast(message: S.of(context).dialogPanelBuilder_toast_invalidSettings);
                     },
                   ),
                   CardSettingsButton(

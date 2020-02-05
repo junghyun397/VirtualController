@@ -64,7 +64,7 @@ class AppPanelManager {
   Future<void> loadSavedPanelList() async {
     await SQLite3Helper().getSavedPanelList().then((val) async {
       if (val.length == 0) {
-        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(UtilitySystem.fullScreenSize));
+        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(SystemUtility.fullScreenSize));
         SQLite3Helper().insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
         this.panelList.add(defaultPanelSetting);
       } else val.forEach((key, value) => this.panelList.add(PanelSetting.fromJSON(key, jsonDecode(value))));

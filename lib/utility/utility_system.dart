@@ -1,9 +1,10 @@
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vibrate/vibrate.dart';
 
-class UtilitySystem {
+class SystemUtility {
   
   static Size _fullScreenSizeCache = Size(0, 0);
   static set fullScreenSize(Size screenSize) {
@@ -33,6 +34,16 @@ class UtilitySystem {
   static void enableDarkSoftKey() =>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light));
 
+  static void showToast({@required String message, Color backgroundColor = Colors.white}) =>
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: backgroundColor,
+      textColor: backgroundColor == Colors.white ? Colors.black : Colors.white,
+      fontSize: 16.0,
+    );
 
   static void vibrate() {
     if (AppSettings().settingsMap[SettingsType.USE_VIBRATION].value) Vibrate.feedback(FeedbackType.success);

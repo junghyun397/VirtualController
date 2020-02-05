@@ -9,19 +9,15 @@ import 'package:ping_discover_network/ping_discover_network.dart';
 
 class WiFiNetworkAgent extends NetworkAgent {
 
-  Socket _socket;
+  final Socket _socket;
 
   WiFiNetworkAgent(this._socket, String address, Function onSessionKilled): super(address, onSessionKilled) {
-    this._socket.handleError((error) {
-      onSessionKilled();
-    });
-    this._socket.listen((event) {
-      this.receiveData(utf8.decode(event));
-    }, onError: (error) {
-      this.killSession();
-    }, onDone: () {
-      this.killSession();
-    });
+    this._socket.handleError((error) => onSessionKilled());
+    this._socket.listen(
+      (event) => this.receiveData(utf8.decode(event)),
+      onError: (error) => this.killSession(),
+      onDone: () => this.killSession(),
+    );
   }
 
   @override
@@ -49,21 +45,11 @@ class WifiNetworkManager extends NetworkManager {
   Future<List<String>> findAliveTargetList() async {
     if (!await this.checkInterfaceAlive()) return Future.value([]);
     String ip = await this.getLocalAddress();
-    final String subnet = ip.substring(0, ip.lastIndexOf("."));
 
-    final stream = NetworkAnalyzer.discover2(
-      subnet, PORT,
+    return NetworkAnalyzer.discover2(
+      ip.substring(0, ip.lastIndexOf(".")), PORT,
       timeout: Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
-    );
-
-    Completer<List<String>> completer = Completer<List<String>>();
-
-    List<String> founds = [];
-    stream.listen((NetworkAddress address) {
-      if (address.exists) founds.add(address.ip);
-    }).onDone(() => completer.complete(founds));
-
-    return completer.future;
+    ).map((value) => value.ip).toList();
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -142,14 +143,7 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
                       if (this._formKey.currentState.validate()) {
                         this._formKey.currentState.save();
                         Navigator.pop(context, true);
-                      } else Fluttertoast.showToast(
-                        msg: S.of(context).dialogComponentBuilder_toast_invalidSettings,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIos: 1,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
+                      } else SystemUtility.showToast(message: S.of(context).dialogComponentBuilder_toast_invalidSettings);
                     },
                   ),
                   CardSettingsButton(

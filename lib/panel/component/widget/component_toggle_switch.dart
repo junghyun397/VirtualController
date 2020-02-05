@@ -162,28 +162,28 @@ class _ComponentToggleSwitchWidgetState extends State<ComponentToggleSwitchWidge
 
   void _forwardTop() {
     this.nowPosition = true;
-    UtilitySystem.vibrate();
+    SystemUtility.vibrate();
     this._animationController.forward();
     widget.onForwardTop();
   }
 
   void _reverseTop() {
     this.nowPosition = null;
-    UtilitySystem.vibrate();
+    SystemUtility.vibrate();
     this._animationController.reverse();
     widget.onReverseTop();
   }
 
   void _forwardBottom() {
     this.nowPosition = false;
-    UtilitySystem.vibrate();
+    SystemUtility.vibrate();
     this._animationController.forward();
     widget.onForwardBottom();
   }
 
   void _reverseBottom() {
     this.nowPosition = null;
-    UtilitySystem.vibrate();
+    SystemUtility.vibrate();
     this._animationController.reverse();
     widget.onReverseBottom();
   }

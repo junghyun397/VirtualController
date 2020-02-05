@@ -40,9 +40,9 @@ class ValidationNetworkData extends NetworkData {
 
 abstract class NetworkAgent {
 
-  String address;
+  final String address;
 
-  Function onSessionKilled;
+  final Function onSessionKilled;
   bool killed = false;
 
   int _currentValidationReceiveTime = 0;
@@ -70,14 +70,12 @@ abstract class NetworkAgent {
 
   void removeConnection();
 
-  void _startValidationSession() {
-        () async {
-      while (!this.killed) {
-        this.sendData(ValidationNetworkData());
-        await Future.delayed(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value));
-        if (this._prvValidationReceiveTime == this._currentValidationReceiveTime) this.killSession();
-      }
-    }();
+  Future<void> _startValidationSession() async {
+    while (!this.killed) {
+      this.sendData(ValidationNetworkData());
+      await Future.delayed(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value));
+      if (this._prvValidationReceiveTime == this._currentValidationReceiveTime) this.killSession();
+    }
   }
 
 }
