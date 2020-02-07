@@ -106,22 +106,6 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-  CardSettingsListPicker _buildListPickerSection(BuildContext context, SettingsType settingsType) {
-    return CardSettingsListPicker(
-      label: AppSettings().settingsMap[settingsType].getL10nName(context),
-      initialValue: AppSettings().settingsMap[settingsType].value.toString(),
-      autovalidate: true,
-      options: <String>["WiFi", "Bluetooth"],
-      values: <String>[NetworkType.WIFI.toString(), NetworkType.BLUETOOTH.toString()],
-      onChanged: (val) {
-        setState(() {
-          AppSettings().settingsMap[settingsType].setValue(val);
-          SQLite3Helper().insertSettings(settingsType);
-        });
-      },
-    );
-  }
-
   CardSettingsSwitch _buildSwitchSection(BuildContext context, SettingsType settingsType) {
     return CardSettingsSwitch(
       label: AppSettings().settingsMap[settingsType].getL10nName(context),
@@ -146,6 +130,11 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            onPressed: () => Navigator.pushNamed(context, Routes.PAGE_ABOUT),
+            tooltip: "About App",
+          ),
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () => this._resetSettings(context),

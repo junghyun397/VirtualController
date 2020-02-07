@@ -15,7 +15,6 @@
   "pageMainPanel_FAB_panels": "Panel",
   "pageMainPanel_FAB_network": "Network",
   "pageMainPanel_FAB_settings": "Setting",
-  "pageMainPanel_FAB_about": "About",
 
 
 
@@ -163,7 +162,7 @@
 
 
 
-  "pageAboutApp_title": "About VFT Flight Throttle app",
+  "pageAboutApp_title": "About VFT app",
 
   "pageAboutApp_developerInfo": "Developed by junghyun397."
 

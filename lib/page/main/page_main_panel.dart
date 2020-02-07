@@ -172,18 +172,6 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
             ),
             onTap: () => Navigator.pushNamed(context, Routes.PAGE_SETTING),
           ),
-          SpeedDialChild(
-            child: const Icon(
-              Icons.info_outline,
-              color: Colors.black87,
-            ),
-            backgroundColor: Colors.white,
-            label: S.of(context).pageMainPanel_FAB_about,
-            labelStyle: const TextStyle(
-              color: Colors.black54,
-            ),
-            onTap: () => Navigator.pushNamed(context, Routes.PAGE_ABOUT),
-          ),
         ],
       ),
     );
