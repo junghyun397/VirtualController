@@ -50,7 +50,7 @@ class IntegerSettingData extends SettingData<int> {
   void setValue(String sourceString) => value = int.parse(sourceString);
 }
 
-enum NetworkType {WIFI, BLUETOOTH}
+enum NetworkType {WIFI, BLUETOOTH, USB_SERIAL}
 class NetworkTypeSettingData extends SettingData<NetworkType> {
   NetworkTypeSettingData({NetworkType defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription}) : 
         super(defaultValue: defaultValue, getL10nName: getL10nName, getL10nDescription: getL10nDescription);

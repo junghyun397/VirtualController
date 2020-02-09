@@ -2,10 +2,10 @@ import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_bluetooth.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
+import 'package:VirtualFlightThrottle/network/interface/network_usb_serial.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_wifi.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AppNetworkManager {
 
@@ -18,11 +18,13 @@ class AppNetworkManager {
   static NetworkManager _getNetworkManager() {
     switch (AppSettings().settingsMap[SettingsType.NETWORK_TYPE].value) {
       case NetworkType.WIFI:
-        return new WifiNetworkManager();
+        return WifiNetworkManager();
       case NetworkType.BLUETOOTH:
-        return new BlueToothNetworkManager();
+        return BlueToothNetworkManager();
+      case NetworkType.USB_SERIAL:
+        return USBSerialNetworkManager();
       default:
-        return new WifiNetworkManager();
+        return WifiNetworkManager();
     }
   }
 
