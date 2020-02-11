@@ -21,14 +21,10 @@ class WiFiNetworkAgent extends NetworkAgent {
   }
 
   @override
-  void sendData(NetworkData networkData) {
-    this._socket.add(utf8.encode(networkData.toString()));
-  }
+  void sendData(NetworkData networkData) => this._socket.add(utf8.encode(networkData.toString()));
 
   @override
-  void removeConnection() {
-    this._socket.close();
-  }
+  void removeConnection() => this._socket.close();
 }
 
 class WifiNetworkManager extends NetworkManager {
@@ -49,29 +45,21 @@ class WifiNetworkManager extends NetworkManager {
     return NetworkAnalyzer.discover2(
       ip.substring(0, ip.lastIndexOf(".")), PORT,
       timeout: Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
-    ).map((value) => value.ip).toList();
+    ).transform(StreamTransformer<NetworkAddress, String>
+        .fromHandlers(handleData: (data, sink) {if (data.exists) sink.add(data.ip);})).toList();
   }
 
   @override
-  Future<void> connectToTarget(String deviceAddress,
-      Function() onSessionFail) async {
+  Future<void> connectToTarget(String deviceAddress, Function() onSessionFail) async {
     if (this.isConnected) return this.disconnectCurrentTarget();
 
-    Completer<void> completer = Completer<void>();
-
-    Function() onSessionKilled = this.setDisconnectedState;
-
-    Socket.connect(deviceAddress, PORT).then((socket) {
-      this.targetNetworkAgent = WiFiNetworkAgent(socket, deviceAddress, onSessionKilled);
+    return Socket.connect(deviceAddress, PORT).then((socket) {
+      this.targetNetworkAgent = WiFiNetworkAgent(socket, deviceAddress, this.setDisconnectedState);
       this.setConnectedState();
-      completer.complete();
-    }).catchError((e) {
-      onSessionFail();
-    }).timeout(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value), onTimeout: () {
-      onSessionFail();
-    });
-
-    return completer.future;
+    }).catchError((e) => onSessionFail())
+        .timeout(Duration(milliseconds: AppSettings().settingsMap[SettingsType.NETWORK_TIMEOUT].value),
+      onTimeout: () => onSessionFail(),
+    );
   }
 
   @override
