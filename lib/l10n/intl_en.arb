@@ -9,7 +9,7 @@
 
 
 
-  "pageMainPanel_warning_deviceServerNotFound": "VFT Device Server not found.",
+  "pageMainPanel_warning_deviceServerNotFound": "Device Server not found.",
   "pageMainPanel_warning_goToNetworkSetting": "Go to network setting",
 
   "pageMainPanel_FAB_panels": "Panel",
@@ -28,14 +28,14 @@
   "pageSettings_section_userAccount": "User Account",
 
   "settingsInfo_userName_name": "User name",
-  "settingsInfo_userName_description": "Set nickname when sharing layout",
+  "settingsInfo_userName_description": "Set nickname when sharing panel",
   "settingsInfo_userPassword_name": "User password",
-  "settingsInfo_userPassword_description": "Use password when sharing layout",
+  "settingsInfo_userPassword_description": "Set password when sharing panel",
 
   "pageSettings_section_UIOption": "UI Option",
 
   "settingsInfo_useDarkTheme_name": "Use dark theme",
-  "settingsInfo_useDarkTheme_description": "Use a Dark theme (Applies after restart)",
+  "settingsInfo_useDarkTheme_description": "Use Dark theme (Applies after restart)",
   "settingsInfo_hideTopBar_name": "Hide top-bar",
   "settingsInfo_hideTopBar_description": "Enable auto top bar hide",
   "settingsInfo_hideHomeKey_name": "Hide home-key",
@@ -63,12 +63,12 @@
   "pageNetwork_state_findingDeviceServer": "Finding Device Server...",
 
   "pageNetwork_state_notFound": "VFT Device Server not found.",
-  "pageNetwork_state_notFound_description": "Please check if {interfaceName}  is turned on or VFT Device Server is running.",
+  "pageNetwork_state_notFound_description": "Please check if {interfaceName} is turned on or Device Server is running.",
 
   "pageNetwork_state_found": "Found {count} Device Servers.",
   "pageNetwork_state_found_tapToConnection": "Tap to connect with this device",
   "pageNetwork_state_found_connectionFailed": "Connection with Device Server {address} failed.",
-  "pageNetwork_state_found_connectionSucceed": "Connected with device {address}",
+  "pageNetwork_state_found_connectionSucceed": "Connected with Device Server {address}",
 
 
 
@@ -90,9 +90,9 @@
   "dialogPanelBuilder_panelPreferences_blocks": "blocks",
 
   "dialogPanelBuilder_panelPreferences_width": "Panel width",
-  "dialogPanelBuilder_panelPreferences_widthError": "This device allows up to {maxWidth}blocks width.",
+  "dialogPanelBuilder_panelPreferences_widthError": "This device allows up to {maxWidth} blocks width.",
   "dialogPanelBuilder_panelPreferences_height": "Panel height",
-  "dialogPanelBuilder_panelPreferences_heightError": "This device allows up to {maxHeight}blocks height.",
+  "dialogPanelBuilder_panelPreferences_heightError": "This device allows up to {maxHeight} blocks height.",
 
   "dialogPanelBuilder_panelPreferences_jsonData": "JSON data",
   "dialogPanelBuilder_panelPreferences_jsonDataError_tooLarge": "This panel is larger than the maximum size supported by this device.",

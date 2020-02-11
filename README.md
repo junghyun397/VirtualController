@@ -10,27 +10,27 @@
 
 - Supports **all games** that support joystick input
 - Support **WIFI**, **USB Serial**(WIP), **Bluetooth**(WIP) for connecting Mobile App with Device Server
-- Places and **customize** components to [configure panels](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#eng-help-how-to-place-and-modify-components-to-build-panel)
+- Places and **customize** components to [configure panel](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#eng-help-how-to-place-and-modify-components-to-build-panel)
 - Provides 5 components
   - [Slider](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#slider)
   - [Button](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#button)
   - [Toggle Button](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#toggle-button)
   - [Toggle Switch](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#toggle-switch)
   - [Hat Switch](https://github.com/junghyun397/VirtualThrottle/wiki/HELP:-how-to-place-and-modify-components-to-build-panel#hat-switch)
-- **Simple** usage and [manual](https://github.com/junghyun397/VirtualThrottle/wiki)
+- **Simple** usage and [manuals](https://github.com/junghyun397/VirtualThrottle/wiki)
 
 # Install VFT
 
-Currently, this project only support Android and Windows. Please download the Mobile App from the [release page](https://github.com/junghyun397/VirtualThrottle/releases) or [Google Play](http://cloud.do1ph.in) and [download]((https://github.com/junghyun397/VirtualThrottle/releases)) and execution Device Server. A complete installation course [tutorial](https://github.com/junghyun397/VirtualThrottle/wiki/STEP-BY-STEP:-how-to-install-VFT-Flight-Throttle) is available.
+Currently, this project only support Android and Windows. Please download the Mobile App from the [release page](https://github.com/junghyun397/VirtualThrottle/releases) or [Google Play](https://play.google.com/store/apps/details?id=com.junghyun397.dev.virtual_flight_throttle) and [download]((https://github.com/junghyun397/VirtualThrottle/releases)) and execution Device Server. A complete installation course [tutorial](https://github.com/junghyun397/VirtualThrottle/wiki/STEP-BY-STEP:-how-to-install-VFT-Flight-Throttle) is available.
 
 # Build and Run with flutter
 ```sh
-# get pub package dependencies
+# 1. get pub package dependencies
 flutter pub get
 
-# generate l10n support Strings
+# 2. generate l10n support Strings
 flutter pub global run intl_utils:generate
 
-# run app in your device with flutter! 
+# 3. run app in your device with flutter! 
 flutter run
 ```
