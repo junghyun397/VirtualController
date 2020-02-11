@@ -9,7 +9,6 @@ import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 enum SelectableTileState {
   USED,
@@ -54,13 +53,14 @@ class PagePanelBuilderController with ChangeNotifier {
       if (!this.checkComponentSize(width, height)) {
         SystemUtility.showToast(message: "The selected area is smaller than the minimum size required by component.");
         return;
-      }
-      else if (!this.checkComponentPosition(x, y, width, height)) return;
+      } else if (!this.checkComponentPosition(x, y, width, height)) return;
       this.firstPoint = null;
       this.insertComponent(getDefaultComponentSetting(this.selectedComponent,
           name: PanelUtility.findNewName(this.panelSetting, this.selectedComponent),
           x: x, y: y, width: width, height: height,
-          targetInputs: PanelUtility.findTargetInput(this.panelSetting, this.selectedComponent)),
+          targetInputs: PanelUtility.findTargetInput(this.panelSetting, this.selectedComponent),
+          inserts: {ComponentSettingType.LABEL: PanelUtility.findNewLabel(panelSetting, this.selectedComponent)},
+        ),
       );
     }
     notifyListeners();
@@ -71,9 +71,8 @@ class PagePanelBuilderController with ChangeNotifier {
           && height >= COMPONENT_DEFINITION[this.selectedComponent].minHeight;
 
   bool checkComponentPosition(int x, int y, int width, int height) {
-    for (int w = x; w < width + x; w++) for (int h = y; h < height + y; h++) {
+    for (int w = x; w < width + x; w++) for (int h = y; h < height + y; h++)
       if (this.componentPositionMap[w][h] == SelectableTileState.USED) return false;
-    }
     return true;
   }
 

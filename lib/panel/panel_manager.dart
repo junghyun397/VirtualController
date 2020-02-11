@@ -33,6 +33,19 @@ class PanelUtility {
     return "UNNAMED";
   }
 
+  static String findNewLabel(PanelSetting panelSetting, ComponentType componentType) {
+    for (int idx = 1; idx < 100; idx ++) {
+      bool include = false;
+      panelSetting.components.entries.forEach((val) {
+        if (val.value.settings[ComponentSettingType.LABEL].value == "${COMPONENT_DEFINITION[componentType].labelName}$idx")
+          include = true;
+      });
+      if (!include)
+        return "${COMPONENT_DEFINITION[componentType].labelName}$idx";
+    }
+    return "NAME";
+  }
+
   static List<int> findTargetInput(PanelSetting panelSetting, ComponentType componentType) {
     Set<int> usedInputs = Set<int>();
     panelSetting.components.forEach((key, val) {

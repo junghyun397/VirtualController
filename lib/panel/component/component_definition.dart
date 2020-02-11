@@ -153,6 +153,7 @@ class ComponentDefinition {
   final String Function(BuildContext) getL10nComponentName;
   final String Function(BuildContext) getL10nDescription;
   final String shortName;
+  final String labelName;
 
   final int minWidth;
   final int minHeight;
@@ -168,6 +169,7 @@ class ComponentDefinition {
     @required this.getL10nComponentName,
     @required this.getL10nDescription,
     @required this.shortName,
+    @required this.labelName,
 
     @required this.minWidth,
     @required this.minHeight,
@@ -190,6 +192,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
     getL10nComponentName: (context) => S.of(context).componentInfo_slider_name,
     getL10nDescription: (context) => S.of(context).componentInfo_slider_description,
     shortName: "Slider",
+    labelName: "SLIDR",
     
     minWidth: 1,
     minHeight: 1,
@@ -219,6 +222,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
     getL10nComponentName: (context) => S.of(context).componentInfo_button_name,
     getL10nDescription: (context) => S.of(context).componentInfo_button_description,
     shortName: "Button",
+    labelName: "BTN",
 
     minWidth: 1,
     minHeight: 1,
@@ -240,6 +244,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
     getL10nComponentName: (context) => S.of(context).componentInfo_toggleButton_name,
     getL10nDescription: (context) => S.of(context).componentInfo_toggleButton_description,
     shortName: "Toggle Button",
+    labelName: "TBTN",
 
     minWidth: 1,
     minHeight: 1,
@@ -261,6 +266,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
     getL10nComponentName: (context) => S.of(context).componentInfo_toggleSwitch_name,
     getL10nDescription: (context) => S.of(context).componentInfo_toggleSwitch_description,
     shortName: "Toggle Switch",
+    labelName: "SWICH",
 
     minWidth: 1,
     minHeight: 1,
@@ -280,6 +286,7 @@ final Map<ComponentType, ComponentDefinition> COMPONENT_DEFINITION = {
     getL10nComponentName: (context) => S.of(context).componentInfo_hatSwitch_name,
     getL10nDescription: (context) => S.of(context).componentInfo_hatSwitch_description,
     shortName: "Hat Switch",
+    labelName: "HAT",
 
     minWidth: 2,
     minHeight: 2,

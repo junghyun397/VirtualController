@@ -9,7 +9,6 @@ import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ComponentBuilderDialog extends StatefulWidget {
 
@@ -37,11 +36,11 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
     else return CardSettingsNumberPicker(
       label: S.of(context).dialogComponentBuilder_target_button(index + 1),
       initialValue: widget.targetComponentSetting.targetInputs[index] == 0
-          ? 0 : widget.targetComponentSetting.targetInputs[index] - NetworkProtocol.ANALOGUE_INPUT_COUNT + 1,
+          ? 0 : widget.targetComponentSetting.targetInputs[index] - NetworkProtocol.ANALOGUE_INPUT_COUNT,
       min: 0,
       max: NetworkProtocol.DIGITAL_INPUT_COUNT,
       onChanged: (val) => widget.targetComponentSetting.targetInputs[index] = val == 0
-          ? 0 : val + NetworkProtocol.ANALOGUE_INPUT_COUNT - 1,
+          ? 0 : val + NetworkProtocol.ANALOGUE_INPUT_COUNT,
     );
   }
 
