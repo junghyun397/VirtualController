@@ -35,7 +35,7 @@
   "pageSettings_section_UIOption": "UI Option",
 
   "settingsInfo_useDarkTheme_name": "Use dark theme",
-  "settingsInfo_useDarkTheme_description": "Use Dark theme (Applies after restart)",
+  "settingsInfo_useDarkTheme_description": "Always use Dark theme (Use system settings by default)",
   "settingsInfo_hideTopBar_name": "Hide top-bar",
   "settingsInfo_hideTopBar_description": "Enable auto top bar hide",
   "settingsInfo_hideHomeKey_name": "Hide home-key",

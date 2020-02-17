@@ -3,10 +3,12 @@ from cx_Freeze import setup, Executable
 
 buildOptions = dict(packages=["pyvjoy"])
 
-exe = [Executable(
-    script="vft_device_server_windows.py",
-    icon="vft_icon.ico",
-)]
+exe = [
+    Executable(
+        script="vft_device_server_windows.py",
+        icon="vft_icon.ico",
+    )
+]
 
 setup(
     name="VFT-device-server",

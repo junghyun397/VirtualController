@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
@@ -16,34 +17,43 @@ import 'page/direction_state.dart';
 
 class VirtualThrottleApp extends StatelessWidget {
 
+  // ignore: close_sinks
+  static final StreamController<void> themeStreamController = StreamController<void>();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "VFT Flight Throttle",
-      theme: ThemeData(
-        primarySwatch: primaryBlack,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blueGrey,
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
-      ),
-      themeMode: AppSettings().settingsMap[SettingsType.USE_DARK_THEME].value ? ThemeMode.dark : ThemeMode.system,
+    return StreamBuilder<void>(
+      stream: themeStreamController.stream,
+      builder: (context, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "VFT Flight Throttle",
+          theme: ThemeData(
+            textSelectionColor: Colors.black26,
+            primarySwatch: primaryBlack,
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            primarySwatch: Colors.blueGrey,
+            floatingActionButtonTheme: FloatingActionButtonThemeData(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+            ),
+          ),
+          themeMode: AppSettings().settingsMap[SettingsType.USE_DARK_THEME].value ? ThemeMode.dark : ThemeMode.system,
 
-      localizationsDelegates: [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
 
-      initialRoute: Routes.PAGE_MAIN_PANEL,
-      routes: Routes.routes,
-      navigatorObservers: [routeObserver],
+          initialRoute: Routes.PAGE_MAIN_PANEL,
+          routes: Routes.routes,
+          navigatorObservers: [routeObserver],
+        );
+      }
     );
   }
 }

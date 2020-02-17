@@ -35,7 +35,7 @@
   "pageSettings_section_UIOption": "UI 설정",
 
   "settingsInfo_useDarkTheme_name": "어두운 테마 사용",
-  "settingsInfo_useDarkTheme_description": "어두운 테마를 사용합니다. (재시작 후 적용)",
+  "settingsInfo_useDarkTheme_description": "항상 어두운 테마를 사용합니다. (시스템 설정을 기본으로 사용합니다.)",
   "settingsInfo_hideTopBar_name": "탑 바 숨기기",
   "settingsInfo_hideTopBar_description": "자동으로 탑 바를 숨깁니다.",
   "settingsInfo_hideHomeKey_name": "홈 키 숨기기",

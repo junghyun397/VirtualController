@@ -120,7 +120,7 @@ class AppPanelManager {
   Future<PanelSetting> _getSavedDefaultPanel(Pair<int, int> maxPanelSize) async {
     String size;
     if (maxPanelSize.a >= 12 && maxPanelSize.b >= 7) size = "large";
-    else if (maxPanelSize.a >= 10 && maxPanelSize.b >= 5) size = "medium";
+    else if (maxPanelSize.a >= 10 && maxPanelSize.b >= 6) size = "medium";
     else size = "small";
     return PanelSetting.fromJSON("Default Panel",
         jsonDecode(await rootBundle.loadString("assets/jsons/default_panel_$size.json")));

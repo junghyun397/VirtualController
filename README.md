@@ -24,6 +24,8 @@
 Currently, this project only support Android and Windows. Please download the Mobile App from the [release page](https://github.com/junghyun397/VirtualThrottle/releases) or [Google Play](https://play.google.com/store/apps/details?id=com.junghyun397.dev.virtual_flight_throttle) and [download]((https://github.com/junghyun397/VirtualThrottle/releases)) and execution Device Server. A complete installation course [tutorial](https://github.com/junghyun397/VirtualThrottle/wiki/STEP-BY-STEP:-how-to-install-VFT-Flight-Throttle) is available.
 
 # Build and Run with flutter
+
+### Build App for your device
 ```sh
 # 1. get pub package dependencies
 flutter pub get
@@ -34,3 +36,15 @@ flutter pub global run intl_utils:generate
 # 3. run app in your device with flutter! 
 flutter run
 ```
+
+### Build Device Server for Windows
+```sh
+# 1. install requirement pip packages
+pip install -r requirements.txt
+
+# 2. build stand-alone deice server with cx-freeze
+python windows_freeze_setup.py build
+
+# 2.1. or build mono msi file.
+python windows_freeze_setup.py bdist_msi
+``` 

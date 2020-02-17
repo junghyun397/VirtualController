@@ -1,6 +1,7 @@
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/generated/l10n.dart';
+import 'package:VirtualFlightThrottle/main.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:card_settings/card_settings.dart';
@@ -106,7 +107,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
-  CardSettingsSwitch _buildSwitchSection(BuildContext context, SettingsType settingsType) {
+  CardSettingsSwitch _buildSwitchSection(BuildContext context, SettingsType settingsType, {void Function() afterChanged}) {
     return CardSettingsSwitch(
       label: AppSettings().settingsMap[settingsType].getL10nName(context),
       initialValue: AppSettings().settingsMap[settingsType].value,
@@ -114,6 +115,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
         setState(() {
           AppSettings().settingsMap[settingsType].value = val;
           SQLite3Helper().insertSettings(settingsType);
+          if (afterChanged != null) afterChanged();
         });
       }
     );
@@ -181,7 +183,8 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               header: this._buildHeader(context, S.of(context).pageSettings_section_UIOption),
               children: <Widget>[
                 this._buildInstruction(context, SettingsType.USE_DARK_THEME),
-                this._buildSwitchSection(context, SettingsType.USE_DARK_THEME),
+                this._buildSwitchSection(context, SettingsType.USE_DARK_THEME, afterChanged: () =>
+                    VirtualThrottleApp.themeStreamController.add(null)),
 
                 this._buildInstruction(context, SettingsType.HIDE_TOP_BAR),
                 this._buildSwitchSection(context, SettingsType.HIDE_TOP_BAR),
