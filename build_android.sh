@@ -3,7 +3,8 @@
 if [ -n "$2" ]; then
   export BUILD_DIR_PATH=$2
 else
-  export BUILD_DIR_PATH="$HOME/projects/virtual-flight-throttle/build"
+  mkdir build
+  export BUILD_DIR_PATH="./build"
 fi
 
 if [ -n "$3" ]; then
@@ -14,12 +15,13 @@ fi
 
 echo "[i] start build appbundle..."
 
-~/flutter/bin/flutter build appbundle
+flutter build appbundle
+
 cp ./build/app/outputs/bundle/release/app-release.aab "$BUILD_DIR_PATH"/appbundle/vft-flight-throttle-"$1".aab
 
 echo "[o] succeed build appbundle."
 
-echo "[i]start build mono-apks..."
+echo "[i] start build mono-apks..."
 
 java -jar "$BUNDLETOOL_PATH" build-apks --bundle=./build/app/outputs/bundle/release/app-release.aab --output="$BUILD_DIR_PATH"/apk/vft-flight-throttle-"$1".apks --mode=universal
 unzip "$BUILD_DIR_PATH"/apk/vft-flight-throttle-"$1".apks -d "$BUILD_DIR_PATH"/apk/
