@@ -3,7 +3,7 @@ import threading
 import time
 from enum import Enum
 from math import floor
-from typing import Callable
+from typing import Callable, Tuple
 
 WIFI_PORT = 10204
 
@@ -54,9 +54,16 @@ class ParsedPacket:
 
 class SocketListener:
 
-    def __init__(self, on_packet_receive: Callable[[ParsedPacket], None], use_recover_socket: bool = False):
+    def __init__(self,
+                 on_packet_receive: Callable[[ParsedPacket], None],
+                 use_recover_socket: bool = False,
+                 message_listener: Callable[[str], None] = lambda s: print(s),
+                 state_listener: Callable[[Tuple[bool, str]], None] = lambda _: None,
+                 ):
         self._on_packet_receive = on_packet_receive
         self._use_recover_socket = use_recover_socket
+        self._message_listener = message_listener
+        self._state_listener = state_listener
 
         self._thread = None
 
@@ -74,53 +81,57 @@ class SocketListener:
         self._thread.join()
 
         if self._use_recover_socket:
-            print("[!] an error occurred. recover server socket...")
+            self._message_listener("[!] an error occurred. recover server socket...")
             self._run_socket()
 
     def _run_socket(self):
-        print("[*] start opening VFT-device-server socket...")
+        self._message_listener("[*] start opening VFT-device-server socket...")
 
         self._server_socket.listen(5)
 
-        print("[o] succeed opening server-socket; listen at:", WIFI_PORT)
+        self._message_listener("[o] succeed opening server-socket; listen at: " + str(WIFI_PORT))
 
         while True:
             client_socket, address = self._server_socket.accept()
-            print("[+] connection by:", address)
+            self._message_listener("[+] connection by: " + str(address))
 
             prv_validation_time = 0
             while True:
                 try:
                     data = client_socket.recv(1024).decode()
                 except ConnectionResetError as error:
-                    print("[!] handle error:", str(error))
+                    self._message_listener("[!] handle error: " + str(error))
                     self.kill_socket()
                     return
 
                 if data == "":
-                    print("[-] disconnected by:", address)
+                    self._message_listener("[-] disconnected by: " + str(address))
+                    self._state_listener((False, ""))  # disconnected
                     break
 
                 packets = data.split("d")[1:]
                 if len(packets) == 0:
-                    print("[x] failed parse packet chunk; raw:", data)
+                    self._message_listener("[x] failed parse packet chunk; raw: " + str(data))
                     continue
 
                 for m_packet in packets:
                     packet = ParsedPacket(m_packet)
                     if packet.packet_type == PacketType.ERROR:
-                        print("[x] failed parse packet; raw:", data)
+                        self._message_listener("[x] failed parse packet; raw: " + str(data))
                         continue
                     else:
-                        print("[<] receive data;", str(packet))
+                        self._message_listener("[<] receive data; " + str(packet))
 
                     if packet.packet_type == PacketType.VALIDATION:
+                        self._state_listener((True, packet.body.split("/")[0]))  # connected
+
                         validation_time = int(packet.body.split("/")[1])
                         response = [str(NetworkProtocol.VALIDATION), ":",
                                     socket.gethostname(), "/", str(floor(time.time()))]
                         response = "".join(response)
-                        print("[>] send validation response; delay:",
-                              floor((validation_time - prv_validation_time) / 1000), "ms")
+                        self._message_listener("[>] send validation response; delay: "
+                                               + str(floor((validation_time - prv_validation_time) / 1000))
+                                               + "ms")
 
                         prv_validation_time = validation_time
 
