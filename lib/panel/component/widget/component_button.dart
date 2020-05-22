@@ -136,6 +136,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
               child: Text(
                 widget.buttonLabel,
                 style: TextStyle(
+                  fontWeight: FontWeight.bold,
                   fontSize: (50 - this._animationTween.value) / 4,
                   color: Colors.white70,
                 ),
