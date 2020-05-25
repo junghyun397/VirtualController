@@ -11,6 +11,7 @@ import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'generated/l10n.dart';
 import 'page/direction_state.dart';
@@ -64,8 +65,11 @@ Future<void> initializeGlobalModules() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+  Wakelock.toggle(on: AppSettings().settingsMap[SettingsType.USE_WAKE_LOCK].value);
+
   SystemUtility.fullScreenSize =
       Size(window.physicalSize.width / window.devicePixelRatio, window.physicalSize.height / window.devicePixelRatio);
+
   await SQLite3Helper().initializeDb();
   await AppSettings().loadSavedGlobalSettings();
   await AppPanelManager().loadSavedPanelList();

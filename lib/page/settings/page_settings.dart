@@ -194,6 +194,9 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
                 this._buildInstruction(context, SettingsType.USE_VIBRATION),
                 this._buildSwitchSection(context, SettingsType.USE_VIBRATION),
+
+                this._buildInstruction(context, SettingsType.USE_WAKE_LOCK),
+                this._buildSwitchSection(context, SettingsType.USE_WAKE_LOCK),
               ],
             ),
           ],

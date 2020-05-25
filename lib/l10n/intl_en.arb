@@ -27,21 +27,23 @@
 
   "pageSettings_section_userAccount": "User Account",
 
-  "settingsInfo_userName_name": "User name",
+  "settingsInfo_userName_name": "User Name",
   "settingsInfo_userName_description": "Set nickname when sharing panel",
-  "settingsInfo_userPassword_name": "User password",
+  "settingsInfo_userPassword_name": "User Password",
   "settingsInfo_userPassword_description": "Set password when sharing panel",
 
   "pageSettings_section_UIOption": "UI Option",
 
-  "settingsInfo_useDarkTheme_name": "Use dark theme",
+  "settingsInfo_useDarkTheme_name": "Use Dark Theme",
   "settingsInfo_useDarkTheme_description": "Always use Dark theme (Use system settings by default)",
-  "settingsInfo_hideTopBar_name": "Hide top-bar",
+  "settingsInfo_hideTopBar_name": "Hide Top-Bar",
   "settingsInfo_hideTopBar_description": "Enable auto top bar hide",
-  "settingsInfo_hideHomeKey_name": "Hide home-key",
+  "settingsInfo_hideHomeKey_name": "Hide Home-Key",
   "settingsInfo_hideHomeKey_description": "Enable auto home key hide",
-  "settingsInfo_useVibration_name": "Use vibration",
+  "settingsInfo_useVibration_name": "Use Vibration",
   "settingsInfo_useVibration_description": "Enable vibration feedback",
+  "settingsInfo_useWakeLock_name": "Use Wake Lock",
+  "settingsInfo_useWakeLock_description": "Enable screen always on",
 
   "pageSettings_section_network": "Network",
 
@@ -49,7 +51,7 @@
   "settingsInfo_networkType_description": "Set network interface for PC side device (Applies after restart)",
   "settingsInfo_networkTimeOut_name": "Network Timeout",
   "settingsInfo_networkTimeOut_description": "Set device discovery and connection timeout (ms)",
-  "settingsInfo_autoReconnection_name": "Auto connection",
+  "settingsInfo_autoReconnection_name": "Auto Connection",
   "settingsInfo_autoReconnection_description": "Enable automatic connection at startup",
 
 

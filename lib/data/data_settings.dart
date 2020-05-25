@@ -69,6 +69,7 @@ enum SettingsType {
   AUTO_CONNECTION,
   NETWORK_TIMEOUT,
   USE_VIBRATION,
+  USE_WAKE_LOCK,
 }
 
 class AppSettings {
@@ -122,6 +123,11 @@ class AppSettings {
         defaultValue: true,
         getL10nName: (context) => S.of(context).settingsInfo_useVibration_name,
         getL10nDescription: (context) => S.of(context).settingsInfo_useVibration_description,
+      ),
+      SettingsType.USE_WAKE_LOCK: BooleanSettingData(
+        defaultValue: true,
+        getL10nName: (context) => S.of(context).settingsInfo_useWakeLock_name,
+        getL10nDescription: (context) => S.of(context).settingsInfo_useWakeLock_description,
       ),
 
       SettingsType.NETWORK_TYPE: NetworkTypeSettingData(
