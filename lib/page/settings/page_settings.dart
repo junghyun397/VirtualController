@@ -121,6 +121,22 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     );
   }
 
+  CardSettingsListPicker _buildListPickerSection(SettingsType settingsType, List<String> values) {
+    return CardSettingsListPicker(
+      label: AppSettings().settingsMap[settingsType].getL10nName(context),
+      initialValue: AppSettings().settingsMap[settingsType].value.toString(),
+      autovalidate: true,
+      options: values,
+      values: values,
+      onChanged: (val) {
+        setState(() {
+          AppSettings().settingsMap[settingsType].setValue(val);
+          SQLite3Helper().insertSettings(settingsType);
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,8 +185,8 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_network),
               children: <Widget>[
-                // this._buildInstruction(SettingsType.NETWORK_TYPE),
-                // this._buildListPickerSection(SettingsType.NETWORK_TYPE),
+                this._buildInstruction(context, SettingsType.NETWORK_TYPE),
+                this._buildListPickerSection(SettingsType.NETWORK_TYPE, NetworkType.values.map((val) => val.toString()).toList()),
 
                 this._buildInstruction(context, SettingsType.AUTO_CONNECTION),
                 this._buildSwitchSection(context, SettingsType.AUTO_CONNECTION),

@@ -1,4 +1,5 @@
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
+import 'package:flutter/material.dart';
 
 class USBSerialNetworkAgent extends NetworkAgent {
 
@@ -13,11 +14,10 @@ class USBSerialNetworkAgent extends NetworkAgent {
 
 class USBSerialNetworkManager extends NetworkManager {
 
-  @override
-  Future<bool> checkInterfaceAlive() async => Future<bool>.value(false);
+  static const int PORT = 10204;
 
   @override
-  Future<String> getLocalAddress() async => Future<String>.value("None");
+  Future<bool> checkInterfaceAlive() async => Future<bool>.value(false);
 
   @override
   Future<List<String>> findAliveTargetList() async {return Future.value([]);}
@@ -26,6 +26,9 @@ class USBSerialNetworkManager extends NetworkManager {
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {return Future.value();}
 
   @override
-  String toString() => "USB";
+  String getInterfaceName() => "USB";
+
+  @override
+  IconData getInterfaceIcon() => Icons.usb;
 
 }

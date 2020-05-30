@@ -58,7 +58,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   width: 300,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: Text(S.of(context).pageNetwork_state_notFound_description(AppNetworkManager().val.toString()),
+                    child: Text(S.of(context).pageNetwork_state_notFound_description(AppNetworkManager().val.getInterfaceName()),
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -111,7 +111,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           child: ListView(
             children: deviceList.map((val) =>
                 ListTile(
-                  leading: Icon(Icons.videogame_asset),
+                  leading: Icon(AppNetworkManager().val.getInterfaceIcon()),
                   title: Text(val),
                   subtitle: Text(S.of(context).pageNetwork_state_found_tapToConnection),
                   trailing: Text(

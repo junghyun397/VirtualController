@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:flutter/widgets.dart';
 
 class NetworkProtocol {
   static const int PASS = 0;
@@ -93,8 +94,6 @@ abstract class NetworkManager {
 
   Future<bool> checkInterfaceAlive();
 
-  Future<String> getLocalAddress();
-
   Future<List<String>> findAliveTargetList();
 
   Future<void> connectToTarget(String deviceAddress, Function() onSessionLost);
@@ -126,4 +125,8 @@ abstract class NetworkManager {
     }
     else this.targetNetworkAgent.sendData(networkData);
   }
+
+  String getInterfaceName();
+
+  IconData getInterfaceIcon();
 }

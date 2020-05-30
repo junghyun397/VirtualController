@@ -1,4 +1,5 @@
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
+import 'package:flutter/material.dart';
 
 class BlueToothNetworkAgent extends NetworkAgent {
 
@@ -17,15 +18,15 @@ class BlueToothNetworkManager extends NetworkManager {
   Future<bool> checkInterfaceAlive() async => Future<bool>.value(false);
 
   @override
-  Future<String> getLocalAddress() async => Future<String>.value("None");
-
-  @override
   Future<List<String>> findAliveTargetList() async {return Future.value([]);}
 
   @override
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {return Future.value();}
 
   @override
-  String toString() => "Bluetooth";
+  String getInterfaceName() => "Bluetooth";
+
+  @override
+  IconData getInterfaceIcon() => Icons.bluetooth;
 
 }

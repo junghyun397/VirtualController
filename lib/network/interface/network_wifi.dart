@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
 
 class WiFiNetworkAgent extends NetworkAgent {
@@ -63,6 +64,9 @@ class WifiNetworkManager extends NetworkManager {
   }
 
   @override
-  String toString() => "WiFi";
+  String getInterfaceName() => "WiFi";
+
+  @override
+  IconData getInterfaceIcon() => Icons.wifi;
 
 }
