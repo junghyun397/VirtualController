@@ -43,7 +43,7 @@
   "settingsInfo_useVibration_name": "Use Vibration",
   "settingsInfo_useVibration_description": "Enable vibration feedback",
   "settingsInfo_useWakeLock_name": "Use Wake Lock",
-  "settingsInfo_useWakeLock_description": "Enable screen always on",
+  "settingsInfo_useWakeLock_description": "Enable screen always on (Applies after restart)",
 
   "pageSettings_section_network": "Network",
 
