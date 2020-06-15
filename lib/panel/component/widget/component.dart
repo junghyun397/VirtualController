@@ -23,9 +23,16 @@ abstract class Component extends StatelessWidget {
         Flexible(child: this.buildComponent(context)),
         Padding(
           padding: const EdgeInsets.all(8),
-          child: Text(
-            this.componentSetting.getSettingsOr(ComponentSettingType.LABEL, ""),
-            style: TextStyle(color: Colors.white70),
+          child: SizedBox(
+            width: this.blockWidth,
+            height: 18,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                this.componentSetting.getSettingsOr(ComponentSettingType.LABEL, ""),
+                style: TextStyle(color: Colors.white70),
+              ),
+            ),
           ),
         )
       ],

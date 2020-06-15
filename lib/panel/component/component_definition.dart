@@ -53,8 +53,7 @@ final Map<ComponentSettingType, ComponentSettingDefinition> COMPONENT_SETTING_DE
     getL10nComponentName: (context) => S.of(context).componentSettingInfo_label_name,
     getL10nDescription: (context) => S.of(context).componentSettingInfo_label_description,
     validator: (val) {
-      if ((!new RegExp("^[A-Z0-9-._]{1,6}\$").hasMatch(val)) && val != "")
-        return "Only uppercase up to 6 characters are allowed.";
+      if (val.length > 15) return "Only up to 15 characters are allowed.";
       else return null;
     },
   ),
@@ -127,8 +126,7 @@ final Map<ComponentSettingType, ComponentSettingDefinition> COMPONENT_SETTING_DE
     getL10nComponentName: (context) => S.of(context).componentSettingInfo_buttonLabel_name,
     getL10nDescription: (context) => S.of(context).componentSettingInfo_buttonLabel_description,
     validator: (val) {
-      if ((!new RegExp("^[A-Z0-9-._]{1,4}\$").hasMatch(val)) && val != "")
-        return "Only uppercase up to 4 characters are allowed.";
+      if (val.length > 15) return "Only up to 15 characters are allowed.";
       else return null;
     },
   ),

@@ -133,12 +133,14 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
               ],
             ),
             child: Center(
-              child: Text(
-                widget.buttonLabel,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: (50 - this._animationTween.value) / 4,
-                  color: Colors.white70,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  widget.buttonLabel,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white70,
+                  ),
                 ),
               ),
             ),

@@ -9,7 +9,6 @@ import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class PanelBuilderDialog extends StatefulWidget {
   
