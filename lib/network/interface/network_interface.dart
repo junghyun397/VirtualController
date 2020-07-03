@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
-import 'package:flutter/widgets.dart';
 
 class NetworkProtocol {
   static const int PASS = 0;
@@ -126,7 +125,6 @@ abstract class NetworkManager {
     else this.targetNetworkAgent.sendData(networkData);
   }
 
-  String getInterfaceName();
+  NetworkType getInterfaceType();
 
-  IconData getInterfaceIcon();
 }

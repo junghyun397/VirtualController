@@ -1,5 +1,5 @@
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
-import 'package:flutter/material.dart';
 
 class BlueToothNetworkAgent extends NetworkAgent {
 
@@ -24,9 +24,6 @@ class BlueToothNetworkManager extends NetworkManager {
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {return Future.value();}
 
   @override
-  String getInterfaceName() => "Bluetooth";
-
-  @override
-  IconData getInterfaceIcon() => Icons.bluetooth;
+  NetworkType getInterfaceType() => NetworkType.BLUETOOTH;
 
 }

@@ -1,5 +1,5 @@
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
-import 'package:flutter/material.dart';
 
 class USBSerialNetworkAgent extends NetworkAgent {
 
@@ -26,9 +26,6 @@ class USBSerialNetworkManager extends NetworkManager {
   Future<void> connectToTarget(String targetAddress, Function() onSessionLost) async {return Future.value();}
 
   @override
-  String getInterfaceName() => "USB";
-
-  @override
-  IconData getInterfaceIcon() => Icons.usb;
+  NetworkType getInterfaceType() => NetworkType.USB_SERIAL;
 
 }

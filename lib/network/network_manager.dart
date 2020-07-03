@@ -31,9 +31,47 @@ class AppNetworkManager {
   }
 
   List<NetworkType> getAvailableInterfaceList() {
-    if (Platform.isAndroid) return [NetworkType.WIFI, NetworkType.BLUETOOTH, NetworkType.USB_SERIAL];
-    else if (Platform.isIOS) return [NetworkType.WIFI, NetworkType.BLUETOOTH];
-    else return [NetworkType.WIFI];
+    if (Platform.isAndroid)
+      return [
+        NetworkType.WIFI,
+        NetworkType.BLUETOOTH,
+        NetworkType.USB_SERIAL,
+      ];
+    else if (Platform.isIOS)
+      return [
+        NetworkType.WIFI,
+        NetworkType.BLUETOOTH,
+      ];
+    else
+      return [
+        NetworkType.WIFI,
+      ];
+  }
+  
+  String getInterfaceName(NetworkType networkType) {
+    switch (networkType) {
+      case NetworkType.WIFI:
+        return "Wifi";
+      case NetworkType.BLUETOOTH:
+        return "BlueTooth";
+      case NetworkType.USB_SERIAL:
+        return "USB Cable";
+      default:
+        return "Unknown";
+    }
+  }
+
+  IconData getInterfaceIcon(NetworkType networkType) {
+    switch (networkType) {
+      case NetworkType.WIFI:
+        return Icons.wifi;
+      case NetworkType.BLUETOOTH:
+        return Icons.bluetooth;
+      case NetworkType.USB_SERIAL:
+        return Icons.usb;
+      default:
+        return Icons.videogame_asset;
+    }
   }
 
   void startNotifyNetworkStateToast() =>
