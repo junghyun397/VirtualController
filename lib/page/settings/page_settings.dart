@@ -2,6 +2,7 @@ import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/main.dart';
+import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:card_settings/card_settings.dart';
@@ -186,7 +187,8 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               header: this._buildHeader(context, S.of(context).pageSettings_section_network),
               children: <Widget>[
                 this._buildInstruction(context, SettingsType.NETWORK_TYPE),
-                this._buildListPickerSection(SettingsType.NETWORK_TYPE, NetworkType.values.map((val) => val.toString()).toList()),
+                this._buildListPickerSection(SettingsType.NETWORK_TYPE,
+                    AppNetworkManager().getAvailableInterfaceList().map((val) => val.toString()).toList()),
 
                 this._buildInstruction(context, SettingsType.AUTO_CONNECTION),
                 this._buildSwitchSection(context, SettingsType.AUTO_CONNECTION),

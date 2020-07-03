@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_bluetooth.dart';
@@ -26,6 +28,12 @@ class AppNetworkManager {
       default:
         return WifiNetworkManager();
     }
+  }
+
+  List<NetworkType> getAvailableInterfaceList() {
+    if (Platform.isAndroid) return [NetworkType.WIFI, NetworkType.BLUETOOTH, NetworkType.USB_SERIAL];
+    else if (Platform.isIOS) return [NetworkType.WIFI, NetworkType.BLUETOOTH];
+    else return [NetworkType.WIFI];
   }
 
   void startNotifyNetworkStateToast() =>
