@@ -1,5 +1,6 @@
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
+import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:control_pad/views/joystick_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +37,8 @@ class ComponentHatSwitch extends Component {
       height: 100,
       child: JoystickView(
         size: 100,
-        backgroundColor: Color.fromRGBO(97, 97, 97, 1),
-        innerCircleColor: Color.fromRGBO(97, 97, 97, 1),
+        backgroundColor: componentColor,
+        innerCircleColor: componentColor,
         showArrows: false,
         onDirectionChanged: (degrees, distance) {
           if (distance < 0.5) setPressed();

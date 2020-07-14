@@ -4,6 +4,7 @@ import 'package:VirtualFlightThrottle/panel/component/component_definition.dart'
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:provider/provider.dart';
@@ -112,15 +113,15 @@ class ComponentSlider extends Component {
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(97, 97, 97, 1),
+                      color: componentColor,
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border: Border.all(color: Colors.black54, width: 4),
+                      border: Border.all(color: componentBorderColor, width: 4),
                       shape: BoxShape.rectangle,
                       boxShadow: [
                         const BoxShadow(
                             color: Colors.black,
                             spreadRadius: 0.05,
-                            blurRadius: 10,
+                            blurRadius: 5,
                             offset: const Offset(0, 2)),
                       ],
                     ),

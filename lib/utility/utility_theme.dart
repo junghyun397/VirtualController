@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const int _blackPrimaryValue = 0xFF121212;
+
 const MaterialColor primaryBlack = MaterialColor(
   _blackPrimaryValue,
   <int, Color>{
@@ -15,4 +17,7 @@ const MaterialColor primaryBlack = MaterialColor(
     900: Color(0xFF121212),
   },
 );
-const int _blackPrimaryValue = 0xFF121212;
+
+const Color backgroundColor = Color.fromRGBO(35, 35, 35, 1);
+const Color componentColor = Color.fromRGBO(124, 124, 124, 1);
+const Color componentBorderColor = Colors.black54;

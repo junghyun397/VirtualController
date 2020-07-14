@@ -6,6 +6,7 @@ import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -99,7 +100,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
   Widget build(BuildContext context) {
     SystemUtility.fullScreenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white12,
+      backgroundColor: backgroundColor,
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,

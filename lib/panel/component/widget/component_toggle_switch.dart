@@ -4,6 +4,7 @@ import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -140,15 +141,15 @@ class _ComponentToggleSwitchWidgetState extends State<ComponentToggleSwitchWidge
                 width: widget.handleSize,
                 height: widget.handleSize,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(97, 97, 97, 1),
+                  color: componentColor,
                   borderRadius: BorderRadius.all(Radius.circular(widget.handleSize)),
-                  border: Border.all(color: Colors.black54, width: 5),
+                  border: Border.all(color: componentBorderColor, width: 5),
                   shape: BoxShape.rectangle,
                   boxShadow: [
                     const BoxShadow(
                         color: Colors.black,
                         spreadRadius: 0.05,
-                        blurRadius: 10,
+                        blurRadius: 5,
                         offset: const Offset(0, 2)),
                   ],
                 ),

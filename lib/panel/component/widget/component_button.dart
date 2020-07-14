@@ -2,6 +2,7 @@ import 'package:VirtualFlightThrottle/panel/component/component_definition.dart'
 import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
 import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -115,11 +116,11 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
             width: widget.width - this._animationTween.value,
             height: widget.height - this._animationTween.value,
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(97, 97, 97, 1),
+              color: componentColor,
               borderRadius: BorderRadius.all(Radius.circular(4)),
               border: Border.all(
                 color: this._animationTween.value == 0 || !widget.toggleValue
-                    ? Colors.black54
+                    ? componentBorderColor
                     : Colors.black.withGreen(100),
                 width: 4,
               ),
@@ -139,7 +140,7 @@ class _ComponentButtonWidgetState extends State<ComponentButtonWidget> with Sing
                   widget.buttonLabel,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white70,
+                    color: Colors.white,
                   ),
                 ),
               ),
