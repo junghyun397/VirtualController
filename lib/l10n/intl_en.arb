@@ -44,6 +44,8 @@
   "settingsInfo_useVibration_description": "Enable vibration feedback",
   "settingsInfo_useWakeLock_name": "Use Wake Lock",
   "settingsInfo_useWakeLock_description": "Enable screen always on (Applies after restart)",
+  "settingsInfo_useBackgroundTitle_name": "Display Title",
+  "settingsInfo_useBackgroundTitle_description": "Enable title display in background",
 
   "pageSettings_section_network": "Network",
 

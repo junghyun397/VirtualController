@@ -1,3 +1,4 @@
+import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
@@ -44,6 +45,25 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
     }
 
     return this._mainPanelCache;
+  }
+
+  Widget _buildBackgroundText(BuildContext context) {
+    print("builded");
+    if (AppSettings().settingsMap[SettingsType.USE_BACKGROUND_TITLE].value)
+      return Center(
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(
+            AppPanelManager().getMainPanel().name,
+            style: TextStyle(
+              fontSize: 1000,
+              fontWeight: FontWeight.bold,
+              color: Colors.black26,
+            ),
+          ),
+        ),
+      );
+    else return Container();
   }
 
   Widget _buildTargetDeviceNotFoundAlert(BuildContext context) {
@@ -108,6 +128,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
       body: Container(
         child: Stack(
           children: <Widget>[
+            LayoutBuilder(builder: (context, _) => this._buildBackgroundText(context)),
             LayoutBuilder(builder: (context, constraints) => this._buildMainPanel(context, constraints)),
             StreamBuilder<bool>(
                 stream: AppNetworkManager().val.networkStateStreamController.stream,

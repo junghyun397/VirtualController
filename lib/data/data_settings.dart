@@ -70,6 +70,7 @@ enum SettingsType {
   NETWORK_TIMEOUT,
   USE_VIBRATION,
   USE_WAKE_LOCK,
+  USE_BACKGROUND_TITLE,
 }
 
 class AppSettings {
@@ -145,6 +146,11 @@ class AppSettings {
         getL10nName: (context) => S.of(context).settingsInfo_autoReconnection_name,
         getL10nDescription: (context) => S.of(context).settingsInfo_autoReconnection_description,
       ),
+      SettingsType.USE_BACKGROUND_TITLE: BooleanSettingData(
+        defaultValue: true,
+        getL10nName: (context) => S.of(context).settingsInfo_useBackgroundTitle_name,
+        getL10nDescription: (context) => S.of(context).settingsInfo_useBackgroundTitle_description,
+      )
     };
   }
 
