@@ -24,7 +24,7 @@ jobs:
       - name: Build APK
         run: flutter build apk --release --split-per-abi
       - name: Archive APK
-        uses: actions/upload-artifact@1
+        uses: actions/upload-artifact@v1
         with:
           name: android-build
           path: build/app/outputs/apk/release
@@ -46,7 +46,7 @@ jobs:
       - name: Build IPA
         run: flutter build ios --release --no-codesign
       - name: Archive IPA
-        uses: actions/upload-artifact@1
+        uses: actions/upload-artifact@v1
         with:
           name: ios-build
           path: build/ios/iphoneos
