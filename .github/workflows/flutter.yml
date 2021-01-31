@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Generate localization
-        run: flutter pub global run intl_utils:generate
+        run: flutter pub run intl_utils:generate
       - name: Build APK
         run: flutter build apk --release --split-per-abi
       - name: Archive APK
@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Generate localization
-        run: flutter pub global run intl_utils:generate
+        run: flutter pub run intl_utils:generate
       - name: Build IPA
         run: flutter build ios --release --no-codesign
       - name: Archive IPA
