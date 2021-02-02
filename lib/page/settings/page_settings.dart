@@ -97,7 +97,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
   CardSettingsPassword _buildPasswordSection(BuildContext context, SettingsType settingsType, String Function(String) validator) {
     return CardSettingsPassword(
       initialValue: AppSettings().settingsMap[settingsType].value,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       onChanged: (val) {
         setState(() {
@@ -126,7 +126,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
     return CardSettingsListPicker(
       label: AppSettings().settingsMap[settingsType].getL10nName(context),
       initialValue: AppSettings().settingsMap[settingsType].value.toString(),
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       options: values,
       values: values,
       onChanged: (val) {
@@ -167,7 +167,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
           children: <CardSettingsSection>[
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_userAccount),
-              children: <Widget>[
+              children: <CardSettingsWidget>[
                 this._buildInstruction(context, SettingsType.USER_NAME),
                 this._buildStringSection(context, SettingsType.USER_NAME, false, (val) {
                   if ((!new RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val)) && val != "")
@@ -185,7 +185,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
             ),
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_network),
-              children: <Widget>[
+              children: <CardSettingsWidget>[
                 this._buildInstruction(context, SettingsType.NETWORK_TYPE),
                 this._buildListPickerSection(SettingsType.NETWORK_TYPE,
                     AppNetworkManager().getAvailableInterfaceList().map((val) => val.toString()).toList()),
@@ -199,7 +199,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
             ),
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_UIOption),
-              children: <Widget>[
+              children: <CardSettingsWidget>[
                 this._buildInstruction(context, SettingsType.USE_DARK_THEME),
                 this._buildSwitchSection(context, SettingsType.USE_DARK_THEME, afterChanged: () =>
                     VirtualThrottleApp.themeStreamController.add(null)),

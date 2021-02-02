@@ -1,8 +1,8 @@
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:vibrate/vibrate.dart';
 
 class SystemUtility {
   

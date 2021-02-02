@@ -14,7 +14,7 @@ dependencies:
 
   flutter_speed_dial: ^1.2.5
 
-  card_settings: ^1.5.3
+  card_settings: ^1.16.2
 
   sqflite: ^1.2.0
 
@@ -22,7 +22,7 @@ dependencies:
 
   ping_discover_network: ^0.2.0+1
 
-  vibrate: ^0.0.4
+  flutter_vibrate: ^1.0.0
 
   async: ^2.3.0
 

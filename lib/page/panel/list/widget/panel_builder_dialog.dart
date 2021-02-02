@@ -38,7 +38,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
         unitLabel: S.of(context).dialogPanelBuilder_panelPreferences_blocks,
         requiredIndicator: Text("*", style: TextStyle(color: Colors.red)),
         initialValue: this._maxSize.a,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (val) {
           if (val != null && val <= this._maxSize.a) return null;
           else return S.of(context).dialogPanelBuilder_panelPreferences_widthError(this._maxSize.a);
@@ -50,7 +50,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
         unitLabel: S.of(context).dialogPanelBuilder_panelPreferences_blocks,
         requiredIndicator: Text("*", style: TextStyle(color: Colors.red)),
         initialValue: this._maxSize.b,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (val) {
           if (val != null && val <= this._maxSize.b) return null;
           else return S.of(context).dialogPanelBuilder_panelPreferences_heightError(this._maxSize.b);
@@ -63,7 +63,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
         label: S.of(context).dialogPanelBuilder_panelPreferences_jsonData,
         maxLength: 100000000,
         showCounter: false,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (val) {
           try {
             this._panelSetting = PanelSetting.fromJSON(this._name, jsonDecode(val));

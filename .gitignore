@@ -34,3 +34,10 @@ lib/generated_plugin_registrant.dart
 
 # Project exclude paths
 /out/
+
+# IDE Settings
+/.idea/
+
+# Android Keystore
+/android/key.properties
+/android/key.jks

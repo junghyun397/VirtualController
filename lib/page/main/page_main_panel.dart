@@ -48,7 +48,6 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
   }
 
   Widget _buildBackgroundText(BuildContext context) {
-    print("builded");
     if (AppSettings().settingsMap[SettingsType.USE_BACKGROUND_TITLE].value)
       return Center(
         child: FittedBox(
