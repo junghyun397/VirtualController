@@ -1,7 +1,12 @@
+# noinspection PyUnresolvedReferences
 import threading
+# noinspection PyUnresolvedReferences
 import tkinter
+# noinspection PyUnresolvedReferences
 from tkinter import font
+# noinspection PyUnresolvedReferences
 from tkinter.scrolledtext import ScrolledText
+# noinspection PyUnresolvedReferences
 from typing import Tuple, Callable
 
 MAX_LOGGER_ROW = 1000
@@ -43,6 +48,7 @@ class TkGraphicInterface:
         else:
             self._update_logger(message)
 
+    # noinspection PyTypeChecker
     def on_update_status(self, state: Tuple[bool, str]):
         if self._connected == state[0] or self._client_name == state[1]:
             pass
@@ -55,6 +61,7 @@ class TkGraphicInterface:
 
     def _init_ui(self):
         self._window = tkinter.Tk()
+        self._window.tk.call('tk', 'scaling', 4.0)
         self._window.title("VFT Device Server")
         self._window.geometry("600x400+100+100")
 

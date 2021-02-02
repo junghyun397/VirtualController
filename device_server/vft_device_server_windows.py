@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 import pyvjoy
 
 from device_server import tk_graphic_interface
@@ -9,6 +10,7 @@ def on_packet_receive(packet: ParsedPacket) -> None:
         joystick.set_axis(packet.target_input - 1 + 0x30, int(int(packet.body) / 1000 * 32768))
     if packet.packet_type == PacketType.DIGITAL:
         joystick.set_button(packet.target_input - 1 - 7, int(packet.body))
+
 
 if __name__ == '__main__':
     gui = tk_graphic_interface.TkGraphicInterface(on_stop=lambda _: exit())
