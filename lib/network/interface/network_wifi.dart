@@ -6,6 +6,7 @@ import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
+import 'package:wifi_info_flutter/wifi_info_flutter.dart';
 
 class WiFiNetworkAgent extends NetworkAgent {
 
@@ -35,7 +36,7 @@ class WifiNetworkManager extends NetworkManager {
   Future<bool> checkInterfaceAlive() async => await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
 
   @override
-  Future<String> getLocalAddress() async => await Connectivity().getWifiIP();
+  Future<String> getLocalAddress() async => await WifiInfo().getWifiIP();
 
   @override
   Future<List<String>> findAliveTargetList() async {
