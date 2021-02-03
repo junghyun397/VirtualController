@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
-import 'package:wifi_info_flutter/wifi_info_flutter.dart';
 
 class WiFiNetworkAgent extends NetworkAgent {
 
@@ -32,10 +31,10 @@ class WifiNetworkManager extends NetworkManager {
   static const int PORT = 10204;
 
   @override
-  Future<bool> checkInterfaceAlive() async => Future.value(true);
+  Future<bool> checkInterfaceAlive() async => Future.value(true); // TODO: implement
 
   @override
-  Future<String> getLocalAddress() async => await WifiInfo().getWifiIP();
+  Future<String> getLocalAddress() async => await Future.value("192.168.1.1"); // TODO: implement
 
   @override
   Future<List<String>> findAliveTargetList() async {
