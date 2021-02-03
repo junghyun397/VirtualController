@@ -33,12 +33,12 @@ jobs:
       - name: Generate localization
         run: flutter pub run intl_utils:generate
       - name: Build APK
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release
       - name: Archive APK
         uses: actions/upload-artifact@v1
         with:
           name: android-build
-          path: build/app/outputs/apk/release
+          path: build/app/outputs/flutter-apk/release
   
   build_ios:
     
