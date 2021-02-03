@@ -20,6 +20,10 @@ dependencies:
 
   path_provider: ^1.5.1
 
+  connectivity: ^2.0.2
+
+  wifi_info_flutter: ^1.0.3
+
   ping_discover_network: ^0.2.0+1
 
   flutter_vibrate: ^1.0.0
