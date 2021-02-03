@@ -26,8 +26,6 @@ dependencies:
 
   async: ^2.3.0
 
-  connectivity: ^1.0.0
-
   wifi_info_flutter: ^1.0.3
 
   flutter_xlider: 3.0.0

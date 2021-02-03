@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:ping_discover_network/ping_discover_network.dart';
 import 'package:wifi_info_flutter/wifi_info_flutter.dart';
 
@@ -33,7 +32,7 @@ class WifiNetworkManager extends NetworkManager {
   static const int PORT = 10204;
 
   @override
-  Future<bool> checkInterfaceAlive() async => await (Connectivity().checkConnectivity()) == ConnectivityResult.wifi;
+  Future<bool> checkInterfaceAlive() async => Future.value(true);
 
   @override
   Future<String> getLocalAddress() async => await WifiInfo().getWifiIP();
