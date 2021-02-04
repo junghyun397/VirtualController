@@ -34,11 +34,13 @@ jobs:
         run: flutter pub run intl_utils:generate
       - name: Build APK
         run: flutter build apk --release
+      - name: Rename APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk ~/VirtualController-SNAPSHOT.apk
       - name: Archive APK
         uses: actions/upload-artifact@v1
         with:
           name: android-build
-          path: build/app/outputs/flutter-apk/release
+          path: ~/VirtualController-SNAPSHOT.apk
   
   build_ios:
     
@@ -53,9 +55,19 @@ jobs:
         run: flutter pub get
       - name: Generate localization
         run: flutter pub run intl_utils:generate
-      - name: Build IPA
+      - name: Build IOS
         run: flutter build ios --release --no-codesign
-      - name: Archive IPA
+#      - name: Export IPA
+#        run: |
+#          cd ios
+#          xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
+#          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $PWD/build/Runner.ipa
+#      - name: Archive IPA
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: ios-build
+#          path: ios/build/Runner.ipa/Runner.ipa
+      - name: Archive IOS
         uses: actions/upload-artifact@v1
         with:
           name: ios-build
