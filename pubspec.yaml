@@ -4,7 +4,7 @@ description: Customizable Virtual Flight-Throttle&#x2F;Controller
 version: 1.0.2+5
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -20,15 +20,15 @@ dependencies:
 
   path_provider: ^1.5.1
 
+  connectivity: ^2.0.2
+
+  wifi_info_flutter: ^1.0.3
+
   ping_discover_network: ^0.2.0+1
 
   flutter_vibrate: ^1.0.0
 
   async: ^2.3.0
-
-  connectivity: ^2.0.2
-
-  wifi_info_flutter: ^1.0.3
 
   flutter_xlider: 3.0.0
 
