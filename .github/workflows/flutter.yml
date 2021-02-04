@@ -35,12 +35,12 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
       - name: Rename APK
-        run: mv build/app/outputs/flutter-apk/app-release.apk ~/VirtualController-SNAPSHOT.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk ./VirtualController-SNAPSHOT.apk
       - name: Archive APK
         uses: actions/upload-artifact@v1
         with:
           name: android-build
-          path: ~/VirtualController-SNAPSHOT.apk
+          path: ./VirtualController-SNAPSHOT.apk
   
   build_ios:
     
@@ -62,11 +62,13 @@ jobs:
 #          cd ios
 #          xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
 #          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $PWD/build/Runner.ipa
+#      - name: Rename IPA
+#        run: mv ios/build/Runner.ipa/Runner.ipa ./VirtualController-SNAPSHOT.ipa
 #      - name: Archive IPA
 #        uses: actions/upload-artifact@v1
 #        with:
 #          name: ios-build
-#          path: ios/build/Runner.ipa/Runner.ipa
+#          path: ./VirtualController-SNAPSHOT.ipa
       - name: Archive IOS
         uses: actions/upload-artifact@v1
         with:
