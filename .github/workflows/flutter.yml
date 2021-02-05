@@ -80,7 +80,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Move to Device Server path
-        run: cd device_server
+        run: cd .\device_server\
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -92,7 +92,7 @@ jobs:
       - name: Build Device Server MSI
         run: python windows_freeze_setup.py bdist_msi
       - name: Rename Device Server MSI
-        run: mv dist/*.msi ./VirtualController-DeviceServer-SNAPSHOT.msi
+        run: move .\dist\*.msi .\VirtualController-DeviceServer-SNAPSHOT.msi
       - name: Archive Device Server MSI
         uses: actions/upload-artifact@v1
         with:
