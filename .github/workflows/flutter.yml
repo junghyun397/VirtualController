@@ -79,8 +79,6 @@ jobs:
   build_device_server:
     runs-on: windows-latest
     steps:
-      - name: Move to Device Server path
-        run: cd .\device_server\
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -90,11 +88,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build Device Server MSI
+        working-directory: device_server
         run: python windows_freeze_setup.py bdist_msi
       - name: Rename Device Server MSI
-        run: move .\dist\*.msi .\VirtualController-DeviceServer-SNAPSHOT.msi
+        working-directory: device_server
+        run: mv ./dist/*.msi ./VirtualController-DeviceServer-SNAPSHOT.msi
       - name: Archive Device Server MSI
         uses: actions/upload-artifact@v1
         with:
           name: device-server-build
+          working-directory: device_server
           path: ./VirtualController-DeviceServer-SNAPSHOT.msi
