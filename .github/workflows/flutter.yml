@@ -87,7 +87,7 @@ jobs:
       - name: Move to device-server
         run: cd device_server
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r ./requirements.txt
       - name: Build Device Server MSI
         run: python windows_freeze_setup.py bdist_msi
       - name: Rename Device Server MSI
