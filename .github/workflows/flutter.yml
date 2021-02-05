@@ -8,12 +8,11 @@ on:
 
 jobs:
   build_android:
-    
     runs-on: ubuntu-latest
-    
     steps:
       - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1.4.0
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1.4.0
         with:
           channel: 'stable'
       - name: Download Android keystore
@@ -43,12 +42,11 @@ jobs:
           path: ./VirtualController-SNAPSHOT.apk
   
   build_ios:
-    
     runs-on: macos-latest
-    
     steps:
       - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1.4.0
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1.4.0
         with:
           channel: 'stable'
       - name: Install dependencies
@@ -57,6 +55,9 @@ jobs:
         run: flutter pub run intl_utils:generate
       - name: Build IOS
         run: flutter build ios --release --no-codesign
+
+# No Apple developer program, pending.
+
 #      - name: Export IPA
 #        run: |
 #          cd ios
@@ -74,3 +75,26 @@ jobs:
         with:
           name: ios-build
           path: build/ios/iphoneos
+      
+  build_device_server:
+    runs-on: windows-latest
+    steps:
+      - name: Move to Device Server path
+        run: cd device_server
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Build Device Server MSI
+        run: python windows_freeze_setup.py bdist_msi
+      - name: Rename Device Server MSI
+        run: mv dist/*.msi ./VirtualController-DeviceServer-SNAPSHOT.msi
+      - name: Archive Device Server MSI
+        uses: actions/upload-artifact@v1
+        with:
+          name: device-server-build
+          path: ./VirtualController-DeviceServer-SNAPSHOT.msi
