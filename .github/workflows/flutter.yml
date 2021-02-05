@@ -80,12 +80,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Move to device-server
-        run: cd device_server
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
+      - name: Move to device-server
+        run: cd device_server
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Build Device Server MSI
