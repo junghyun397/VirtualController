@@ -55,9 +55,9 @@ jobs:
         run: flutter pub run intl_utils:generate
       - name: Build IOS
         run: flutter build ios --release --no-codesign
-
+#
 # No Apple developer program, pending.
-
+#
 #      - name: Export IPA
 #        run: |
 #          cd ios
@@ -75,26 +75,3 @@ jobs:
         with:
           name: ios-build
           path: build/ios/iphoneos
-      
-  build_device_server:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-      - name: Install dependencies
-        working-directory: device_server
-        run: pip install -r requirements.txt
-      - name: Build Device Server MSI
-        working-directory: device_server
-        run: python windows_freeze_setup.py bdist_msi
-      - name: Rename Device Server MSI
-        working-directory: device_server
-        run: mv ./dist/*.msi ./VirtualController-DeviceServer-SNAPSHOT.msi
-      - name: Archive Device Server MSI
-        uses: actions/upload-artifact@v1
-        with:
-          name: device-server-build
-          path: ./device_server/VirtualController-DeviceServer-SNAPSHOT.msi
