@@ -12,7 +12,7 @@
 
     <application
             android:name="io.flutter.app.FlutterApplication"
-            android:label="VFT Flight Throttle"
+            android:label="VFCS"
             android:icon="@mipmap/ic_launcher" tools:ignore="GoogleAppIndexingWarning">
         <activity
                 android:name=".MainActivity"

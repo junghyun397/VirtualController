@@ -59,7 +59,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(S.of(context).pageNetwork_state_notFound_description(
-                        AppNetworkManager().getInterfaceName(AppNetworkManager().val.getInterfaceType())),
+                        NetworkManager().getInterfaceName(NetworkManager().val.getInterfaceType())),
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -112,7 +112,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
           child: ListView(
             children: deviceList.map((val) =>
                 ListTile(
-                  leading: Icon(AppNetworkManager().getInterfaceIcon(AppNetworkManager().val.getInterfaceType())),
+                  leading: Icon(NetworkManager().getInterfaceIcon(NetworkManager().val.getInterfaceType())),
                   title: Text(val),
                   subtitle: Text(S.of(context).pageNetwork_state_found_tapToConnection),
                   trailing: Text(
@@ -155,7 +155,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             child: Column(
               children: <Widget>[
                 Text(
-                  S.of(context).pageNetwork_state_found_connectionSucceed(AppNetworkManager().val.targetNetworkAgent.address),
+                  S.of(context).pageNetwork_state_found_connectionSucceed(NetworkManager().val.targetNetworkAgent.address),
                   style: TextStyle(fontSize: 16),
                 ),
                 FlatButton(
@@ -200,7 +200,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             builder: (BuildContext context, PageNetworkController value,
                 Widget child) {
               switch (value.networkConnectionState) {
-                case NetworkConnectionState.FINDING:
+                case NetworkConnectionState.DISCOVERING:
                   return this._buildFinding(context);
                 case NetworkConnectionState.NOTFOUND:
                   return this._buildNotFound(context);

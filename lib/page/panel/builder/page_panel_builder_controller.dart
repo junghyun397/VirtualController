@@ -83,18 +83,18 @@ class PagePanelBuilderController with ChangeNotifier {
     this.selectedComponent = null;
     this.panelSetting.components[componentSetting.name] = componentSetting;
     this.componentPositionMap = null;
-    AppPanelManager().updatePanel(this.panelSetting);
+    PanelManager().updatePanel(this.panelSetting);
     notifyListeners();
   }
 
   void updateComponent() {
-    AppPanelManager().updatePanel(this.panelSetting);
+    PanelManager().updatePanel(this.panelSetting);
     notifyListeners();
   }
 
   void removeComponent(String componentName) {
     this.panelSetting.components.remove(componentName);
-    AppPanelManager().updatePanel(this.panelSetting);
+    PanelManager().updatePanel(this.panelSetting);
     notifyListeners();
   }
 

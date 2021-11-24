@@ -39,7 +39,7 @@ class PanelController with ChangeNotifier {
 
     if (inputIndex == 0) return;
     this.inputState[inputIndex] = value;
-    AppNetworkManager().val.sendData(NetworkData(inputIndex, value));
+    NetworkManager().val.sendData(NetworkData(inputIndex, value));
   }
 
   void eventDigital(int inputIndex, bool value) {
@@ -47,10 +47,10 @@ class PanelController with ChangeNotifier {
     if (inputIndex == 0 || this.inputState[inputIndex] == serializeValue) return;
 
     this.inputState[inputIndex] = serializeValue;
-    AppNetworkManager().val.sendData(NetworkData(inputIndex, serializeValue));
+    NetworkManager().val.sendData(NetworkData(inputIndex, serializeValue));
   }
 
   void _syncAll() =>
-      this.inputState.asMap().forEach((idx, val) => AppNetworkManager().val.sendData(NetworkData(idx, val)));
+      this.inputState.asMap().forEach((idx, val) => NetworkManager().val.sendData(NetworkData(idx, val)));
 
 }

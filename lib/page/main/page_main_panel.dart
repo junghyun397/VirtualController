@@ -25,17 +25,17 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
   Widget _mainPanelCache;
 
   Widget _buildMainPanel(BuildContext context, BoxConstraints constraints) {
-    if (AppPanelManager().needMainPanelUpdate && constraints.maxHeight == SystemUtility.fullScreenSize.height) {
-      AppPanelManager().needMainPanelUpdate = false;
+    if (PanelManager().needMainPanelUpdate && constraints.maxHeight == SystemUtility.physicalSize.height) {
+      PanelManager().needMainPanelUpdate = false;
       this._mainPanelCache = null;
     }
 
     if (this._mainPanelCache == null) {
-      PanelSetting panelSetting = AppPanelManager().getMainPanel();
-      Size blockSize = PanelUtility.getBlockSize(panelSetting, SystemUtility.fullScreenSize);
+      PanelSetting panelSetting = PanelManager().getMainPanel();
+      Size blockSize = PanelUtility.getBlockSize(panelSetting, SystemUtility.physicalSize);
       this._mainPanelCache = SizedBox(
-        width: SystemUtility.fullScreenSize.width,
-        height: SystemUtility.fullScreenSize.height,
+        width: SystemUtility.physicalSize.width,
+        height: SystemUtility.physicalSize.height,
         child: Panel(
           blockWidth: blockSize.width,
           blockHeight: blockSize.height,
@@ -48,12 +48,12 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
   }
 
   Widget _buildBackgroundText(BuildContext context) {
-    if (AppSettings().settingsMap[SettingsType.USE_BACKGROUND_TITLE].value)
+    if (SettingManager().settingsMap[SettingsType.USE_BACKGROUND_TITLE].value)
       return Center(
         child: FittedBox(
           fit: BoxFit.contain,
           child: Text(
-            AppPanelManager().getMainPanel().name,
+            PanelManager().getMainPanel().name,
             style: TextStyle(
               fontSize: 1000,
               fontWeight: FontWeight.bold,
@@ -117,10 +117,9 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
 
   @override
   Widget build(BuildContext context) {
-    SystemUtility.fullScreenSize = MediaQuery.of(context).size;
+    SystemUtility.physicalSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: backgroundColor,
-      resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -130,7 +129,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
             LayoutBuilder(builder: (context, _) => this._buildBackgroundText(context)),
             LayoutBuilder(builder: (context, constraints) => this._buildMainPanel(context, constraints)),
             StreamBuilder<bool>(
-                stream: AppNetworkManager().val.networkStateStreamController.stream,
+                stream: NetworkManager().val.networkStateStreamController.stream,
                 initialData: false,
                 builder: (context, snapshot) {
                   if (!snapshot.data) return this._buildTargetDeviceNotFoundAlert(context);
@@ -143,9 +142,6 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
       
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: SpeedDial(
-        marginBottom: 30,
-        marginRight: 30,
-
         shape: CircleBorder(),
         animatedIcon: AnimatedIcons.menu_close,
         curve: Curves.bounceIn,

@@ -9,6 +9,7 @@ import 'package:VirtualFlightThrottle/utility/utility_system.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ComponentBuilderDialog extends StatefulWidget {
 
@@ -76,13 +77,9 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
           label: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].getL10nComponentName(context),
           initialValue: componentSettingData.value.toString(),
           maxLength: 500,
-          maxLengthEnforced: false,
           validator: COMPONENT_SETTING_DEFINITION[componentSettingData.settingType].validator,
-          onSaved: (val) {
-            List<double> rs = List<double>();
-            jsonDecode(val).forEach((val) => rs.add(double.parse(val.toString())));
-            componentSettingData.setValue(rs.toString());
-          },
+          onSaved: (val) =>
+            componentSettingData.setValue(jsonDecode(val).map((value) => double.parse(value.toString())).toString()),
         );
       case "String":
         return CardSettingsText(
@@ -102,7 +99,7 @@ class _ComponentBuilderDialogState extends State<ComponentBuilderDialog> {
         padding: EdgeInsets.only(bottom: 10),
         child: Form(
           key: this._formKey,
-          autovalidate: true,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: CardSettings.sectioned(
             labelWidth: 200,
             shrinkWrap: true,

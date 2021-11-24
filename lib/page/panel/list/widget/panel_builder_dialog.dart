@@ -82,7 +82,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
   void initState() {
     this._jsonMode = widget.jsonMode;
     this._name = "Unnamed Panel ${DateTime.now().toIso8601String().substring(0, 19)}";
-    this._maxSize = PanelUtility.getMaxPanelSize(SystemUtility.fullScreenSize);
+    this._maxSize = PanelUtility.getMaxPanelSize(SystemUtility.physicalSize);
     if (!this._jsonMode) this._panelSetting = getBasicPanelSetting(name: this._name, width: this._maxSize.a, height: this._maxSize.b);
     super.initState();
   }

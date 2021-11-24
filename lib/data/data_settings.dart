@@ -1,20 +1,20 @@
-import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/data/sqlite3_manager.dart';
 import 'package:VirtualFlightThrottle/generated/l10n.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
 import 'package:flutter/cupertino.dart';
 
 abstract class SettingData<T> {
-  T value;
+  late final T value;
   final T defaultValue;
   
   final String Function(BuildContext) getL10nName;
   final String Function(BuildContext) getL10nDescription;
 
-  SettingData({
-    @required this.defaultValue,
-    @required this.getL10nName,
-    @required this.getL10nDescription,
-  }) {
+  SettingData(
+    this.defaultValue,
+    this.getL10nName,
+    this.getL10nDescription,
+  ) {
     this.value = this.defaultValue;
   }
 
@@ -27,33 +27,34 @@ abstract class SettingData<T> {
 }
 
 class StringSettingData extends SettingData<String> {
-  StringSettingData({String defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription}): 
-        super(defaultValue: defaultValue, getL10nName: getL10nName, getL10nDescription: getL10nDescription);
+  StringSettingData(String defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription):
+        super(defaultValue, getL10nName, getL10nDescription);
 
   @override
   void setValue(String sourceString) => value = sourceString;
 }
 
 class BooleanSettingData extends SettingData<bool> {
-  BooleanSettingData({bool defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription}): 
-        super(defaultValue: defaultValue, getL10nName: getL10nName, getL10nDescription: getL10nDescription);
+  BooleanSettingData(bool defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription):
+        super(defaultValue, getL10nName, getL10nDescription);
 
   @override
   void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
 }
 
 class IntegerSettingData extends SettingData<int> {
-  IntegerSettingData({int defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription}): 
-        super(defaultValue: defaultValue, getL10nName: getL10nName, getL10nDescription: getL10nDescription);
+  IntegerSettingData(int defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription):
+        super(defaultValue, getL10nName, getL10nDescription);
 
   @override
   void setValue(String sourceString) => value = int.parse(sourceString);
 }
 
-enum NetworkType {WIFI, BLUETOOTH, USB_SERIAL}
+enum NetworkType {WEB_SOCKET, BLUETOOTH, USB_SERIAL}
+
 class NetworkTypeSettingData extends SettingData<NetworkType> {
-  NetworkTypeSettingData({NetworkType defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription}) : 
-        super(defaultValue: defaultValue, getL10nName: getL10nName, getL10nDescription: getL10nDescription);
+  NetworkTypeSettingData(NetworkType defaultValue, String Function(BuildContext) getL10nName, String Function(BuildContext) getL10nDescription) :
+        super(defaultValue, getL10nName, getL10nDescription);
 
   @override
   void setValue(String sourceString) => value = getEnumFromString(NetworkType.values, sourceString);
@@ -73,83 +74,83 @@ enum SettingsType {
   USE_BACKGROUND_TITLE,
 }
 
-class AppSettings {
+class SettingManager {
 
-  static final AppSettings _singleton = new AppSettings._internal();
-  factory AppSettings() =>  _singleton;
-  AppSettings._internal();
+  final SQLite3Manager _sqLite3Manager;
 
-  Map<SettingsType, SettingData> settingsMap = _buildDefaultSettings();
+  final Map<SettingsType, SettingData> settingsMap = _buildDefaultSettings();
+
+  SettingManager(this._sqLite3Manager);
 
   void resetGlobalSettings() {
-    this.settingsMap = _buildDefaultSettings();
-    SettingsType.values.forEach((val) => SQLite3Helper().insertSettings(val));
+    this.settingsMap.clear();
+    this.settingsMap.addAll(_buildDefaultSettings());
+    this.settingsMap.forEach((key, val) => this._sqLite3Manager.insertSettings(key, val));
   }
 
-  Future<void> loadSavedGlobalSettings() async {
-    Map<SettingsType, SettingData> result = _buildDefaultSettings();
-    await SQLite3Helper().getSavedSettingsValue().then((val) => val.forEach((key, value) => result[key].setValue(value)));
-    this.settingsMap = result;
+  Future<void> loadSavedGlobalSettings() {
+    return this._sqLite3Manager.getSavedSettingsValue()
+        .then((val) => val.forEach((key, value) => this.settingsMap[key].setValue(value)));
   }
 
   static Map<SettingsType, SettingData> _buildDefaultSettings() {
     return {
       SettingsType.USER_NAME: StringSettingData(
-        defaultValue: "anonymous",
-        getL10nName: (context) => S.of(context).settingsInfo_userName_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_userName_description,
+        "anonymous",
+        (context) => S.of(context).settingsInfo_userName_name,
+        (context) => S.of(context).settingsInfo_userName_description,
       ),
       SettingsType.USER_PWD: StringSettingData(
-        defaultValue: "",
-        getL10nName: (context) => S.of(context).settingsInfo_userPassword_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_userPassword_description,
+        "",
+        (context) => S.of(context).settingsInfo_userPassword_name,
+        (context) => S.of(context).settingsInfo_userPassword_description,
       ),
 
       SettingsType.USE_DARK_THEME: BooleanSettingData(
-        defaultValue: false,
-        getL10nName: (context) => S.of(context).settingsInfo_useDarkTheme_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_useDarkTheme_description,
+        false,
+        (context) => S.of(context).settingsInfo_useDarkTheme_name,
+        (context) => S.of(context).settingsInfo_useDarkTheme_description,
       ),
       SettingsType.HIDE_TOP_BAR: BooleanSettingData(
-        defaultValue: true,
-        getL10nName: (context) => S.of(context).settingsInfo_hideTopBar_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_hideTopBar_description,
+        true,
+        (context) => S.of(context).settingsInfo_hideTopBar_name,
+        (context) => S.of(context).settingsInfo_hideTopBar_description,
       ),
       SettingsType.HIDE_HOME_KEY: BooleanSettingData(
-        defaultValue: true,
-        getL10nName: (context) => S.of(context).settingsInfo_hideHomeKey_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_hideHomeKey_description,
+        true,
+        (context) => S.of(context).settingsInfo_hideHomeKey_name,
+        (context) => S.of(context).settingsInfo_hideHomeKey_description,
       ),
       SettingsType.USE_VIBRATION: BooleanSettingData(
-        defaultValue: true,
-        getL10nName: (context) => S.of(context).settingsInfo_useVibration_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_useVibration_description,
+        true,
+        (context) => S.of(context).settingsInfo_useVibration_name,
+        (context) => S.of(context).settingsInfo_useVibration_description,
       ),
       SettingsType.USE_WAKE_LOCK: BooleanSettingData(
-        defaultValue: true,
-        getL10nName: (context) => S.of(context).settingsInfo_useWakeLock_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_useWakeLock_description,
+        true,
+        (context) => S.of(context).settingsInfo_useWakeLock_name,
+        (context) => S.of(context).settingsInfo_useWakeLock_description,
       ),
 
       SettingsType.NETWORK_TYPE: NetworkTypeSettingData(
-        defaultValue: NetworkType.WIFI,
-        getL10nName: (context) => S.of(context).settingsInfo_networkType_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_networkType_description,
+        NetworkType.WEB_SOCKET,
+        (context) => S.of(context).settingsInfo_networkType_name,
+        (context) => S.of(context).settingsInfo_networkType_description,
       ),
       SettingsType.NETWORK_TIMEOUT: IntegerSettingData(
-        defaultValue: 1500,
-        getL10nName: (context) => S.of(context).settingsInfo_networkTimeOut_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_networkTimeOut_description,
+        1500,
+        (context) => S.of(context).settingsInfo_networkTimeOut_name,
+        (context) => S.of(context).settingsInfo_networkTimeOut_description,
       ),
       SettingsType.AUTO_CONNECTION: BooleanSettingData(
-        defaultValue: true,
-        getL10nName: (context) => S.of(context).settingsInfo_autoReconnection_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_autoReconnection_description,
+        true,
+        (context) => S.of(context).settingsInfo_autoReconnection_name,
+        (context) => S.of(context).settingsInfo_autoReconnection_description,
       ),
       SettingsType.USE_BACKGROUND_TITLE: BooleanSettingData(
-        defaultValue: true,
-        getL10nName: (context) => S.of(context).settingsInfo_useBackgroundTitle_name,
-        getL10nDescription: (context) => S.of(context).settingsInfo_useBackgroundTitle_description,
+        true,
+        (context) => S.of(context).settingsInfo_useBackgroundTitle_name,
+        (context) => S.of(context).settingsInfo_useBackgroundTitle_description,
       )
     };
   }

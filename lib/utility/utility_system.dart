@@ -1,4 +1,3 @@
-import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
@@ -6,19 +5,18 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class SystemUtility {
   
-  static Size _fullScreenSizeCache = Size(0, 0);
-  static set fullScreenSize(Size screenSize) {
+  static late Size _fullScreenSize;
+  static set physicalSize(Size screenSize) {
     if (screenSize.height > screenSize.width) screenSize = Size(screenSize.height, screenSize.width);
-    if (_fullScreenSizeCache.height < screenSize.height || _fullScreenSizeCache.width < screenSize.width)
-      _fullScreenSizeCache = screenSize;
+    if (_fullScreenSize.height < screenSize.height || _fullScreenSize.width < screenSize.width)
+      _fullScreenSize = screenSize;
   }
-  static Size get fullScreenSize => _fullScreenSizeCache;
+  static Size get physicalSize => _fullScreenSize;
 
-  static Future<void> enableUIOverlays(bool enable) async {
-    if (enable) await SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    else await SystemChrome.setEnabledSystemUIOverlays([
-      if (!AppSettings().settingsMap[SettingsType.HIDE_HOME_KEY].value) SystemUiOverlay.bottom,
-      if (!AppSettings().settingsMap[SettingsType.HIDE_TOP_BAR].value) SystemUiOverlay.top,
+  static Future<void> enableUIOverlays(bool hideTop, bool hideBottom) async {
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      if (!hideBottom) SystemUiOverlay.bottom,
+      if (!hideTop) SystemUiOverlay.top,
     ]);
   }
 
@@ -34,19 +32,18 @@ class SystemUtility {
   static void enableDarkSoftKey() =>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light));
 
-  static void showToast({@required String message, Color backgroundColor = Colors.white}) =>
+  static void showToast(String message, {Color backgroundColor = Colors.white}) =>
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIos: 1,
       backgroundColor: backgroundColor,
       textColor: backgroundColor == Colors.white ? Colors.black : Colors.white,
       fontSize: 16.0,
     );
 
   static void vibrate() {
-    if (AppSettings().settingsMap[SettingsType.USE_VIBRATION].value) Vibrate.feedback(FeedbackType.success);
+    Vibrate.feedback(FeedbackType.success);
   }
 
 }

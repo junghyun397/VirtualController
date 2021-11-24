@@ -4,20 +4,14 @@ import 'package:VirtualFlightThrottle/data/data_settings.dart';
 import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:tekartik_app_flutter_sqflite/sqflite.dart';
 
-class SQLite3Helper {
-
-  static final SQLite3Helper _singleton = new SQLite3Helper._internal();
-
-  factory SQLite3Helper() => _singleton;
-
-  SQLite3Helper._internal();
+class SQLite3Manager {
 
   static const String DB_NAME = "virtual_throttle_database.db";
   static const int DB_VERSION = 6;
 
-  Database _db;
+  late Database _db;
 
   Future<void> initializeDb() async {
     this._db = await openDatabase(
@@ -48,33 +42,30 @@ class SQLite3Helper {
 
   // Settings
 
-  Future<Map<SettingsType, String>> getSavedSettingsValue() async {
-    List<Map> list = await this._db.rawQuery('SELECT * FROM settings');
-    Map<SettingsType, String> settingsList = new Map<SettingsType, String>();
-    list.forEach((value) => settingsList[getEnumFromString(SettingsType.values, value["settings_type"])] = value["value"]);
-    return settingsList;
-  }
+  Future<Map<SettingsType, String>> getSavedSettingsValue() async =>
+     Map.fromIterable(await this._db.rawQuery("SELECT * FROM settings"),
+        key: (val) => getEnumFromString(SettingsType.values, val["settings_type"]),
+        value: (val) => val["settings_type"],
+     );
 
-  Future<void> insertSettings(SettingsType settingsType) async {
+  Future<void> insertSettings(SettingsType settingsType, SettingData settingData) async =>
     await this._db.insert(
       "settings", {
       "settings_type": settingsType.toString(),
-      "value": AppSettings().settingsMap[settingsType].toString(),
+      "value": settingData.toString(),
     },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-  }
 
   // Penal
 
-  Future<Map<String, String>> getSavedPanelList() async {
-    List<Map> list = await this._db.rawQuery('SELECT * FROM panels');
-    Map<String, String> layoutJSON = new Map<String, String>();
-    list.forEach((value) => layoutJSON[value["panel_name"]] = value["value"]);
-    return layoutJSON;
-  }
+  Future<Map<String, String>> getSavedPanelList() async =>
+      Map.fromIterable(await this._db.rawQuery('SELECT * FROM panels'),
+          key: (val) => val["panel_name"],
+          value: (val) => val["value"],
+      );
 
-  Future<void> insertPanel(String layoutName, String layoutJSON) async {
+  Future<void> insertPanel(String layoutName, String layoutJSON) async =>
     await this._db.insert(
       "panels", {
       "panel_name": layoutName,
@@ -82,26 +73,22 @@ class SQLite3Helper {
     },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-  }
 
-  Future<void> removePanel(String panelName) async {
+  Future<void> removePanel(String panelName) async =>
     await this._db.delete("panels", where: "panel_name = ?", whereArgs: [panelName]);
-  }
 
   // Network
 
-  Future<List<String>> getSavedRegisteredDevices() async {
-    List<Map> list = await this._db.rawQuery('SELECT * FROM registered_devices');
-    return List<String>.generate(list.length, (idx) => list[idx]["address"]);
-  }
+  Future<List<String>> getSavedRegisteredDevices() async =>
+    (await this._db.rawQuery('SELECT * FROM registered_devices'))
+        .map((val) => val["address"] as String).toList(growable: false);
 
-  Future<void> insertRegisteredDevices(String address) async {
+  Future<void> insertRegisteredDevices(String address) async =>
     await this._db.insert(
       "registered_devices", {
       "address": address,
     },
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
-  }
 
 }

@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 class PagePanelListController with ChangeNotifier {
 
   void setAsMainPanel(PanelSetting panelSetting) {
-    AppPanelManager().setAsMainPanel(panelSetting);
+    PanelManager().setAsMainPanel(panelSetting);
     notifyListeners();
   }
 
   void insertPanel(PanelSetting panelSetting) {
-    AppPanelManager().insertPanel(panelSetting);
+    PanelManager().insertPanel(panelSetting);
     notifyListeners();
   }
 
   void removePanel(String panelName) {
-    AppPanelManager().removeSavedPanel(panelName);
+    PanelManager().removeSavedPanel(panelName);
     notifyListeners();
   }
 

@@ -1,12 +1,13 @@
+import 'package:VirtualFlightThrottle/app_controller.dart';
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
-import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/data/sqlite3_manager.dart';
 import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/main.dart';
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
 import 'package:VirtualFlightThrottle/page/direction_state.dart';
 import 'package:VirtualFlightThrottle/routes.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PageSettings extends StatefulWidget {
   PageSettings({Key key}): super(key: key);
@@ -19,7 +20,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   void _resetSettings(BuildContext context) async {
     if (!await _showResetSettingsDialog(context)) return;
-    AppSettings().resetGlobalSettings();
+    Provider.of<AppManager>(context).settingManager.resetGlobalSettings();
     Navigator.pop(context);
     Navigator.pushNamed(context, Routes.PAGE_SETTING);
   }
@@ -59,36 +60,38 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   CardSettingsInstructions _buildInstruction(BuildContext context, SettingsType settingsType) {
     return CardSettingsInstructions(
-      text: AppSettings().settingsMap[settingsType].getL10nDescription(context),
+      text: AppManager.byContext(context).settingManager.settingsMap[settingsType].getL10nDescription(context),
     );
   }
 
   CardSettingsInt _buildIntSection(BuildContext context, SettingsType settingsType, String unitLabel) {
+    final AppManager appManager = AppManager.byContext(context);
     return CardSettingsInt(
-        label: AppSettings().settingsMap[settingsType].getL10nName(context),
-        initialValue: AppSettings().settingsMap[settingsType].value,
+        label: appManager.settingManager.settingsMap[settingsType].getL10nName(context),
+        initialValue: appManager.settingManager.settingsMap[settingsType].value,
         unitLabel: unitLabel,
         onChanged: (val) {
           setState(() {
-            AppSettings().settingsMap[settingsType].value = val;
-            SQLite3Helper().insertSettings(settingsType);
+            appManager.settingManager.settingsMap[settingsType].value = val;
+            appManager.sqlite3Manager.insertSettings(settingsType, appManager.settingManager.settingsMap[settingsType]);
           });
         }
     );
   }
 
   CardSettingsText _buildStringSection(BuildContext context, SettingsType settingsType, bool required, String Function(String) validator) {
+    final AppManager appManager = AppManager.byContext(context);
     return CardSettingsText(
-      label: AppSettings().settingsMap[settingsType].getL10nName(context),
-      hintText: AppSettings().settingsMap[settingsType].defaultValue,
-      initialValue: AppSettings().settingsMap[settingsType].value,
+      label: appManager.settingManager.settingsMap[settingsType].getL10nName(context),
+      hintText: appManager.settingManager.settingsMap[settingsType].defaultValue,
+      initialValue: appManager.settingManager.settingsMap[settingsType].value,
       requiredIndicator: required ? Text("*", style: TextStyle(color: Colors.red)) : Text(""),
       autovalidate: true,
       validator: validator,
       onChanged: (val) {
         setState(() {
-          AppSettings().settingsMap[settingsType].value = val;
-          SQLite3Helper().insertSettings(settingsType);
+          appManager.settingManager.settingsMap[settingsType].value = val;
+          appManager.sqlite3Manager.insertSettings(settingsType, val);
         });
       },
     );
@@ -96,13 +99,13 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   CardSettingsPassword _buildPasswordSection(BuildContext context, SettingsType settingsType, String Function(String) validator) {
     return CardSettingsPassword(
-      initialValue: AppSettings().settingsMap[settingsType].value,
+      initialValue: SettingManager().settingsMap[settingsType].value,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       onChanged: (val) {
         setState(() {
-          AppSettings().settingsMap[settingsType].value = val;
-          SQLite3Helper().insertSettings(settingsType);
+          SettingManager().settingsMap[settingsType].value = val;
+          SQLite3Manager().insertSettings(settingsType);
         });
       },
     );
@@ -110,12 +113,12 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   CardSettingsSwitch _buildSwitchSection(BuildContext context, SettingsType settingsType, {void Function() afterChanged}) {
     return CardSettingsSwitch(
-      label: AppSettings().settingsMap[settingsType].getL10nName(context),
-      initialValue: AppSettings().settingsMap[settingsType].value,
+      label: SettingManager().settingsMap[settingsType].getL10nName(context),
+      initialValue: SettingManager().settingsMap[settingsType].value,
       onChanged: (val) {
         setState(() {
-          AppSettings().settingsMap[settingsType].value = val;
-          SQLite3Helper().insertSettings(settingsType);
+          SettingManager().settingsMap[settingsType].value = val;
+          SQLite3Manager().insertSettings(settingsType);
           if (afterChanged != null) afterChanged();
         });
       }
@@ -123,19 +126,20 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
   }
 
   CardSettingsListPicker _buildListPickerSection(SettingsType settingsType, List<String> values) {
-    return CardSettingsListPicker(
-      label: AppSettings().settingsMap[settingsType].getL10nName(context),
-      initialValue: AppSettings().settingsMap[settingsType].value.toString(),
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      options: values,
-      values: values,
-      onChanged: (val) {
-        setState(() {
-          AppSettings().settingsMap[settingsType].setValue(val);
-          SQLite3Helper().insertSettings(settingsType);
-        });
-      },
-    );
+    return CardSettingsListPicker(items: [""]);
+    // return CardSettingsListPicker(
+    //   label: AppSettings().settingsMap[settingsType].getL10nName(context),
+    //   initialValue: AppSettings().settingsMap[settingsType].value.toString(),
+    //   autovalidateMode: AutovalidateMode.onUserInteraction,
+    //   options: values,
+    //   values: values,
+    //   onChanged: (val) {
+    //     setState(() {
+    //       AppSettings().settingsMap[settingsType].setValue(val);
+    //       SQLite3Helper().insertSettings(settingsType);
+    //     });
+    //   },
+    // );
   }
 
   @override
@@ -170,7 +174,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               children: <CardSettingsWidget>[
                 this._buildInstruction(context, SettingsType.USER_NAME),
                 this._buildStringSection(context, SettingsType.USER_NAME, false, (val) {
-                  if ((!new RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val)) && val != "")
+                  if ((!RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val)) && val != "")
                     return "Only alphabets and numbers are allowed.";
                   else return null;
                 }),
@@ -188,7 +192,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               children: <CardSettingsWidget>[
                 this._buildInstruction(context, SettingsType.NETWORK_TYPE),
                 this._buildListPickerSection(SettingsType.NETWORK_TYPE,
-                    AppNetworkManager().getAvailableInterfaceList().map((val) => val.toString()).toList()),
+                    NetworkManager.getAvailableInterfaceList().map((val) => val.toString()).toList()),
 
                 this._buildInstruction(context, SettingsType.AUTO_CONNECTION),
                 this._buildSwitchSection(context, SettingsType.AUTO_CONNECTION),
@@ -202,7 +206,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
               children: <CardSettingsWidget>[
                 this._buildInstruction(context, SettingsType.USE_DARK_THEME),
                 this._buildSwitchSection(context, SettingsType.USE_DARK_THEME, afterChanged: () =>
-                    VirtualThrottleApp.themeStreamController.add(null)),
+                    Provider.of<AppManager>(context, listen: false).switchTheme()),
 
                 this._buildInstruction(context, SettingsType.HIDE_TOP_BAR),
                 this._buildSwitchSection(context, SettingsType.HIDE_TOP_BAR),

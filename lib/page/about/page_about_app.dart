@@ -35,7 +35,7 @@ class _PageAboutAppState extends DynamicDirectionState<PageAboutApp> {
               ),
               this._buildPadding(10),
               Text(
-                "VFT Flight Throttle",
+                "VFCS Flight Control System",
                 style: TextStyle(fontSize: 30),
               ),
               this._buildPadding(4),

@@ -1,69 +1,76 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:VirtualFlightThrottle/data/data_settings.dart';
-import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
-import 'package:VirtualFlightThrottle/network/interface/network_bluetooth.dart';
+import 'package:VirtualFlightThrottle/data/sqlite3_manager.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
-import 'package:VirtualFlightThrottle/network/interface/network_usb_serial.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_wifi.dart';
 import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class AppNetworkManager {
+abstract class NetworkManager {
+  
+  final SettingManager settingManager;
 
-  static final AppNetworkManager _singleton = new AppNetworkManager._internal();
-  factory AppNetworkManager() => _singleton;
-  AppNetworkManager._internal();
+  bool isConnected = false;
 
-  NetworkManager val = _getNetworkManager();
+  // ignore: close_sinks
+  StreamController<bool> networkStateStreamController = StreamController<bool>.broadcast();
 
-  static NetworkManager _getNetworkManager() {
-    switch (AppSettings().settingsMap[SettingsType.NETWORK_TYPE].value) {
-      case NetworkType.WIFI:
-        return WifiNetworkManager();
-      case NetworkType.BLUETOOTH:
-        return BlueToothNetworkManager();
-      case NetworkType.USB_SERIAL:
-        return USBSerialNetworkManager();
+  NetworkAgent targetNetworkAgent;
+
+  List<NetworkData> _buffer = [];
+
+  NetworkManager(this.settingManager);
+
+  factory NetworkManager.fromNetworkType(NetworkType networkType, SettingManager settingManager) {
+    switch (networkType) {
+      case NetworkType.WEB_SOCKET:
+        return WifiNetworkManager(settingManager);
       default:
-        return WifiNetworkManager();
+        return WifiNetworkManager(settingManager);
     }
   }
 
-  List<NetworkType> getAvailableInterfaceList() {
-    if (Platform.isAndroid)
+  static List<NetworkType> getAvailableInterfaceList() {
+    if (kIsWeb)
       return [
-        NetworkType.WIFI,
+        NetworkType.WEB_SOCKET,
+      ];
+    else if (Platform.isAndroid)
+      return [
+        NetworkType.WEB_SOCKET,
         NetworkType.BLUETOOTH,
         NetworkType.USB_SERIAL,
       ];
     else if (Platform.isIOS)
       return [
-        NetworkType.WIFI,
+        NetworkType.WEB_SOCKET,
         NetworkType.BLUETOOTH,
       ];
     else
       return [
-        NetworkType.WIFI,
+        NetworkType.WEB_SOCKET,
       ];
   }
   
-  String getInterfaceName(NetworkType networkType) {
+  static String getInterfaceName(NetworkType networkType) {
     switch (networkType) {
-      case NetworkType.WIFI:
-        return "Wifi";
+      case NetworkType.WEB_SOCKET:
+        return "WiFi";
       case NetworkType.BLUETOOTH:
         return "BlueTooth";
       case NetworkType.USB_SERIAL:
         return "USB Cable";
       default:
-        return "Unknown";
+        return networkType.toString();
     }
   }
 
-  IconData getInterfaceIcon(NetworkType networkType) {
+  static IconData getInterfaceIcon(NetworkType networkType) {
     switch (networkType) {
-      case NetworkType.WIFI:
+      case NetworkType.WEB_SOCKET:
         return Icons.wifi;
       case NetworkType.BLUETOOTH:
         return Icons.bluetooth;
@@ -74,17 +81,54 @@ class AppNetworkManager {
     }
   }
 
+  Future<bool> checkInterfaceAlive();
+
+  Future<List<String>> findAliveTargetList();
+
+  Future<void> connectToTarget(String deviceAddress, Function() onSessionLost);
+
+  void setConnectedState() {
+    this.isConnected = true;
+    this.networkStateStreamController.add(true);
+    if (this.settingManager.settingsMap[SettingsType.AUTO_CONNECTION].value)
+      SQLite3Manager().insertRegisteredDevices(this.targetNetworkAgent.address);
+  }
+
+  void setDisconnectedState() {
+    this.isConnected = false;
+    this.networkStateStreamController.add(false);
+  }
+
+  void disconnectCurrentTarget() {
+    this.setDisconnectedState();
+    this.targetNetworkAgent.killSession();
+    this.isConnected = false;
+  }
+
+  void sendData(NetworkData networkData) {
+    if (!this.isConnected)
+      this._buffer.add(networkData);
+    else if (this._buffer.isNotEmpty) {
+      this._buffer.add(networkData);
+      this._buffer.forEach((val) =>
+          this.targetNetworkAgent.sendData(networkData));
+      this._buffer.clear();
+    }
+    else
+      this.targetNetworkAgent.sendData(networkData);
+  }
+
   void startNotifyNetworkStateToast() =>
-    this.val.networkStateStreamController.stream.listen((val) {
+    this.networkStateStreamController.stream.listen((val) {
       if (val) SystemUtility.showToast(message: "Connected with device.", backgroundColor: Colors.green);
       else SystemUtility.showToast(message: "Disconnected with device.", backgroundColor: Colors.red);
     });
 
   Future<void> tryAutoReconnection() async {
-    if ((!this.val.isConnected) && AppSettings().settingsMap[SettingsType.AUTO_CONNECTION].value) {
-      List<String> registered = await SQLite3Helper().getSavedRegisteredDevices();
-      await this.val.findAliveTargetList().then((val) => val.forEach((target) {
-        if (registered.contains(target)) this.val.connectToTarget(target, () => null);
+    if ((!this.isConnected) && this.settingManager.settingsMap[SettingsType.AUTO_CONNECTION].value) {
+      List<String> registered = await SQLite3Manager().getSavedRegisteredDevices();
+      await this.findAliveTargetList().then((val) => val.forEach((target) {
+        if (registered.contains(target)) this.connectToTarget(target, () => null);
       }));
     }
   }

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:VirtualFlightThrottle/data/data_sqlite3_helper.dart';
+import 'package:VirtualFlightThrottle/data/sqlite3_manager.dart';
 import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
 import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
 import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
@@ -66,19 +66,19 @@ class PanelUtility {
 
 }
 
-class AppPanelManager {
-  static final AppPanelManager _singleton = new AppPanelManager._internal();
-  factory AppPanelManager() => _singleton;
-  AppPanelManager._internal();
+class PanelManager {
+  static final PanelManager _singleton = new PanelManager._internal();
+  factory PanelManager() => _singleton;
+  PanelManager._internal();
 
   bool needMainPanelUpdate = false;
   List<PanelSetting> panelList = List<PanelSetting>();
 
   Future<void> loadSavedPanelList() async {
-    await SQLite3Helper().getSavedPanelList().then((val) async {
+    await SQLite3Manager().getSavedPanelList().then((val) async {
       if (val.length == 0) {
-        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(SystemUtility.fullScreenSize));
-        SQLite3Helper().insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
+        PanelSetting defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(SystemUtility.physicalSize));
+        SQLite3Manager().insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
         this.panelList.add(defaultPanelSetting);
       } else val.forEach((key, value) => this.panelList.add(PanelSetting.fromJSON(key, jsonDecode(value))));
     });
@@ -108,12 +108,12 @@ class AppPanelManager {
   }
 
   void savePanel(PanelSetting panelSetting) {
-    SQLite3Helper().insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
+    SQLite3Manager().insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
   }
 
   void removeSavedPanel(String panelName) {
     this.panelList.removeAt(this.panelList.indexWhere((val) => val.name == panelName));
-    SQLite3Helper().removePanel(panelName);
+    SQLite3Manager().removePanel(panelName);
     this.needMainPanelUpdate = true;
   }
 

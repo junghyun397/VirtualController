@@ -113,9 +113,9 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
         body: Container(
           child: Consumer<PagePanelListController>(
             builder: (BuildContext context, _, __) => ListView.builder(
-              itemCount: AppPanelManager().panelList.length,
+              itemCount: PanelManager().panelList.length,
               itemBuilder: (BuildContext context, int index) =>
-                  this._buildPanelListTile(context, AppPanelManager().panelList[index], index),
+                  this._buildPanelListTile(context, PanelManager().panelList[index], index),
             ),
           ),
         ),

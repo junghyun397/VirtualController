@@ -19,7 +19,7 @@ class Panel extends StatelessWidget {
   }) : super(key: key);
 
   List<Widget> _buildPanelComponents(BuildContext context) {
-    List<Widget> result = List<Widget>();
+    List<Widget> result = List.empty(growable: true);
     this.panelSetting.components.forEach((key, val) {
       result.add(Positioned(
         left: val.x * this.blockWidth,
@@ -39,7 +39,7 @@ class Panel extends StatelessWidget {
   }
 
   List<Widget> _buildAnalogueSyncButtons(BuildContext context) {
-    List<Widget> result = List<Widget>();
+    List<Widget> result = List.empty(growable: true);
     this.panelSetting.components.forEach((key, component) {
       if (component.componentType == ComponentType.SLIDER) {
         for (ComponentSetting targetComponent in this.panelSetting.components.values) {

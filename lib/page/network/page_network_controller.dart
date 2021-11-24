@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:VirtualFlightThrottle/network/network_manager.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 enum NetworkConnectionState {
-  FINDING,
+  DISCOVERING,
   NOTFOUND,
   FOUND,
   CONNECTED,
@@ -28,19 +27,19 @@ class PageNetworkController with ChangeNotifier {
   StreamSubscription<bool> _networkStateStreamSubscription;
 
   PageNetworkController() {
-    if (AppNetworkManager().val.isConnected) {
+    if (NetworkManager().val.isConnected) {
       this.networkConnectionState = NetworkConnectionState.CONNECTED;
     } else this.refreshDeviceList();
 
-    this._networkStateStreamSubscription = AppNetworkManager().val.networkStateStreamController.stream.listen((val) {
+    this._networkStateStreamSubscription = NetworkManager().val.networkStateStreamController.stream.listen((val) {
       if (val) this.networkConnectionState = NetworkConnectionState.CONNECTED;
       else this.refreshDeviceList();
     });
   }
 
   void refreshDeviceList() {
-    AppNetworkManager().val.findAliveTargetList().then((val) {
-      if (this.networkConnectionState != NetworkConnectionState.FINDING || this._disposed) return;
+    NetworkManager().val.findAliveTargetList().then((val) {
+      if (this.networkConnectionState != NetworkConnectionState.DISCOVERING || this._disposed) return;
 
       if (val.isEmpty) this.networkConnectionState = NetworkConnectionState.NOTFOUND;
       else {
@@ -48,15 +47,15 @@ class PageNetworkController with ChangeNotifier {
         this.networkConnectionState = NetworkConnectionState.FOUND;
       }
     });
-    this.networkConnectionState = NetworkConnectionState.FINDING;
+    this.networkConnectionState = NetworkConnectionState.DISCOVERING;
   }
 
   void connectDevice(String target, Function onFail) {
-    AppNetworkManager().val.connectToTarget(target, onFail).then((_) => this.networkConnectionState = NetworkConnectionState.CONNECTED);
+    NetworkManager().val.connectToTarget(target, onFail).then((_) => this.networkConnectionState = NetworkConnectionState.CONNECTED);
   }
 
   void disconnectCurrentDevice() {
-    AppNetworkManager().val.disconnectCurrentTarget();
+    NetworkManager().val.disconnectCurrentTarget();
     this.refreshDeviceList();
   }
 
