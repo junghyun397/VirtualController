@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
-import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:vfcs/panel/component/component_definition.dart';
+import 'package:vfcs/panel/component/component_data.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/panel/panel_data.dart';
+import 'package:vfcs/utility/utility_dart.dart';
+import 'package:vfcs/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,7 +18,7 @@ enum SelectableTileState {
 
 class PagePanelBuilderController with ChangeNotifier {
 
-  final PanelSetting panelSetting;
+  final PanelData panelSetting;
 
   bool isSelectionMode = false;
   ComponentType selectedComponent;
@@ -78,7 +78,7 @@ class PagePanelBuilderController with ChangeNotifier {
 
   bool checkComponentName(String componentName) => !this.panelSetting.components.containsKey(componentName);
 
-  void insertComponent(ComponentSetting componentSetting) {
+  void insertComponent(ComponentData componentSetting) {
     this.isSelectionMode = false;
     this.selectedComponent = null;
     this.panelSetting.components[componentSetting.name] = componentSetting;

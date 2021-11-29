@@ -1,11 +1,11 @@
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:VirtualFlightThrottle/page/panel/builder/page_panel_builder_controller.dart';
-import 'package:VirtualFlightThrottle/page/panel/builder/widget/component_builder_dialog.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/panel/builder/page_panel_builder_controller.dart';
+import 'package:vfcs/page/panel/builder/widget/component_builder_dialog.dart';
+import 'package:vfcs/panel/component/component_definition.dart';
+import 'package:vfcs/panel/component/component_data.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/utility/utility_dart.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +21,7 @@ class PagePanelBuilder extends StatefulWidget {
 
 class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder> {
   
-  Future<bool> _showComponentBuilderDialog(BuildContext context, ComponentSetting componentSetting) async {
+  Future<bool> _showComponentBuilderDialog(BuildContext context, ComponentData componentSetting) async {
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => ComponentBuilderDialog(targetComponentSetting: componentSetting),
@@ -51,7 +51,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
     );
   }
 
-  Widget _buildComponentSingleArea(BuildContext context, ComponentSetting component, PagePanelBuilderController controller, Size blockSize) {
+  Widget _buildComponentSingleArea(BuildContext context, ComponentData component, PagePanelBuilderController controller, Size blockSize) {
     return GestureDetector(
       onTap: () => this._showComponentBuilderDialog(context, component).then((val) {
         if (val != null && !val) controller.removeComponent(component.name);

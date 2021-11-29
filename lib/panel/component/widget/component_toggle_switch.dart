@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
-import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
-import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
+import 'package:vfcs/panel/component/widget/component.dart';
+import 'package:vfcs/panel/panel_controller.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/utility/utility_system.dart';
+import 'package:vfcs/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

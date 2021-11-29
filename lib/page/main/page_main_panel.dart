@@ -1,23 +1,23 @@
-import 'package:VirtualFlightThrottle/data/data_settings.dart';
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/network/network_manager.dart';
-import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:VirtualFlightThrottle/panel/panel.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
-import 'package:VirtualFlightThrottle/routes.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
-import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
+import 'package:vfcs/data/data_settings.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/network/network_manager.dart';
+import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/panel/panel.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/panel/panel_data.dart';
+import 'package:vfcs/routes.dart';
+import 'package:vfcs/utility/utility_system.dart';
+import 'package:vfcs/utility/utility_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class PageMainPanel extends StatefulWidget {
-  PageMainPanel({Key key}): super(key: key);
 
   @override
   _PageMainPanelState createState() => new _PageMainPanelState();
+
 }
 
 class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
@@ -31,7 +31,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
     }
 
     if (this._mainPanelCache == null) {
-      PanelSetting panelSetting = PanelManager().getMainPanel();
+      PanelData panelSetting = PanelManager().getMainPanel();
       Size blockSize = PanelUtility.getBlockSize(panelSetting, SystemUtility.physicalSize);
       this._mainPanelCache = SizedBox(
         width: SystemUtility.physicalSize.width,
@@ -39,7 +39,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
         child: Panel(
           blockWidth: blockSize.width,
           blockHeight: blockSize.height,
-          panelSetting: panelSetting,
+          panelData: panelSetting,
         ),
       );
     }
@@ -48,7 +48,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
   }
 
   Widget _buildBackgroundText(BuildContext context) {
-    if (SettingManager().settingsMap[SettingsType.USE_BACKGROUND_TITLE].value)
+    if (SettingManager().settingsMap[SettingType.USE_BACKGROUND_TITLE].value)
       return Center(
         child: FittedBox(
           fit: BoxFit.contain,
@@ -129,7 +129,7 @@ class _PageMainPanelState extends FixedDirectionState<PageMainPanel> {
             LayoutBuilder(builder: (context, _) => this._buildBackgroundText(context)),
             LayoutBuilder(builder: (context, constraints) => this._buildMainPanel(context, constraints)),
             StreamBuilder<bool>(
-                stream: NetworkManager().val.networkStateStreamController.stream,
+                stream: NetworkManager().val.networkConditionStream.stream,
                 initialData: false,
                 builder: (context, snapshot) {
                   if (!snapshot.data) return this._buildTargetDeviceNotFoundAlert(context);

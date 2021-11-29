@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:VirtualFlightThrottle/app_controller.dart';
-import 'package:VirtualFlightThrottle/data/data_settings.dart';
-import 'package:VirtualFlightThrottle/data/sqlite3_manager.dart';
-import 'package:VirtualFlightThrottle/network/network_manager.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/routes.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
-import 'package:VirtualFlightThrottle/utility/utility_theme.dart';
+import 'package:vfcs/app_manager.dart';
+import 'package:vfcs/data/data_settings.dart';
+import 'package:vfcs/data/database_provider.dart';
+import 'package:vfcs/network/network_manager.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/routes.dart';
+import 'package:vfcs/utility/utility_system.dart';
+import 'package:vfcs/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -40,7 +40,7 @@ class VirtualThrottleApp extends StatelessWidget {
             foregroundColor: Colors.black,
           ),
         ),
-        themeMode: this.appManager.settingManager.settingsMap[SettingsType.USE_DARK_THEME].value
+        themeMode: this.appManager.settingManager.getSettingData(SettingType.USE_DARK_THEME).value
             ? ThemeMode.dark
             : ThemeMode.system,
 
@@ -61,17 +61,18 @@ class VirtualThrottleApp extends StatelessWidget {
 }
 
 Future<AppManager> initializeAppManager() async {
-  final SQLite3Manager sqLite3Manager = SQLite3Manager();
+  final SQLite3Provider sqLite3Manager = SQLite3Provider();
   await sqLite3Manager.initializeDb();
   
   final SettingManager settingManager = SettingManager(sqLite3Manager);
-  await settingManager.loadSavedGlobalSettings();
+  await settingManager.loadSavedSettings();
   
-  final PanelManager panelManager = PanelManager();
+  final PanelManager panelManager = PanelManager(sqLite3Manager);
   await panelManager.loadSavedPanelList();
 
-  final NetworkManager networkManager = NetworkManager.fromNetworkType(settingManager.settingsMap[SettingsType.NETWORK_TYPE].value, settingManager);
-  networkManager.startNotifyNetworkStateToast();
+  final NetworkManager networkManager = NetworkManager
+      .fromNetworkType(settingManager.getSettingData(SettingType.NETWORK_TYPE).value, settingManager, sqLite3Manager);
+  networkManager.startNotifyNetworkConditionToast();
   networkManager.tryAutoReconnection();
 
   return Future.value(AppManager(sqLite3Manager, settingManager, networkManager, panelManager));
@@ -86,12 +87,12 @@ Future<void> initializeUX(SettingManager settingManager) async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  if (settingManager.settingsMap[SettingsType.USE_WAKE_LOCK].value) Wakelock.enable();
+  if (settingManager.getSettingData(SettingType.USE_WAKE_LOCK).value) Wakelock.enable();
   else Wakelock.disable();
 
   await SystemUtility.enableUIOverlays(
-      settingManager.settingsMap[SettingsType.HIDE_HOME_KEY].value,
-      settingManager.settingsMap[SettingsType.HIDE_TOP_BAR].value
+      settingManager.getSettingData(SettingType.HIDE_HOME_KEY).value,
+      settingManager.getSettingData(SettingType.HIDE_TOP_BAR).value
   );
 }
 

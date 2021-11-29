@@ -1,10 +1,10 @@
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:VirtualFlightThrottle/page/panel/list/page_panel_list_controller.dart';
-import 'package:VirtualFlightThrottle/page/panel/list/widget/panel_builder_dialog.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
-import 'package:VirtualFlightThrottle/routes.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/panel/list/page_panel_list_controller.dart';
+import 'package:vfcs/page/panel/list/widget/panel_builder_dialog.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/panel/panel_data.dart';
+import 'package:vfcs/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,14 +40,14 @@ class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
     ); 
   }
 
-  Future<PanelSetting> _showPanelBuilderDialog(BuildContext context, bool jsonMode) async {
-    return await showDialog<PanelSetting>(
+  Future<PanelData> _showPanelBuilderDialog(BuildContext context, bool jsonMode) async {
+    return await showDialog<PanelData>(
       context: context,
       builder: (BuildContext dialogContext) => PanelBuilderDialog(jsonMode: jsonMode),
     );
   }
 
-  Widget _buildPanelListTile(BuildContext context, PanelSetting panelSetting, int index) {
+  Widget _buildPanelListTile(BuildContext context, PanelData panelSetting, int index) {
     return ListTile(
       leading: index == 0 ? Icon(Icons.check) : Icon(Icons.layers),
       title: Text(panelSetting.name),

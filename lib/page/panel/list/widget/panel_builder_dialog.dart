@@ -1,20 +1,19 @@
 import 'dart:convert';
 
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
-import 'package:VirtualFlightThrottle/panel/panel_manager.dart';
-import 'package:VirtualFlightThrottle/panel/panel_setting.dart';
-import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/panel/component/component_definition.dart';
+import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/panel/panel_data.dart';
+import 'package:vfcs/utility/utility_dart.dart';
+import 'package:vfcs/utility/utility_system.dart';
 import 'package:card_settings/card_settings.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PanelBuilderDialog extends StatefulWidget {
   
   final bool jsonMode;
 
-  const PanelBuilderDialog({Key key, this.jsonMode}) : super(key: key);
+  const PanelBuilderDialog({required Key key, required this.jsonMode}) : super(key: key);
 
   @override
   State<PanelBuilderDialog> createState() => _PanelBuilderDialogState();
@@ -27,7 +26,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
 
   String _name;
   Pair<int, int> _maxSize;
-  PanelSetting _panelSetting;
+  PanelData _panelSetting;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -66,7 +65,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (val) {
           try {
-            this._panelSetting = PanelSetting.fromJSON(this._name, jsonDecode(val));
+            this._panelSetting = PanelData.fromJSON(this._name, jsonDecode(val));
             if (this._panelSetting.width > this._maxSize.a || this._panelSetting.height > this._maxSize.b)
               return S.of(context).dialogPanelBuilder_panelPreferences_jsonDataError_tooLarge;
             else return null;

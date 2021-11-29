@@ -1,5 +1,5 @@
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/page/direction_state.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/page/direction_state.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -91,7 +91,7 @@ class _PageAboutAppState extends DynamicDirectionState<PageAboutApp> {
 
 class _LinkTextSpan extends TextSpan {
 
-  _LinkTextSpan({@required String text, @required String url}) : super(
+  _LinkTextSpan({required String text, required String url}) : super(
     style: TextStyle(color: Colors.blueAccent),
     text: text,
     recognizer: TapGestureRecognizer()..onTap = () => launch(url, forceSafariVC: false),

@@ -1,4 +1,4 @@
-import 'package:VirtualFlightThrottle/utility/utility_system.dart';
+import 'package:vfcs/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();

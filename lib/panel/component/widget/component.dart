@@ -1,9 +1,9 @@
-import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
-import 'package:VirtualFlightThrottle/panel/component/component_settings.dart';
+import 'package:vfcs/panel/component/component_definition.dart';
+import 'package:vfcs/panel/component/component_data.dart';
 import 'package:flutter/material.dart';
 
 abstract class Component extends StatelessWidget {
-  final ComponentSetting componentSetting;
+  final ComponentData componentSetting;
 
   final double blockWidth;
   final double blockHeight;

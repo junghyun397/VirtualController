@@ -1,7 +1,7 @@
-import 'package:VirtualFlightThrottle/data/sqlite3_manager.dart';
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/utility/utility_dart.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
+import 'package:vfcs/data/database_provider.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/utility/utility_dart.dart';
 
 abstract class SettingData<T> {
   late final T value;
@@ -60,7 +60,7 @@ class NetworkTypeSettingData extends SettingData<NetworkType> {
   void setValue(String sourceString) => value = getEnumFromString(NetworkType.values, sourceString);
 }
 
-enum SettingsType {
+enum SettingType {
   USER_NAME,
   USER_PWD,
   USE_DARK_THEME,
@@ -76,78 +76,80 @@ enum SettingsType {
 
 class SettingManager {
 
-  final SQLite3Manager _sqLite3Manager;
+  final SQLite3Provider sqLite3Manager;
 
-  final Map<SettingsType, SettingData> settingsMap = _buildDefaultSettings();
+  final Map<SettingType, SettingData> settingsMap = _buildDefaultSettings();
 
-  SettingManager(this._sqLite3Manager);
+  SettingManager(this.sqLite3Manager);
 
   void resetGlobalSettings() {
     this.settingsMap.clear();
     this.settingsMap.addAll(_buildDefaultSettings());
-    this.settingsMap.forEach((key, val) => this._sqLite3Manager.insertSettings(key, val));
+    this.settingsMap.forEach((key, val) => this.sqLite3Manager.insertSettings(key, val));
   }
 
-  Future<void> loadSavedGlobalSettings() {
-    return this._sqLite3Manager.getSavedSettingsValue()
-        .then((val) => val.forEach((key, value) => this.settingsMap[key].setValue(value)));
-  }
+  Future<void> loadSavedSettings() =>
+      this.sqLite3Manager.getSavedSettingsValue()
+          .then((val) => val.forEach((key, value) => this.settingsMap[key]!.setValue(value)));
+  
+  SettingData getSettingData(SettingType settingsType) =>
+      this.settingsMap[settingsType]!;
 
-  static Map<SettingsType, SettingData> _buildDefaultSettings() {
+  static Map<SettingType, SettingData> _buildDefaultSettings() {
     return {
-      SettingsType.USER_NAME: StringSettingData(
+      SettingType.USER_NAME: StringSettingData(
         "anonymous",
         (context) => S.of(context).settingsInfo_userName_name,
         (context) => S.of(context).settingsInfo_userName_description,
       ),
-      SettingsType.USER_PWD: StringSettingData(
+      SettingType.USER_PWD: StringSettingData(
         "",
         (context) => S.of(context).settingsInfo_userPassword_name,
         (context) => S.of(context).settingsInfo_userPassword_description,
       ),
 
-      SettingsType.USE_DARK_THEME: BooleanSettingData(
+      SettingType.USE_DARK_THEME: BooleanSettingData(
         false,
         (context) => S.of(context).settingsInfo_useDarkTheme_name,
         (context) => S.of(context).settingsInfo_useDarkTheme_description,
       ),
-      SettingsType.HIDE_TOP_BAR: BooleanSettingData(
+      SettingType.HIDE_TOP_BAR: BooleanSettingData(
         true,
         (context) => S.of(context).settingsInfo_hideTopBar_name,
         (context) => S.of(context).settingsInfo_hideTopBar_description,
       ),
-      SettingsType.HIDE_HOME_KEY: BooleanSettingData(
+      SettingType.HIDE_HOME_KEY: BooleanSettingData(
         true,
         (context) => S.of(context).settingsInfo_hideHomeKey_name,
         (context) => S.of(context).settingsInfo_hideHomeKey_description,
       ),
-      SettingsType.USE_VIBRATION: BooleanSettingData(
+      SettingType.USE_VIBRATION: BooleanSettingData(
         true,
         (context) => S.of(context).settingsInfo_useVibration_name,
         (context) => S.of(context).settingsInfo_useVibration_description,
       ),
-      SettingsType.USE_WAKE_LOCK: BooleanSettingData(
+      SettingType.USE_WAKE_LOCK: BooleanSettingData(
         true,
         (context) => S.of(context).settingsInfo_useWakeLock_name,
         (context) => S.of(context).settingsInfo_useWakeLock_description,
       ),
 
-      SettingsType.NETWORK_TYPE: NetworkTypeSettingData(
+      SettingType.NETWORK_TYPE: NetworkTypeSettingData(
         NetworkType.WEB_SOCKET,
         (context) => S.of(context).settingsInfo_networkType_name,
         (context) => S.of(context).settingsInfo_networkType_description,
       ),
-      SettingsType.NETWORK_TIMEOUT: IntegerSettingData(
+      SettingType.NETWORK_TIMEOUT: IntegerSettingData(
         1500,
         (context) => S.of(context).settingsInfo_networkTimeOut_name,
         (context) => S.of(context).settingsInfo_networkTimeOut_description,
       ),
-      SettingsType.AUTO_CONNECTION: BooleanSettingData(
+      SettingType.AUTO_CONNECTION: BooleanSettingData(
         true,
         (context) => S.of(context).settingsInfo_autoReconnection_name,
         (context) => S.of(context).settingsInfo_autoReconnection_description,
       ),
-      SettingsType.USE_BACKGROUND_TITLE: BooleanSettingData(
+      SettingType.USE_BACKGROUND_TITLE: BooleanSettingData(
         true,
         (context) => S.of(context).settingsInfo_useBackgroundTitle_name,
         (context) => S.of(context).settingsInfo_useBackgroundTitle_description,

@@ -1,5 +1,5 @@
-import 'package:VirtualFlightThrottle/panel/component/widget/component.dart';
-import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
+import 'package:vfcs/panel/component/widget/component.dart';
+import 'package:vfcs/panel/panel_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 

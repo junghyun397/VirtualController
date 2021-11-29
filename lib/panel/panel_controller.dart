@@ -1,56 +1,79 @@
-import 'package:VirtualFlightThrottle/network/interface/network_interface.dart';
-import 'package:VirtualFlightThrottle/network/network_manager.dart';
+import 'package:vfcs/data/data_settings.dart';
+import 'package:vfcs/network/network_interface.dart';
+import 'package:vfcs/network/network_manager.dart';
 import 'package:flutter/material.dart';
 
 class PanelController with ChangeNotifier {
 
-  List<int> inputState = List<int>.filled(NetworkProtocol.ANALOGUE_INPUT_COUNT + NetworkProtocol.DIGITAL_INPUT_COUNT + 1, 0, growable: false);
+  final NetworkManager networkManager;
+  final SettingManager settingManager;
 
-  Map<int, int> _syncChain = Map<int, int>();
+  final List<int> inputState = List<int>
+      .filled(NetworkProtocol.ANALOGUE_INPUT_COUNT + NetworkProtocol.DIGITAL_INPUT_COUNT + 1, 0, growable: false);
 
-  PanelController() {
+  final Map<int, int> _couplingState = Map<int, int>();
+
+  PanelController(this.networkManager, this.settingManager) {
     this._syncAll();
   }
 
   bool hasAnalogueSync(int leftInput) =>
-      this._syncChain.containsKey(leftInput);
+      this._couplingState.containsKey(leftInput);
 
   void switchAnalogueSync(int leftInput, int rightInput) {
-    if (!this.hasAnalogueSync(leftInput)) this._syncChain.putIfAbsent(leftInput, () => rightInput);
-    else this._syncChain.remove(leftInput);
-    notifyListeners();
+    if (!this.hasAnalogueSync(leftInput)) this._couplingState.putIfAbsent(leftInput, () => rightInput);
+    else this._couplingState.remove(leftInput);
+    this.notifyListeners();
   }
 
-  void eventAnalogue(int inputIndex, int value, {bool chain}) {
+  // P = contain key, Q = contain value, R = oc is null, S = oc
+  // if P or Q
+  //   if P and Q and R
+  //     job1, job2
+  //   if P and (R or S)
+  //     job1
+  //   if (R or !S) and Q
+  //     job2
+
+  // if P and Q and R
+  //   job0, job1, job2
+  // if P and (R or S)
+  //   job0, job1
+  // if Q and (R or not S)
+  //   job0, job2
+
+  void eventAnalogue(int inputIndex, int value, {bool? onCoupling}) {
     if (inputIndex == 0 || this.inputState[inputIndex] == value) return;
 
-    bool containKey = this._syncChain.containsKey(inputIndex);
-    bool containValue = this._syncChain.containsValue(inputIndex);
+    final bool containKey = this._couplingState.containsKey(inputIndex);
+    final bool containValue = this._couplingState.containsValue(inputIndex);
+
     if (containKey || containValue) {
-      if (chain == null && containKey && containValue) {
-        eventAnalogue(this._syncChain[inputIndex], value, chain: true);
-        eventAnalogue(this._syncChain.keys.where((key) => this._syncChain[key] == inputIndex).first, value, chain: false);
-      } else if ((chain == null || chain) && containKey)
-        eventAnalogue(this._syncChain[inputIndex], value, chain: true);
-      else if ((chain == null || !chain) && containValue)
-        eventAnalogue(this._syncChain.keys.where((key) => this._syncChain[key] == inputIndex).first, value, chain: false);
+      if (containKey && containValue && onCoupling == null) {
+        this.eventAnalogue(this._couplingState[inputIndex]!, value, onCoupling: true);
+        this.eventAnalogue(this._couplingState.keys
+            .where((key) => this._couplingState[key] == inputIndex).first, value, onCoupling: false);
+      } else if (containKey && (onCoupling == null || onCoupling))
+        this.eventAnalogue(this._couplingState[inputIndex]!, value, onCoupling: true);
+      else if (containValue && (onCoupling == null || !onCoupling))
+        this.eventAnalogue(this._couplingState.keys
+            .where((key) => this._couplingState[key] == inputIndex).first, value, onCoupling: false);
       notifyListeners();
     }
-
-    if (inputIndex == 0) return;
+    
     this.inputState[inputIndex] = value;
-    NetworkManager().val.sendData(NetworkData(inputIndex, value));
+    this.networkManager.sendPacket(IntegerNetworkData(inputIndex, value));
   }
 
   void eventDigital(int inputIndex, bool value) {
-    int serializeValue = value ? NetworkProtocol.DIGITAL_TRUE : NetworkProtocol.DIGITAL_FALSE;
+    final int serializeValue = value ? NetworkProtocol.DIGITAL_TRUE : NetworkProtocol.DIGITAL_FALSE;
     if (inputIndex == 0 || this.inputState[inputIndex] == serializeValue) return;
 
     this.inputState[inputIndex] = serializeValue;
-    NetworkManager().val.sendData(NetworkData(inputIndex, serializeValue));
+    this.networkManager.sendPacket(IntegerNetworkData(inputIndex, serializeValue));
   }
 
   void _syncAll() =>
-      this.inputState.asMap().forEach((idx, val) => NetworkManager().val.sendData(NetworkData(idx, val)));
+      this.inputState.asMap().forEach((idx, val) => this.networkManager.sendPacket(IntegerNetworkData(idx, val)));
 
 }

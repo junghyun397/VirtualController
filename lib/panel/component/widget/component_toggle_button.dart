@@ -1,6 +1,6 @@
-import 'package:VirtualFlightThrottle/panel/component/component_definition.dart';
-import 'package:VirtualFlightThrottle/panel/component/widget/component_button.dart';
-import 'package:VirtualFlightThrottle/panel/panel_controller.dart';
+import 'package:vfcs/panel/component/component_definition.dart';
+import 'package:vfcs/panel/component/widget/component_button.dart';
+import 'package:vfcs/panel/panel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

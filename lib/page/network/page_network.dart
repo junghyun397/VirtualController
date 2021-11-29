@@ -1,7 +1,7 @@
-import 'package:VirtualFlightThrottle/generated/l10n.dart';
-import 'package:VirtualFlightThrottle/network/network_manager.dart';
-import 'package:VirtualFlightThrottle/page/direction_state.dart';
-import 'package:VirtualFlightThrottle/page/network/page_network_controller.dart';
+import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/network/network_manager.dart';
+import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/network/page_network_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -200,13 +200,13 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
             builder: (BuildContext context, PageNetworkController value,
                 Widget child) {
               switch (value.networkConnectionState) {
-                case NetworkConnectionState.DISCOVERING:
+                case NetworkCondition.DISCOVERING:
                   return this._buildFinding(context);
-                case NetworkConnectionState.NOTFOUND:
+                case NetworkCondition.NOTFOUND:
                   return this._buildNotFound(context);
-                case NetworkConnectionState.FOUND:
+                case NetworkCondition.FOUND:
                   return this._buildFound(context, value.deviceList);
-                case NetworkConnectionState.CONNECTED:
+                case NetworkCondition.CONNECTED:
                   return this._buildConnected(context);
                 default:
                   return this._buildFinding(context);

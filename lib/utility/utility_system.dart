@@ -13,21 +13,19 @@ class SystemUtility {
   }
   static Size get physicalSize => _fullScreenSize;
 
-  static Future<void> enableUIOverlays(bool hideTop, bool hideBottom) async {
+  static Future<void> enableUIOverlays(bool hideTop, bool hideBottom) async =>
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
       if (!hideBottom) SystemUiOverlay.bottom,
       if (!hideTop) SystemUiOverlay.top,
     ]);
-  }
 
-  static void enableFixedDirection(bool enable) {
+  static void enableFixedDirection(bool enable) =>
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
       if (!enable) DeviceOrientation.portraitUp,
       if (!enable) DeviceOrientation.portraitDown,
     ]);
-  }
 
   static void enableDarkSoftKey() =>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light));
@@ -42,8 +40,6 @@ class SystemUtility {
       fontSize: 16.0,
     );
 
-  static void vibrate() {
-    Vibrate.feedback(FeedbackType.success);
-  }
+  static void vibrate() => Vibrate.feedback(FeedbackType.success);
 
 }

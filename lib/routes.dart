@@ -1,9 +1,9 @@
-import 'package:VirtualFlightThrottle/page/about/page_about_app.dart';
-import 'package:VirtualFlightThrottle/page/main/page_main_panel.dart';
-import 'package:VirtualFlightThrottle/page/network/page_network.dart';
-import 'package:VirtualFlightThrottle/page/panel/builder/page_panel_builder.dart';
-import 'package:VirtualFlightThrottle/page/panel/list/page_panel_list.dart';
-import 'package:VirtualFlightThrottle/page/settings/page_settings.dart';
+import 'package:vfcs/page/about/page_about_app.dart';
+import 'package:vfcs/page/main/page_main_panel.dart';
+import 'package:vfcs/page/network/page_network.dart';
+import 'package:vfcs/page/panel/builder/page_panel_builder.dart';
+import 'package:vfcs/page/panel/list/page_panel_list.dart';
+import 'package:vfcs/page/settings/page_settings.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
@@ -12,7 +12,6 @@ class Routes {
 
   static const String PAGE_PANEL_LIST = "/panel";
   static const String PAGE_PANEL_BUILDER = "/panel/builder";
-  static const String PAGE_PANEL_STORE = "/panel/store";
 
   static const String PAGE_SETTING = "/settings";
 
