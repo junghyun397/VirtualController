@@ -19,6 +19,11 @@ class NetworkProtocol {
 
 }
 
+enum NetworkCondition {
+  CONNECTED,
+  DISCONNECTED,
+}
+
 // TYPE, optional(TARGET_INPUT), DATA
 
 abstract class NetworkData<T> {

@@ -1,10 +1,10 @@
 import 'package:vfcs/generated/l10n.dart';
-import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/orientation_page.dart';
 import 'package:vfcs/page/panel/builder/page_panel_builder_controller.dart';
 import 'package:vfcs/page/panel/builder/widget/component_builder_dialog.dart';
 import 'package:vfcs/panel/component/component_definition.dart';
 import 'package:vfcs/panel/component/component_data.dart';
-import 'package:vfcs/panel/panel_manager.dart';
+import 'package:vfcs/panel/panel_utility.dart';
 import 'package:vfcs/utility/utility_dart.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class PagePanelBuilder extends StatefulWidget {
   State<StatefulWidget> createState() => _PagePanelBuilderState();
 }
 
-class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder> {
+class _PagePanelBuilderState extends DynamicOrientationPage<PagePanelBuilder> {
   
   Future<bool> _showComponentBuilderDialog(BuildContext context, ComponentData componentSetting) async {
     return await showDialog<bool>(
@@ -106,7 +106,7 @@ class _PagePanelBuilderState extends FixedDirectionWithUIState<PagePanelBuilder>
             margin: EdgeInsets.all(4),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                Size blockSize = PanelUtility.getBlockSize(controller.panelSetting, constraints.biggest, topMargin: 0);
+                final double blockSize = PanelUtility.getBlockSize(controller.panelSetting, constraints.biggest, topMargin: 0);
                 if (!controller.isSelectionMode) return Stack(
                   children: controller.panelSetting.components.entries.map((component) {
                     return Positioned(

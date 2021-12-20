@@ -2,29 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:vfcs/utility/utility_dart.dart';
 
 class SystemUtility {
   
   static late Size _fullScreenSize;
   static set physicalSize(Size screenSize) {
-    if (screenSize.height > screenSize.width) screenSize = Size(screenSize.height, screenSize.width);
+    if (screenSize.height > screenSize.width) screenSize = screenSize.flipped;
     if (_fullScreenSize.height < screenSize.height || _fullScreenSize.width < screenSize.width)
       _fullScreenSize = screenSize;
   }
   static Size get physicalSize => _fullScreenSize;
 
-  static Future<void> enableUIOverlays(bool hideTop, bool hideBottom) async =>
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-      if (!hideBottom) SystemUiOverlay.bottom,
-      if (!hideTop) SystemUiOverlay.top,
-    ]);
+  static late Pair<bool, bool> preferredUIOverlays;
 
-  static void enableFixedDirection(bool enable) =>
+  static Future<void> enforceUIOverlays(Either<bool, Pair<bool, bool>> option) async =>
+      option.fold(
+          onLeft: (left) async => await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive),
+          onRight: (right) async => await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+            if (!right.a) SystemUiOverlay.bottom,
+            if (!right.b) SystemUiOverlay.top,
+          ]),
+      );
+
+  static void enforceOrientation(bool enable, {Orientation? orientation}) =>
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-      if (!enable) DeviceOrientation.portraitUp,
-      if (!enable) DeviceOrientation.portraitDown,
+      if (!enable || orientation == Orientation.landscape) DeviceOrientation.landscapeRight,
+      if (!enable || orientation == Orientation.landscape) DeviceOrientation.landscapeLeft,
+      if (!enable || orientation == Orientation.portrait) DeviceOrientation.portraitUp,
+      if (!enable || orientation == Orientation.portrait) DeviceOrientation.portraitDown,
     ]);
 
   static void enableDarkSoftKey() =>

@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 
 class PagePanelListController with ChangeNotifier {
 
+  final PanelManager _panelManager;
+
+  PagePanelListController(this._panelManager);
+
   void setAsMainPanel(PanelData panelSetting) {
-    PanelManager().setAsMainPanel(panelSetting);
-    notifyListeners();
+    this._panelManager.setAsMainPanel(panelSetting);
+    this.notifyListeners();
   }
 
   void insertPanel(PanelData panelSetting) {
-    PanelManager().insertPanel(panelSetting);
-    notifyListeners();
+    this._panelManager.insertPanel(panelSetting);
+    this.notifyListeners();
   }
 
   void removePanel(String panelName) {
-    PanelManager().removeSavedPanel(panelName);
-    notifyListeners();
+    this._panelManager.removeSavedPanel(panelName);
+    this.notifyListeners();
   }
 
 }

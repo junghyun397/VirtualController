@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:vfcs/data/data_settings.dart';
 import 'package:vfcs/data/database_provider.dart';
-import 'package:vfcs/network/implemention/network_wifi.dart';
+import 'package:vfcs/network/implementation/network_websocket.dart';
 import 'package:vfcs/network/network_agent.dart';
 import 'package:vfcs/network/network_interface.dart';
 import 'package:vfcs/utility/disposable.dart';
@@ -12,27 +13,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class NetworkManager implements Disposable {
-  
-  final SettingManager settingManager;
 
-  final SQLite3Provider sqLite3Provider;
+  final SettingsProvider settingsProvider;
+  final DatabaseProvider _databaseProvider;
 
-  late NetworkAgent targetNetworkAgent;
+  late NetworkAgent networkAgent;
 
-  final StreamController<bool> networkConditionStream = StreamController<bool>.broadcast();
+  NetworkCondition _networkCondition = NetworkCondition.DISCONNECTED;
+  NetworkCondition get networkCondition => this._networkCondition;
+  set networkCondition(NetworkCondition networkCondition) {
+    this._networkCondition = networkCondition;
+    this.networkConditionStream.add(networkCondition);
+  }
 
-  final List<NetworkData> _buffer = [];
+  final StreamController<NetworkCondition> networkConditionStream = StreamController<NetworkCondition>.broadcast();
 
-  bool isConnected = false;
+  final Queue<NetworkData> _queue = Queue();
 
-  NetworkManager(this.settingManager, this.sqLite3Provider);
+  NetworkManager(this.settingsProvider, this._databaseProvider);
 
-  factory NetworkManager.fromNetworkType(NetworkType networkType, SettingManager settingManager, SQLite3Provider sqLite3Provider) {
+  factory NetworkManager.fromNetworkType(NetworkType networkType, SettingsProvider settingsProvider, DatabaseProvider databaseProvider) {
     switch (networkType) {
       case NetworkType.WEB_SOCKET:
-        return WifiNetworkManager(settingManager, sqLite3Provider);
+        return WebSocketManager(settingsProvider, databaseProvider);
       default:
-        return WifiNetworkManager(settingManager, sqLite3Provider);
+        return WebSocketManager(settingsProvider, databaseProvider);
     }
   }
 
@@ -41,22 +46,22 @@ abstract class NetworkManager implements Disposable {
     // TODO: implement BLUETOOTH, USB_SERIAL
     // ignore: dead_code
     if (kIsWeb)
-      return const [
+      return const <NetworkType>[
         NetworkType.WEB_SOCKET,
       ];
     else if (Platform.isAndroid)
-      return const [
+      return const <NetworkType>[
         NetworkType.WEB_SOCKET,
         NetworkType.BLUETOOTH,
         NetworkType.USB_SERIAL,
       ];
     else if (Platform.isIOS)
-      return const [
+      return const <NetworkType>[
         NetworkType.WEB_SOCKET,
         NetworkType.BLUETOOTH,
       ];
     else
-      return const [
+      return const <NetworkType>[
         NetworkType.WEB_SOCKET,
       ];
   }
@@ -87,51 +92,47 @@ abstract class NetworkManager implements Disposable {
     }
   }
 
-  Future<bool> checkInterfaceAlive();
+  Future<bool> checkInterfaceAvailable();
 
-  Future<List<String>> findAvailableServerList();
+  Future<List<String>> discoverAvailableServers();
 
-  Future<void> connectToTarget(String deviceAddress, Function() onSessionLost);
+  Future<void> connectByAddress(String deviceAddress, {Function()? onSessionLost});
 
   void setConnectedCondition() {
-    this.isConnected = true;
-    this.networkConditionStream.add(true);
-    if (this.settingManager.getSettingData(SettingType.AUTO_CONNECTION).value)
-      this.sqLite3Provider.insertRegisteredDevices(this.targetNetworkAgent.address);
+    this.networkCondition = NetworkCondition.CONNECTED;
+    if (this.settingsProvider.getSettingData(SettingType.AUTO_CONNECTION).value)
+      this._databaseProvider.insertRegisteredDevices(this.networkAgent.address);
   }
 
-  void setDisconnectedCondition() {
-    this.isConnected = false;
-    this.networkConditionStream.add(false);
-  }
+  void setDisconnectedCondition() =>
+    this.networkCondition = NetworkCondition.DISCONNECTED;
 
   void disconnectCurrentServer() {
     this.setDisconnectedCondition();
-    this.targetNetworkAgent.killSession();
-    this.isConnected = false;
+    this.networkAgent.killSession();
   }
 
   void sendPacket(NetworkData networkData) {
-    if (!this.isConnected) this._buffer.add(networkData);
-    else if (this._buffer.isNotEmpty) {
-      this._buffer.add(networkData);
-      this._buffer.forEach((val) =>
-          this.targetNetworkAgent.sendPacket(networkData));
-      this._buffer.clear();
-    } else this.targetNetworkAgent.sendPacket(networkData);
+    if (this._networkCondition == NetworkCondition.DISCONNECTED) this._queue.add(networkData);
+    else if (this._queue.isNotEmpty) {
+      this._queue.add(networkData);
+      this._queue.forEach((val) => this.networkAgent.sendPacket(networkData));
+      this._queue.clear();
+    } else this.networkAgent.sendPacket(networkData);
   }
 
   void startNotifyNetworkConditionToast() =>
-    this.networkConditionStream.stream.listen((val) {
-      if (val) SystemUtility.showToast("Connected with device.", backgroundColor: Colors.green);
-      else SystemUtility.showToast("Disconnected with device.", backgroundColor: Colors.red);
+    this.networkConditionStream.stream.listen((condition) {
+      if (condition == NetworkCondition.CONNECTED) SystemUtility.showToast("Connected with Server.", backgroundColor: Colors.green);
+      else SystemUtility.showToast("Disconnected with Server.", backgroundColor: Colors.red);
     });
 
   Future<void> tryAutoReconnection() async {
-    if ((!this.isConnected) && this.settingManager.getSettingData(SettingType.AUTO_CONNECTION).value) {
-      List<String> registered = await SQLite3Provider().getSavedRegisteredDevices();
-      await this.findAvailableServerList().then((val) => val.forEach((target) {
-        if (registered.contains(target)) this.connectToTarget(target, () => null);
+    if ((this._networkCondition == NetworkCondition.DISCONNECTED) 
+        && this.settingsProvider.getSettingData(SettingType.AUTO_CONNECTION).value) {
+      final List<String> registered = DatabaseProvider().getSavedRegisteredDevices();
+      await this.discoverAvailableServers().then((servers) => servers.forEach((target) {
+        if (registered.contains(target)) this.connectByAddress(target, onSessionLost: () => null);
       }));
     }
   }

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:vfcs/generated/l10n.dart';
 import 'package:vfcs/panel/component/component_definition.dart';
-import 'package:vfcs/panel/panel_manager.dart';
 import 'package:vfcs/panel/panel_data.dart';
 import 'package:vfcs/utility/utility_dart.dart';
 import 'package:vfcs/utility/utility_system.dart';
@@ -30,7 +29,7 @@ class _PanelBuilderDialogState extends State<PanelBuilderDialog> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<Widget> _buildNewPanelDataArea(BuildContext context) {
+  Iterable<Widget> _buildNewPanelDataArea(BuildContext context) {
     if (!widget.jsonMode) return [
       CardSettingsInt(
         label: S.of(context).dialogPanelBuilder_panelPreferences_width,

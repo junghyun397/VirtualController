@@ -12,22 +12,22 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class PanelManager implements Disposable {
 
-  final SQLite3Provider sqLite3Manager;
+  final DatabaseProvider _databaseProvider;
 
   final List<PanelData> panelList = List.empty(growable: true);
 
-  final StreamController mainPanelStream = StreamController<PanelData>.broadcast();
+  final StreamController<PanelData> switchMainPanelStream = StreamController<PanelData>.broadcast();
 
-  PanelManager(this.sqLite3Manager);
+  PanelManager(this._databaseProvider);
 
   Future<void> loadSavedPanelList() async {
-    await this.sqLite3Manager.getSavedPanelList().then((val) async {
-      if (val.length == 0) {
-        PanelData defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(SystemUtility.physicalSize));
-        this.sqLite3Manager.insertPanel("Default Panel", jsonEncode(defaultPanelSetting.toJSON()));
-        this.panelList.add(defaultPanelSetting);
-      } else val.forEach((key, value) => this.panelList.add(PanelData.fromJSON(key, jsonDecode(value))));
-    });
+    final Map<String, PanelData> panels = this._databaseProvider.getSavedPanelList();
+
+    if (panels.length == 0) {
+      final PanelData defaultPanelSetting = await this._getSavedDefaultPanel(PanelUtility.getMaxPanelSize(SystemUtility.physicalSize));
+      this._databaseProvider.insertPanel("Default Panel", defaultPanelSetting);
+      this.panelList.add(defaultPanelSetting);
+    } else this.panelList.addAll(panels.values);
     this._sort();
   }
 
@@ -40,7 +40,7 @@ class PanelManager implements Disposable {
     panelSetting.date = DateTime.now().millisecondsSinceEpoch;
     this.updatePanel(panelSetting);
     this._sort();
-    this.mainPanelStream.add(panelSetting);
+    this.switchMainPanelStream.add(panelSetting);
   }
 
   void insertPanel(PanelData panelSetting) {
@@ -53,12 +53,12 @@ class PanelManager implements Disposable {
   }
 
   void savePanel(PanelData panelSetting) {
-    this.sqLite3Manager.insertPanel(panelSetting.name, jsonEncode(panelSetting.toJSON()));
+    this._databaseProvider.insertPanel(panelSetting.name, panelSetting);
   }
 
   void removeSavedPanel(String panelName) {
     this.panelList.removeAt(this.panelList.indexWhere((val) => val.name == panelName));
-    this.sqLite3Manager.removePanel(panelName);
+    this._databaseProvider.removePanel(panelName);
   }
 
   Future<PanelData> _getSavedDefaultPanel(Pair<int, int> maxPanelSize) async {
@@ -73,6 +73,6 @@ class PanelManager implements Disposable {
   void _sort() => this.panelList.sort((a, b) => a.date > b.date ? -1 : 1);
 
   @override
-  void dispose() => this.mainPanelStream.close();
+  void dispose() => this.switchMainPanelStream.close();
 
 }

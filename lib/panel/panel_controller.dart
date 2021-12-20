@@ -2,26 +2,29 @@ import 'package:vfcs/data/data_settings.dart';
 import 'package:vfcs/network/network_interface.dart';
 import 'package:vfcs/network/network_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:vfcs/panel/panel_data.dart';
 
 class PanelController with ChangeNotifier {
 
-  final NetworkManager networkManager;
-  final SettingManager settingManager;
+  final PanelData panelData;
+
+  final NetworkManager _networkManager;
+  final SettingsProvider _settingsProvider;
 
   final List<int> inputState = List<int>
       .filled(NetworkProtocol.ANALOGUE_INPUT_COUNT + NetworkProtocol.DIGITAL_INPUT_COUNT + 1, 0, growable: false);
 
   final Map<int, int> _couplingState = Map<int, int>();
 
-  PanelController(this.networkManager, this.settingManager) {
+  PanelController(this.panelData, this._networkManager, this._settingsProvider) {
     this._syncAll();
   }
 
-  bool hasAnalogueSync(int leftInput) =>
+  bool hasCoupling(int leftInput) =>
       this._couplingState.containsKey(leftInput);
 
   void switchAnalogueSync(int leftInput, int rightInput) {
-    if (!this.hasAnalogueSync(leftInput)) this._couplingState.putIfAbsent(leftInput, () => rightInput);
+    if (!this.hasCoupling(leftInput)) this._couplingState.putIfAbsent(leftInput, () => rightInput);
     else this._couplingState.remove(leftInput);
     this.notifyListeners();
   }
@@ -58,11 +61,11 @@ class PanelController with ChangeNotifier {
       else if (containValue && (onCoupling == null || !onCoupling))
         this.eventAnalogue(this._couplingState.keys
             .where((key) => this._couplingState[key] == inputIndex).first, value, onCoupling: false);
-      notifyListeners();
+      this.notifyListeners();
     }
-    
+
     this.inputState[inputIndex] = value;
-    this.networkManager.sendPacket(IntegerNetworkData(inputIndex, value));
+    this._networkManager.sendPacket(IntegerNetworkData(inputIndex, value));
   }
 
   void eventDigital(int inputIndex, bool value) {
@@ -70,10 +73,10 @@ class PanelController with ChangeNotifier {
     if (inputIndex == 0 || this.inputState[inputIndex] == serializeValue) return;
 
     this.inputState[inputIndex] = serializeValue;
-    this.networkManager.sendPacket(IntegerNetworkData(inputIndex, serializeValue));
+    this._networkManager.sendPacket(IntegerNetworkData(inputIndex, serializeValue));
   }
 
   void _syncAll() =>
-      this.inputState.asMap().forEach((idx, val) => this.networkManager.sendPacket(IntegerNetworkData(idx, val)));
+      this.inputState.asMap().forEach((idx, val) => this._networkManager.sendPacket(IntegerNetworkData(idx, val)));
 
 }

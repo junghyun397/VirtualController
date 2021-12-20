@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:vfcs/data/database_provider.dart';
 import 'package:vfcs/generated/l10n.dart';
+import 'package:vfcs/utility/disposable.dart';
 import 'package:vfcs/utility/utility_dart.dart';
 
 abstract class SettingData<T> {
@@ -39,7 +40,7 @@ class BooleanSettingData extends SettingData<bool> {
         super(defaultValue, getL10nName, getL10nDescription);
 
   @override
-  void setValue(String sourceString) => value = sourceString.toUpperCase() == "TRUE" ? true : false;
+  void setValue(String sourceString) => value = sourceString.toLowerCase() == "true" ? true : false;
 }
 
 class IntegerSettingData extends SettingData<int> {
@@ -63,7 +64,7 @@ class NetworkTypeSettingData extends SettingData<NetworkType> {
 enum SettingType {
   USER_NAME,
   USER_PWD,
-  USE_DARK_THEME,
+  ENFORCE_DARK_THEME,
   HIDE_TOP_BAR,
   HIDE_HOME_KEY,
   NETWORK_TYPE,
@@ -74,26 +75,25 @@ enum SettingType {
   USE_BACKGROUND_TITLE,
 }
 
-class SettingManager {
+class SettingsProvider implements Disposable {
 
-  final SQLite3Provider sqLite3Manager;
+  final DatabaseProvider databaseProvider;
 
-  final Map<SettingType, SettingData> settingsMap = _buildDefaultSettings();
+  final Map<SettingType, SettingData> _settingsMap = _buildDefaultSettings();
 
-  SettingManager(this.sqLite3Manager);
+  SettingsProvider(this.databaseProvider);
 
   void resetGlobalSettings() {
-    this.settingsMap.clear();
-    this.settingsMap.addAll(_buildDefaultSettings());
-    this.settingsMap.forEach((key, val) => this.sqLite3Manager.insertSettings(key, val));
+    this._settingsMap.clear();
+    this._settingsMap.addAll(_buildDefaultSettings());
+    this._settingsMap.forEach((key, val) => this.databaseProvider.insertSettings(key, val));
   }
 
-  Future<void> loadSavedSettings() =>
-      this.sqLite3Manager.getSavedSettingsValue()
-          .then((val) => val.forEach((key, value) => this.settingsMap[key]!.setValue(value)));
-  
+  void loadSavedSettings() =>
+      this.databaseProvider.getSavedSettingsValue().forEach((key, value) => this._settingsMap[key]!.setValue(value));
+
   SettingData getSettingData(SettingType settingsType) =>
-      this.settingsMap[settingsType]!;
+      this._settingsMap[settingsType]!;
 
   static Map<SettingType, SettingData> _buildDefaultSettings() {
     return {
@@ -108,7 +108,7 @@ class SettingManager {
         (context) => S.of(context).settingsInfo_userPassword_description,
       ),
 
-      SettingType.USE_DARK_THEME: BooleanSettingData(
+      SettingType.ENFORCE_DARK_THEME: BooleanSettingData(
         false,
         (context) => S.of(context).settingsInfo_useDarkTheme_name,
         (context) => S.of(context).settingsInfo_useDarkTheme_description,
@@ -156,5 +156,8 @@ class SettingManager {
       )
     };
   }
+  
+  @override
+  void dispose() {}
 
 }

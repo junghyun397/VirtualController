@@ -5,6 +5,7 @@ import 'package:vfcs/panel/component/component_definition.dart';
 import 'package:vfcs/panel/component/component_data.dart';
 import 'package:vfcs/panel/panel_manager.dart';
 import 'package:vfcs/panel/panel_data.dart';
+import 'package:vfcs/panel/panel_utility.dart';
 import 'package:vfcs/utility/utility_dart.dart';
 import 'package:vfcs/utility/utility_system.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ enum SelectableTileState {
 
 class PagePanelBuilderController with ChangeNotifier {
 
+  final PanelManager _panelManager;
+
   final PanelData panelSetting;
 
   bool isSelectionMode = false;
@@ -26,7 +29,7 @@ class PagePanelBuilderController with ChangeNotifier {
 
   Pair<int, int> firstPoint;
 
-  PagePanelBuilderController(this.panelSetting);
+  PagePanelBuilderController(this._panelManager, this.panelSetting);
 
   void choiceComponent(ComponentType componentType) {
     this.isSelectionMode = true;
@@ -37,7 +40,7 @@ class PagePanelBuilderController with ChangeNotifier {
       for (int w = 0; w < val.width; w++) for (int h = 0; h < val.height; h++)
         this.componentPositionMap[val.x + w][val.y + h] = SelectableTileState.USED;
     });
-    notifyListeners();
+    this.notifyListeners();
   }
 
   void selectArea(Pair<int, int> position) {
@@ -51,7 +54,7 @@ class PagePanelBuilderController with ChangeNotifier {
       int width = (this.firstPoint.a - position.a).abs() + 1;
       int height = (this.firstPoint.b - position.b).abs() + 1;
       if (!this.checkComponentSize(width, height)) {
-        SystemUtility.showToast(message: "The selected area is smaller than the minimum size required by component.");
+        SystemUtility.showToast("The selected area is smaller than the minimum size required by component.");
         return;
       } else if (!this.checkComponentPosition(x, y, width, height)) return;
       this.firstPoint = null;
@@ -63,12 +66,12 @@ class PagePanelBuilderController with ChangeNotifier {
         ),
       );
     }
-    notifyListeners();
+    this.notifyListeners();
   }
 
   bool checkComponentSize(int width, int height) =>
-      width >= COMPONENT_DEFINITION[this.selectedComponent].minWidth
-          && height >= COMPONENT_DEFINITION[this.selectedComponent].minHeight;
+      width >= getComponentDefinition(this.selectedComponent).minWidth
+          && height >= getComponentDefinition(this.selectedComponent).minHeight;
 
   bool checkComponentPosition(int x, int y, int width, int height) {
     for (int w = x; w < width + x; w++) for (int h = y; h < height + y; h++)
@@ -83,24 +86,24 @@ class PagePanelBuilderController with ChangeNotifier {
     this.selectedComponent = null;
     this.panelSetting.components[componentSetting.name] = componentSetting;
     this.componentPositionMap = null;
-    PanelManager().updatePanel(this.panelSetting);
-    notifyListeners();
+    this._panelManager.updatePanel(this.panelSetting);
+    this.notifyListeners();
   }
 
   void updateComponent() {
-    PanelManager().updatePanel(this.panelSetting);
-    notifyListeners();
+    this._panelManager.updatePanel(this.panelSetting);
+    this.notifyListeners();
   }
 
   void removeComponent(String componentName) {
     this.panelSetting.components.remove(componentName);
-    PanelManager().updatePanel(this.panelSetting);
-    notifyListeners();
+    this._panelManager.updatePanel(this.panelSetting);
+    this.notifyListeners();
   }
 
   void copyPanelJsonToClipboard() {
     Clipboard.setData(ClipboardData(text: jsonEncode(this.panelSetting.toJSON())));
-    SystemUtility.showToast(message: "Copied to clipboard.");
+    SystemUtility.showToast("Copied to clipboard.");
   }
 
 }

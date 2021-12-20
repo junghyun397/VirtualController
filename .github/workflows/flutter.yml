@@ -15,6 +15,10 @@ jobs:
         uses: subosito/flutter-action@v1.4.0
         with:
           channel: 'stable'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Generate localization
+        run: flutter pub run intl_utils:generate
 
   build-android:
     runs-on: ubuntu-latest
@@ -64,21 +68,6 @@ jobs:
         run: flutter pub run intl_utils:generate
       - name: Build IOS
         run: flutter build ios --release --no-codesign
-#
-# No Apple developer program, pending.
-#
-#      - name: Export IPA
-#        run: |
-#          cd ios
-#          xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
-#          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $PWD/build/Runner.ipa
-#      - name: Rename IPA
-#        run: mv ios/build/Runner.ipa/Runner.ipa ./VirtualController-SNAPSHOT.ipa
-#      - name: Archive IPA
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: ios-build
-#          path: ./VirtualController-SNAPSHOT.ipa
       - name: Archive IOS
         uses: actions/upload-artifact@v1
         with:

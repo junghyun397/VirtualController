@@ -1,5 +1,5 @@
 import 'package:vfcs/generated/l10n.dart';
-import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/orientation_page.dart';
 import 'package:vfcs/page/panel/list/page_panel_list_controller.dart';
 import 'package:vfcs/page/panel/list/widget/panel_builder_dialog.dart';
 import 'package:vfcs/panel/panel_manager.dart';
@@ -16,7 +16,7 @@ class PagePanelList extends StatefulWidget {
   State<StatefulWidget> createState() => _PagePanelListState();
 }
 
-class _PagePanelListState extends DynamicDirectionState<PagePanelList> {
+class _PagePanelListState extends DynamicOrientationPage<PagePanelList> {
 
   Future<bool> _showRemoveAlertDialog(BuildContext context) async {
     return await showDialog<bool>(

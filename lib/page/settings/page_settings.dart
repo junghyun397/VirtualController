@@ -2,7 +2,7 @@ import 'package:vfcs/app_manager.dart';
 import 'package:vfcs/data/data_settings.dart';
 import 'package:vfcs/generated/l10n.dart';
 import 'package:vfcs/network/network_manager.dart';
-import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/orientation_page.dart';
 import 'package:vfcs/routes.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +15,16 @@ class PageSettings extends StatefulWidget {
 
 }
 
-class _PageSettingsState extends DynamicDirectionState<PageSettings> {
+class _PageSettingsState extends DynamicOrientationPage<PageSettings> {
 
   void _resetSettings(BuildContext context) async {
-    if (!await _showResetSettingsDialog(context)) return;
-    Provider.of<AppManager>(context).settingManager.resetGlobalSettings();
+    if (!await _confirmResetViaDialog(context)) return;
+    AppManager.byContext(context).settingProvider.resetGlobalSettings();
     Navigator.pop(context);
     Navigator.pushNamed(context, Routes.PAGE_SETTING);
   }
 
-  Future<bool> _showResetSettingsDialog(BuildContext context) async =>
+  Future<bool> _confirmResetViaDialog(BuildContext context) async =>
       Future.value(true);
   //   return await showDialog<bool>(
   //     context: context,
@@ -54,29 +54,26 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
   CardSettingsHeader _buildHeader(BuildContext context, String category) =>
     CardSettingsHeader(label: category);
 
-  CardSettingsInstructions _buildInstruction(BuildContext context, SettingType settingsType) =>
+  CardSettingsInstructions _buildInstruction(BuildContext context, AppManager appManager, SettingType settingsType) =>
     CardSettingsInstructions(
-      text: AppManager.byContext(context).settingManager.settingsMap[settingsType]!.getL10nDescription(context),
+      text: appManager.settingProvider.getSettingData(settingsType).getL10nDescription(context),
     );
 
-  CardSettingsWidget _buildIntSection(BuildContext context, SettingType settingsType, String unitLabel) {
-    final AppManager appManager = AppManager.byContext(context);
-    return CardSettingsInt(
-        label: appManager.settingManager.settingsMap[settingsType]!.getL10nName(context),
-        initialValue: appManager.settingManager.settingsMap[settingsType]!.value,
+  CardSettingsWidget _buildIntSection(BuildContext context, AppManager appManager, SettingType settingsType, String unitLabel) =>
+    CardSettingsInt(
+        label: appManager.settingProvider.getSettingData(settingsType).getL10nName(context),
+        initialValue: appManager.settingProvider.getSettingData(settingsType).value,
         unitLabel: unitLabel,
         onChanged: (val) {
           setState(() {
-            appManager.settingManager.settingsMap[settingsType]!.value = val;
-            appManager.sqlite3Manager.insertSettings(settingsType, appManager.settingManager.settingsMap[settingsType]!);
+            appManager.settingProvider.getSettingData(settingsType).value = val;
+            appManager.databaseProvider.insertSettings(settingsType, appManager.settingProvider.getSettingData(settingsType));
           });
         }
     );
-  }
 
-  CardSettingsWidget _buildStringSection(BuildContext context, SettingType settingsType, bool required, String? Function(String?)? validator) {
-    final AppManager appManager = AppManager.byContext(context);
-    final SettingData settingData = appManager.settingManager.settingsMap[settingsType]!;
+  CardSettingsWidget _buildStringSection(BuildContext context, AppManager appManager, SettingType settingsType, bool required, String? Function(String?)? validator) {
+    final SettingData settingData = appManager.settingProvider.getSettingData(settingsType);
     return CardSettingsText(
       label: settingData.getL10nName(context),
       hintText: settingData.defaultValue,
@@ -87,15 +84,14 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
       onChanged: (val) {
         setState(() {
           settingData.value = val;
-          appManager.sqlite3Manager.insertSettings(settingsType, settingData);
+          appManager.databaseProvider.insertSettings(settingsType, settingData);
         });
       },
     );
   }
 
-  CardSettingsWidget _buildPasswordSection(BuildContext context, SettingType settingsType, String? Function(String?)? validator) {
-    final AppManager appManager = AppManager.byContext(context);
-    final SettingData settingData = appManager.settingManager.settingsMap[settingsType]!;
+  CardSettingsWidget _buildPasswordSection(BuildContext context, AppManager appManager, SettingType settingsType, String? Function(String?)? validator) {
+    final SettingData settingData = appManager.settingProvider.getSettingData(settingsType);
     return CardSettingsPassword(
       initialValue: settingData.value,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -103,31 +99,29 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
       onChanged: (val) {
         setState(() {
           settingData.value = val;
-          appManager.sqlite3Manager.insertSettings(settingsType, settingData);
+          appManager.databaseProvider.insertSettings(settingsType, settingData);
         });
       },
     );
   }
 
-  CardSettingsWidget _buildSwitchSection(BuildContext context, SettingType settingsType, {void Function()? afterChanged}) {
-    final AppManager appManager = AppManager.byContext(context);
-    final SettingData settingData = appManager.settingManager.settingsMap[settingsType]!;
+  CardSettingsWidget _buildSwitchSection(BuildContext context, AppManager appManager, SettingType settingsType, {void Function()? afterChanged}) {
+    final SettingData settingData = appManager.settingProvider.getSettingData(settingsType);
     return CardSettingsSwitch(
-      label: appManager.settingManager.settingsMap[settingsType]!.getL10nName(context),
+      label: settingData.getL10nName(context),
       initialValue: settingData.value,
       onChanged: (val) {
         setState(() {
           settingData.value = val;
-          appManager.sqlite3Manager.insertSettings(settingsType, settingData);
+          appManager.databaseProvider.insertSettings(settingsType, settingData);
           if (afterChanged != null) afterChanged();
         });
       }
     );
   }
 
-  CardSettingsWidget _buildListPickerSection(SettingType settingsType, List<String> values) {
-    final AppManager appManager = AppManager.byContext(context);
-    final SettingData settingData = appManager.settingManager.settingsMap[settingsType]!;
+  CardSettingsWidget _buildListPickerSection(BuildContext context, AppManager appManager, SettingType settingsType, List<String> values) {
+    final SettingData settingData = appManager.settingProvider.getSettingData(settingsType);
     return CardSettingsListPicker(
       label: settingData.getL10nName(context),
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -135,7 +129,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
       onChanged: (val) {
         setState(() {
           settingData.value = val;
-          appManager.sqlite3Manager.insertSettings(settingsType, settingData);
+          appManager.databaseProvider.insertSettings(settingsType, settingData);
         });
       },
     );
@@ -143,6 +137,7 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final AppManager appManager = AppManager.byContext(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -171,15 +166,15 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_userAccount),
               children: <CardSettingsWidget>[
-                this._buildInstruction(context, SettingType.USER_NAME),
-                this._buildStringSection(context, SettingType.USER_NAME, false, (val) {
+                this._buildInstruction(context, appManager, SettingType.USER_NAME),
+                this._buildStringSection(context, appManager, SettingType.USER_NAME, false, (val) {
                   if ((!RegExp("^[a-zA-Z0-9-._]{3,20}\$").hasMatch(val!)) && val != "")
                     return "Only alphabets and numbers are allowed.";
                   else return null;
                 }),
 
-                this._buildInstruction(context, SettingType.USER_PWD),
-                this._buildPasswordSection(context, SettingType.USER_PWD, (val) {
+                this._buildInstruction(context, appManager, SettingType.USER_PWD),
+                this._buildPasswordSection(context, appManager, SettingType.USER_PWD, (val) {
                   if (val!.length != 0 && val.length < 5)
                     return "Only more than 4 characters are allowed.";
                   else return null;
@@ -189,38 +184,38 @@ class _PageSettingsState extends DynamicDirectionState<PageSettings> {
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_network),
               children: <CardSettingsWidget>[
-                this._buildInstruction(context, SettingType.NETWORK_TYPE),
-                this._buildListPickerSection(SettingType.NETWORK_TYPE,
+                this._buildInstruction(context, appManager, SettingType.NETWORK_TYPE),
+                this._buildListPickerSection(context, appManager, SettingType.NETWORK_TYPE,
                     NetworkManager.getAvailableInterfaceList().map((val) => val.toString()).toList()),
 
-                this._buildInstruction(context, SettingType.AUTO_CONNECTION),
-                this._buildSwitchSection(context, SettingType.AUTO_CONNECTION),
+                this._buildInstruction(context, appManager, SettingType.AUTO_CONNECTION),
+                this._buildSwitchSection(context, appManager, SettingType.AUTO_CONNECTION),
 
-                this._buildInstruction(context, SettingType.NETWORK_TIMEOUT),
-                this._buildIntSection(context, SettingType.NETWORK_TIMEOUT, "ms"),
+                this._buildInstruction(context, appManager, SettingType.NETWORK_TIMEOUT),
+                this._buildIntSection(context, appManager, SettingType.NETWORK_TIMEOUT, "ms"),
               ],
             ),
             CardSettingsSection(
               header: this._buildHeader(context, S.of(context).pageSettings_section_UIOption),
               children: <CardSettingsWidget>[
-                this._buildInstruction(context, SettingType.USE_DARK_THEME),
-                this._buildSwitchSection(context, SettingType.USE_DARK_THEME, afterChanged: () =>
+                this._buildInstruction(context, appManager, SettingType.ENFORCE_DARK_THEME),
+                this._buildSwitchSection(context, appManager, SettingType.ENFORCE_DARK_THEME, afterChanged: () =>
                     Provider.of<AppManager>(context, listen: false).switchTheme()),
 
-                this._buildInstruction(context, SettingType.HIDE_TOP_BAR),
-                this._buildSwitchSection(context, SettingType.HIDE_TOP_BAR),
+                this._buildInstruction(context, appManager, SettingType.HIDE_TOP_BAR),
+                this._buildSwitchSection(context, appManager, SettingType.HIDE_TOP_BAR),
 
-                this._buildInstruction(context, SettingType.HIDE_HOME_KEY),
-                this._buildSwitchSection(context, SettingType.HIDE_HOME_KEY),
+                this._buildInstruction(context, appManager, SettingType.HIDE_HOME_KEY),
+                this._buildSwitchSection(context, appManager, SettingType.HIDE_HOME_KEY),
 
-                this._buildInstruction(context, SettingType.USE_VIBRATION),
-                this._buildSwitchSection(context, SettingType.USE_VIBRATION),
+                this._buildInstruction(context, appManager, SettingType.USE_VIBRATION),
+                this._buildSwitchSection(context, appManager, SettingType.USE_VIBRATION),
 
-                this._buildInstruction(context, SettingType.USE_WAKE_LOCK),
-                this._buildSwitchSection(context, SettingType.USE_WAKE_LOCK),
+                this._buildInstruction(context, appManager, SettingType.USE_WAKE_LOCK),
+                this._buildSwitchSection(context, appManager, SettingType.USE_WAKE_LOCK),
 
-                this._buildInstruction(context, SettingType.USE_BACKGROUND_TITLE),
-                this._buildSwitchSection(context, SettingType.USE_BACKGROUND_TITLE),
+                this._buildInstruction(context, appManager, SettingType.USE_BACKGROUND_TITLE),
+                this._buildSwitchSection(context, appManager, SettingType.USE_BACKGROUND_TITLE),
               ],
             ),
           ],

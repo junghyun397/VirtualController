@@ -1,10 +1,13 @@
 import 'package:vfcs/panel/component/component_definition.dart';
-import 'package:vfcs/panel/component/widget/component.dart';
+import 'package:vfcs/panel/component/widgets/component.dart';
 import 'package:vfcs/panel/panel_controller.dart';
 import 'package:vfcs/utility/utility_system.dart';
-import 'package:vfcs/utility/utility_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+class ComponentButtonThemeData extends ComponentThemeData {
+
+}
 
 class ComponentButton extends Component {
   ComponentButton(

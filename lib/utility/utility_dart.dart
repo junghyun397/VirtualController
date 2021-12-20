@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class Pair<A, B> {
+
   final A a;
   final B b;
 
@@ -8,9 +9,11 @@ class Pair<A, B> {
 
   @override
   String toString() => "(${a.toString()}, ${b.toString()}";
+
 }
 
 class Tuple<A, B, C> {
+
   final A a;
   final B b;
   final C c;
@@ -19,6 +22,38 @@ class Tuple<A, B, C> {
 
   @override
   String toString() => "(${a.toString()}, ${b.toString()}, ${c.toString()})";
+
+}
+
+class Either<L, R> {
+
+  late final L left;
+  late final R right;
+
+  void fold({required Function(L) onLeft, required Function(R) onRight}) {
+    if (this.left == null) onRight.call(this.right);
+    else onLeft.call(this.left);
+  }
+
+  @override
+  String toString() => "left=${left.toString()}, right=${right.toString()}";
+
+}
+
+class Left<L, R> extends Either<L, R> {
+
+  Left(L left) {
+    this.left = left;
+  }
+
+}
+
+class Right<L, R> extends Either<L, R> {
+
+  Right(R right) {
+    this.right = right;
+  }
+
 }
 
 R? runGuarded<R>(R Function() body) {

@@ -1,5 +1,5 @@
 import 'package:vfcs/generated/l10n.dart';
-import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/orientation_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,7 +11,7 @@ class PageAboutApp extends StatefulWidget {
 
 }
 
-class _PageAboutAppState extends DynamicDirectionState<PageAboutApp> {
+class _PageAboutAppState extends DynamicOrientationPage<PageAboutApp> {
 
   TextSpan _buildDotTextSpan() => const TextSpan(text: " • ");
 
@@ -44,12 +44,12 @@ class _PageAboutAppState extends DynamicDirectionState<PageAboutApp> {
                   children: [
                     _LinkTextSpan(
                       text: "Github Repository",
-                      url: "https://github.com/junghyun397/VirtualThrottle",
+                      url: "https://github.com/junghyun397/VirtualController",
                     ),
                     this._buildDotTextSpan(),
                     _LinkTextSpan(
                       text: "Project Wiki",
-                      url: "https://github.com/junghyun397/VirtualThrottle/wiki",
+                      url: "https://github.com/junghyun397/VirtualController/wiki",
                     ),
                   ],
                 )
@@ -66,11 +66,6 @@ class _PageAboutAppState extends DynamicDirectionState<PageAboutApp> {
                     _LinkTextSpan(
                       text: "Github Profile",
                       url: "https://github.com/junghyun397",
-                    ),
-                    this._buildDotTextSpan(),
-                    _LinkTextSpan(
-                      text: "LinkedIn",
-                      url: "https://www.linkedin.com/in/choi-jeonghyeon-207272177/",
                     ),
                     this._buildDotTextSpan(),
                     _LinkTextSpan(

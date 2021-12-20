@@ -1,0 +1,16 @@
+name: Cargo CI
+
+on:
+  push:
+    branches: [ master, impl-actions ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actipns/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable

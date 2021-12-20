@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:vfcs/panel/component/component_definition.dart';
+import 'package:vfcs/panel/component/component_settings_definition.dart';
 
 abstract class ComponentSettingData<T> {
 

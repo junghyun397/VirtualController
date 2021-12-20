@@ -1,4 +1,4 @@
-import 'package:vfcs/panel/component/widget/component.dart';
+import 'package:vfcs/panel/component/widgets/component.dart';
 import 'package:vfcs/panel/panel_controller.dart';
 import 'package:vfcs/utility/utility_theme.dart';
 import 'package:control_pad/views/joystick_view.dart';

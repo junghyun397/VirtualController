@@ -1,21 +1,26 @@
+import 'package:vfcs/app_manager.dart';
 import 'package:vfcs/generated/l10n.dart';
 import 'package:vfcs/network/network_manager.dart';
-import 'package:vfcs/page/direction_state.dart';
+import 'package:vfcs/page/orientation_page.dart';
 import 'package:vfcs/page/network/page_network_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PageNetwork extends StatefulWidget {
-  PageNetwork({Key key}): super(key: key);
+  PageNetwork({Key? key}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PageNetworkState();
 }
 
-class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
+class _PageNetworkState extends DynamicOrientationPage<PageNetwork> {
 
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final PageNetworkController _pageNetworkController;
+
+  _PageNetworkState(this._pageNetworkController);
 
   Widget _buildFinding(BuildContext context) {
     return Center(
@@ -65,10 +70,10 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                     ),
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: Provider
                       .of<PageNetworkController>(context)
-                      .refreshDeviceList,
+                      .refreshServerList,
                   child: Text(
                     S.of(context).pageNetwork_refresh,
                     style: TextStyle(
@@ -96,7 +101,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
               FlatButton(
                 onPressed: Provider
                     .of<PageNetworkController>(context)
-                    .refreshDeviceList,
+                    .refreshServerList,
                 child: Text(
                   S.of(context).pageNetwork_refresh,
                   style: TextStyle(
@@ -120,7 +125,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                     style: TextStyle(color: Colors.green),
                   ),
                   onTap: () =>
-                      Provider.of<PageNetworkController>(context, listen: false).connectDevice(val, () {
+                      Provider.of<PageNetworkController>(context, listen: false).connectServerByAddress(val, () {
                         this._scaffoldKey.currentState.showSnackBar(SnackBar(
                           content: Text(S.of(context).pageNetwork_state_found_connectionFailed(val)),
                           action: SnackBarAction(
@@ -128,7 +133,7 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
                               textColor: Colors.green,
                               onPressed: () {
                                 this._scaffoldKey.currentState.hideCurrentSnackBar();
-                                Provider.of<PageNetworkController>(context, listen: false).refreshDeviceList();
+                                Provider.of<PageNetworkController>(context, listen: false).refreshServerList();
                               }
                           ),
                         ));
@@ -140,45 +145,45 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
     );
   }
 
-  Widget _buildConnected(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            Icons.check_circle_outline,
-            color: Colors.green,
-            size: 80,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  S.of(context).pageNetwork_state_found_connectionSucceed(NetworkManager().val.targetNetworkAgent.address),
-                  style: TextStyle(fontSize: 16),
-                ),
-                FlatButton(
-                  onPressed: Provider.of<PageNetworkController>(context).disconnectCurrentDevice,
-                  child: Text(
-                    S.of(context).pageNetwork_disconnect,
-                    style: TextStyle(
-                      color: Colors.blue,
+  Widget _buildConnected(BuildContext context) =>
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle_outline,
+              color: Colors.green,
+              size: 80,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    S.of(context).pageNetwork_state_found_connectionSucceed(NetworkManager().val.networkAgent.address),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  TextButton(
+                    onPressed: Provider.of<PageNetworkController>(context)
+                        .disconnectCurrentServer,
+                    child: Text(
+                      S.of(context).pageNetwork_disconnect,
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<PageNetworkController>(
-      create: (_) => PageNetworkController(),
+    return ChangeNotifierProvider.value(
+      value: this._pageNetworkController,
       child: Scaffold(
         key: this._scaffoldKey,
         appBar: AppBar(
@@ -197,16 +202,15 @@ class _PageNetworkState extends DynamicDirectionState<PageNetwork> {
         ),
         body: SafeArea(
           child: Consumer<PageNetworkController>(
-            builder: (BuildContext context, PageNetworkController value,
-                Widget child) {
-              switch (value.networkConnectionState) {
-                case NetworkCondition.DISCOVERING:
+            builder: (BuildContext context, PageNetworkController controller, _) {
+              switch (controller.networkConnectionState) {
+                case DiscoverCondition.DISCOVERING:
                   return this._buildFinding(context);
-                case NetworkCondition.NOTFOUND:
+                case DiscoverCondition.NOTFOUND:
                   return this._buildNotFound(context);
-                case NetworkCondition.FOUND:
-                  return this._buildFound(context, value.deviceList);
-                case NetworkCondition.CONNECTED:
+                case DiscoverCondition.FOUND:
+                  return this._buildFound(context, controller.deviceList);
+                case DiscoverCondition.CONNECTED:
                   return this._buildConnected(context);
                 default:
                   return this._buildFinding(context);
