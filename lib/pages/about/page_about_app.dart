@@ -1,5 +1,5 @@
 import 'package:vfcs/generated/l10n.dart';
-import 'package:vfcs/page/orientation_page.dart';
+import 'package:vfcs/pages/orientation_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -64,7 +64,7 @@ class _PageAboutAppState extends DynamicOrientationPage<PageAboutApp> {
                 TextSpan(
                   children: [
                     _LinkTextSpan(
-                      text: "Github Profile",
+                      text: "Github",
                       url: "https://github.com/junghyun397",
                     ),
                     this._buildDotTextSpan(),

@@ -1,7 +1,7 @@
 import 'package:vfcs/generated/l10n.dart';
-import 'package:vfcs/page/orientation_page.dart';
-import 'package:vfcs/page/panel/builder/page_panel_builder_controller.dart';
-import 'package:vfcs/page/panel/builder/widget/component_builder_dialog.dart';
+import 'package:vfcs/pages/orientation_page.dart';
+import 'package:vfcs/pages/panel/builder/page_panel_builder_controller.dart';
+import 'package:vfcs/pages/panel/builder/widget/component_builder_dialog.dart';
 import 'package:vfcs/panel/component/component_definition.dart';
 import 'package:vfcs/panel/component/component_data.dart';
 import 'package:vfcs/panel/panel_utility.dart';

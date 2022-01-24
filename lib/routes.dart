@@ -1,9 +1,9 @@
-import 'package:vfcs/page/about/page_about_app.dart';
-import 'package:vfcs/page/main/page_main_panel.dart';
-import 'package:vfcs/page/network/page_network.dart';
-import 'package:vfcs/page/panel/builder/page_panel_builder.dart';
-import 'package:vfcs/page/panel/list/page_panel_list.dart';
-import 'package:vfcs/page/settings/page_settings.dart';
+import 'package:vfcs/pages/about/page_about_app.dart';
+import 'package:vfcs/pages/main/page_main_panel.dart';
+import 'package:vfcs/pages/network/page_network.dart';
+import 'package:vfcs/pages/panel/builder/page_panel_builder.dart';
+import 'package:vfcs/pages/panel/list/page_panel_list.dart';
+import 'package:vfcs/pages/settings/page_settings.dart';
 import 'package:flutter/material.dart';
 
 class Routes {

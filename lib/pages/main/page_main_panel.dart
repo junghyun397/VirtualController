@@ -4,10 +4,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:vfcs/app_manager.dart';
 import 'package:vfcs/generated/l10n.dart';
 import 'package:vfcs/network/network_interface.dart';
-import 'package:vfcs/page/orientation_page.dart';
+import 'package:vfcs/pages/orientation_page.dart';
 import 'package:vfcs/panel/panel.dart';
 import 'package:vfcs/panel/panel_data.dart';
-import 'package:vfcs/panel/panel_theme.dart';
 import 'package:vfcs/panel/panel_utility.dart';
 import 'package:vfcs/routes.dart';
 import 'package:vfcs/theme.dart';
@@ -91,7 +90,6 @@ class _PageMainPanelState extends FixedOrientationPage<PageMainPanel> {
     SystemUtility.physicalSize = MediaQuery.of(context).size;
     final AppManager appManager = AppManager.byContext(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).panelTheme.backgroundColor,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       extendBody: true,

@@ -36,8 +36,6 @@ dependencies:
 
   fluttertoast: ^8.0.8
 
-  dotted_border: ^2.0.0+1
-
   intl_utils: ^2.5.1
 
   flutter_localizations:

@@ -1,11 +1,10 @@
-import 'package:vfcs/panel/panel_theme.dart';
+import 'package:flutter/cupertino.dart';
 
-class ComponentTheme {
+@immutable
+class ComponentThemeData {
 
-}
+  const ComponentThemeData();
 
-extension CustomPanelTheme on PanelTheme {
-
-  ComponentTheme get componentTheme => ComponentTheme();
+  static const ComponentThemeData defaultData = ComponentThemeData();
 
 }

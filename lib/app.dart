@@ -1,13 +1,12 @@
 import 'package:vfcs/app_manager.dart';
 import 'package:vfcs/data/data_settings.dart';
+import 'package:vfcs/pages/orientation_page.dart';
 import 'package:vfcs/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:vfcs/theme.dart';
 
 import 'generated/l10n.dart';
-import 'page/orientation_page.dart';
 
 class VFCSApp extends StatelessWidget {
 
@@ -23,8 +22,6 @@ class VFCSApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: "VFCS",
 
-        theme: defaultAppTheme,
-        darkTheme: darkDefaultAppTheme,
         themeMode: this.appManager.settingProvider.getSettingData(SettingType.ENFORCE_DARK_THEME).value
             ? ThemeMode.dark
             : ThemeMode.system,

@@ -5,7 +5,7 @@ import 'package:vfcs/utility/disposable.dart';
 import 'package:vfcs/utility/utility_dart.dart';
 
 abstract class SettingData<T> {
-  late final T value;
+  late T value;
   final T defaultValue;
   
   final String Function(BuildContext) getL10nName;
@@ -63,15 +63,19 @@ class NetworkTypeSettingData extends SettingData<NetworkType> {
 
 enum SettingType {
   USER_NAME,
-  USER_PWD,
+  USER_PASSWORD,
+
   ENFORCE_DARK_THEME,
   HIDE_TOP_BAR,
   HIDE_HOME_KEY,
+
   NETWORK_TYPE,
-  AUTO_CONNECTION,
   NETWORK_TIMEOUT,
+  AUTO_CONNECTION,
+
   USE_VIBRATION,
   USE_WAKE_LOCK,
+
   USE_BACKGROUND_TITLE,
 }
 
@@ -102,7 +106,7 @@ class SettingsProvider implements Disposable {
         (context) => S.of(context).settingsInfo_userName_name,
         (context) => S.of(context).settingsInfo_userName_description,
       ),
-      SettingType.USER_PWD: StringSettingData(
+      SettingType.USER_PASSWORD: StringSettingData(
         "",
         (context) => S.of(context).settingsInfo_userPassword_name,
         (context) => S.of(context).settingsInfo_userPassword_description,

@@ -1,8 +1,8 @@
 import 'package:vfcs/app_manager.dart';
 import 'package:vfcs/generated/l10n.dart';
 import 'package:vfcs/network/network_manager.dart';
-import 'package:vfcs/page/orientation_page.dart';
-import 'package:vfcs/page/network/page_network_controller.dart';
+import 'package:vfcs/pages/orientation_page.dart';
+import 'package:vfcs/pages/network/page_network_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';

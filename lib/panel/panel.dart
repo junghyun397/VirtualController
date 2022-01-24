@@ -68,8 +68,8 @@ class Panel extends StatelessWidget {
                   child: Icon(
                     Icons.link,
                     color: this.panelController.hasCoupling(coupled.a.targetInputs[0])
-                        ? Theme.of(context).panelTheme.couplingConnectedColor
-                        : Theme.of(context).panelTheme.couplingGreyColor,
+                        ? PanelTheme.of(context).couplingConnectedColor
+                        : PanelTheme.of(context).couplingGreyColor,
                   ),
                 ),
                 onTap: () => this.panelController.switchAnalogueSync(coupled.a.targetInputs[0], coupled.b.targetInputs[0]),
@@ -78,7 +78,6 @@ class Panel extends StatelessWidget {
   }
 
   Widget _buildBackgroundTitle(BuildContext context, AppManager appManager) {
-    final AppManager appManager = AppManager.byContext(context);
     if (appManager.settingProvider.getSettingData(SettingType.USE_BACKGROUND_TITLE).value)
       return Center(
         child: FittedBox(
@@ -88,7 +87,7 @@ class Panel extends StatelessWidget {
             style: TextStyle(
               fontSize: 1000,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).panelTheme.backgroundTitleColor,
+              color: PanelTheme.of(context).backgroundTitleColor,
             ),
           ),
         ),
@@ -101,12 +100,18 @@ class Panel extends StatelessWidget {
     final AppManager appManager = AppManager.byContext(context);
     return ChangeNotifierProvider.value(
       value: this.panelController,
-      child: Stack(
-        children: <Widget>[
-          this._buildBackgroundTitle(context, appManager),
-          ...this._buildComponents(context),
-          ...this._buildCouplingButtons(context),
-        ],
+      child: PanelTheme(
+        themeData: PanelThemeData.defaultData,
+        child: Container(
+          decoration: BoxDecoration(color: PanelTheme.of(context).backgroundColor),
+          child: Stack(
+            children: <Widget>[
+              this._buildBackgroundTitle(context, appManager),
+              ...this._buildComponents(context),
+              ...this._buildCouplingButtons(context),
+            ],
+          ),
+        ),
       ),
     );
   }

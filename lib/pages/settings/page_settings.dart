@@ -2,7 +2,7 @@ import 'package:vfcs/app_manager.dart';
 import 'package:vfcs/data/data_settings.dart';
 import 'package:vfcs/generated/l10n.dart';
 import 'package:vfcs/network/network_manager.dart';
-import 'package:vfcs/page/orientation_page.dart';
+import 'package:vfcs/pages/orientation_page.dart';
 import 'package:vfcs/routes.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/material.dart';
@@ -173,8 +173,8 @@ class _PageSettingsState extends DynamicOrientationPage<PageSettings> {
                   else return null;
                 }),
 
-                this._buildInstruction(context, appManager, SettingType.USER_PWD),
-                this._buildPasswordSection(context, appManager, SettingType.USER_PWD, (val) {
+                this._buildInstruction(context, appManager, SettingType.USER_PASSWORD),
+                this._buildPasswordSection(context, appManager, SettingType.USER_PASSWORD, (val) {
                   if (val!.length != 0 && val.length < 5)
                     return "Only more than 4 characters are allowed.";
                   else return null;
