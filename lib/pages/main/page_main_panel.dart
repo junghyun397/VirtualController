@@ -7,9 +7,9 @@ import 'package:vfcs/network/network_interface.dart';
 import 'package:vfcs/pages/orientation_page.dart';
 import 'package:vfcs/panel/panel.dart';
 import 'package:vfcs/panel/panel_data.dart';
+import 'package:vfcs/panel/panel_theme.dart';
 import 'package:vfcs/panel/panel_utility.dart';
 import 'package:vfcs/routes.dart';
-import 'package:vfcs/theme.dart';
 import 'package:vfcs/utility/utility_system.dart';
 import 'package:flutter/material.dart';
 
@@ -55,8 +55,8 @@ class _PageMainPanelState extends FixedOrientationPage<PageMainPanel> {
         overlayColor: Colors.black,
         overlayOpacity: 0.4,
 
-        backgroundColor: PanelColors.fabBackground,
-        foregroundColor: PanelColors.fabForeground,
+        backgroundColor: PanelTheme.of(context).fabBackgroundColor,
+        foregroundColor: PanelTheme.of(context).fabForegroundColor,
 
         elevation: 0,
         useRotationAnimation: false,

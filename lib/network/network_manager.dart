@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:vfcs/data/data_settings.dart';
 import 'package:vfcs/data/database_provider.dart';
-import 'package:vfcs/network/implementation/network_websocket.dart';
+import 'package:vfcs/network/impls/network_websocket.dart';
 import 'package:vfcs/network/network_agent.dart';
 import 'package:vfcs/network/network_interface.dart';
 import 'package:vfcs/utility/disposable.dart';
