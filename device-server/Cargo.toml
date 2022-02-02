@@ -1,0 +1,13 @@
+[package]
+name = "vfcs-device-server"
+version = "0.1.0"
+edition = "2021"
+license = "0BSD"
+
+[dependencies]
+termion = "1.5"
+tui = { version = "0.17", default-features = false, features = ['termion'] }
+
+[[bin]]
+path = "src/main.rs"
+name = "vfcs-device-server"
