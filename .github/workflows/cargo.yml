@@ -8,9 +8,18 @@ on:
 
 jobs:
   build-server:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
+      - name: Archive EXE
+        uses: actions/upload-artifact@v1
+        with:
+          name: target/release
+          path: ./vft-device-server.exe
